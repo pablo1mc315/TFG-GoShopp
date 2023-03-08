@@ -11,10 +11,12 @@ import 'package:google_sign_in/google_sign_in.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MainPage());
+  runApp(const MainPage());
 }
 
 class MainPage extends StatefulWidget {
+  const MainPage({super.key});
+
   @override
   MainPageState createState() => MainPageState();
 }
@@ -23,15 +25,16 @@ class MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-    this._estaUsuarioAutenticado();
+    _estaUsuarioAutenticado();
   }
 
   void _estaUsuarioAutenticado() {
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      if (user == null)
+      if (user == null) {
         print("Usuario no autenticado");
-      else
+      } else {
         print("Usuario autenticado");
+      }
     });
   }
 
@@ -42,6 +45,8 @@ class MainPageState extends State<MainPage> {
 }
 
 class Login extends StatefulWidget {
+  const Login({super.key});
+
   @override
   _LoginState createState() => _LoginState();
 }
@@ -58,6 +63,7 @@ class _LoginState extends State<Login> {
 
   FirebaseAuth auth = FirebaseAuth.instance;
 
+  @override
   void initState() {
     super.initState();
     visible = false;
@@ -78,8 +84,8 @@ class _LoginState extends State<Login> {
           key: _formKey,
           child: Column(
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 120.0, bottom: 0.0),
+              const Padding(
+                padding: EdgeInsets.only(top: 120.0, bottom: 0.0),
                 child: Text(
                   'Firebase Auth',
                   style: TextStyle(
@@ -101,12 +107,12 @@ class _LoginState extends State<Login> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
+                  style: const TextStyle(color: Colors.white),
+                  decoration: const InputDecoration(
                       prefixIcon: Icon(
                         Icons.mail_outline_rounded,
                         color: Colors.white70,
@@ -138,9 +144,9 @@ class _LoginState extends State<Login> {
                   controller: _contrasenaController,
                   obscureText: !_contrasenaVisible,
                   keyboardType: TextInputType.visiblePassword,
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
-                      prefixIcon: Icon(
+                      prefixIcon: const Icon(
                         Icons.lock_outline_rounded,
                         color: Colors.white70,
                       ),
@@ -158,18 +164,18 @@ class _LoginState extends State<Login> {
                           }),
                       filled: true,
                       fillColor: Colors.black12,
-                      labelStyle: TextStyle(
+                      labelStyle: const TextStyle(
                         fontSize: 16,
                         color: Colors.white,
                       ),
-                      hintStyle: TextStyle(
+                      hintStyle: const TextStyle(
                         color: Colors.white54,
                       ),
-                      enabledBorder: OutlineInputBorder(
+                      enabledBorder: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(5.0)),
                         borderSide: BorderSide(color: Colors.white, width: 0.5),
                       ),
-                      focusedBorder: OutlineInputBorder(
+                      focusedBorder: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(5.0)),
                         borderSide: BorderSide(color: Colors.white, width: 2),
                       ),
@@ -177,7 +183,7 @@ class _LoginState extends State<Login> {
                       hintText: 'Contraseña'),
                 ),
               ),
-              Container(
+              SizedBox(
                 height: 50,
                 width: 350,
                 child: ElevatedButton(
@@ -195,26 +201,26 @@ class _LoginState extends State<Login> {
                       acceder(context);
                     }
                   },
-                  child: Text(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.black45,
+                    shadowColor: Colors.black45,
+                    elevation: 8,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      side: const BorderSide(
+                        color: Colors.white70,
+                        width: 2,
+                      ),
+                    ),
+                  ),
+                  child: const Text(
                     'Acceder',
                     //style: TextStyle(color: Colors.white, fontSize: 20,),
                     style: TextStyle(
                       fontSize: 19,
                       color: Colors.white,
                       fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.black45,
-                    onPrimary: Colors.white,
-                    shadowColor: Colors.black45,
-                    elevation: 8,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      side: BorderSide(
-                        color: Colors.white70,
-                        width: 2,
-                      ),
                     ),
                   ),
                 ),
@@ -225,21 +231,22 @@ class _LoginState extends State<Login> {
                   maintainState: true,
                   visible: visible,
                   child: ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
                       child: Container(
                           width: 320,
-                          margin: EdgeInsets.only(),
+                          margin: const EdgeInsets.only(),
                           child: LinearProgressIndicator(
                             minHeight: 2,
                             backgroundColor: Colors.blueGrey[800],
-                            valueColor: AlwaysStoppedAnimation(Colors.white),
+                            valueColor:
+                                const AlwaysStoppedAnimation(Colors.white),
                           )))),
-              Container(
+              SizedBox(
                 height: 30,
                 width: 300,
                 child: TextButton(
                   onPressed: () {},
-                  child: Text(
+                  child: const Text(
                     '¿Olvidó la contraseña?',
                     style: TextStyle(
                       fontSize: 12,
@@ -251,7 +258,7 @@ class _LoginState extends State<Login> {
               Container(
                 height: 60,
                 width: 350,
-                padding: EdgeInsets.only(top: 10),
+                padding: const EdgeInsets.only(top: 10),
                 child: ElevatedButton(
                   onPressed: () {
                     setState(() {
@@ -259,8 +266,21 @@ class _LoginState extends State<Login> {
                     });
                     accederGoogle(context);
                   },
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.black45,
+                    elevation: 8,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      side: const BorderSide(
+                        color: Colors.white70,
+                        width: 2,
+                      ),
+                    ),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                     child: Row(
                       children: <Widget>[
                         Image(
@@ -268,7 +288,7 @@ class _LoginState extends State<Login> {
                           height: 30.0,
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 40, right: 55),
+                          padding: EdgeInsets.only(left: 40, right: 55),
                           child: Text(
                             'Acceder con Google',
                             style: TextStyle(
@@ -283,19 +303,6 @@ class _LoginState extends State<Login> {
                       ],
                     ),
                   ),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.transparent,
-                    onPrimary: Colors.white,
-                    shadowColor: Colors.black45,
-                    elevation: 8,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      side: BorderSide(
-                        color: Colors.white70,
-                        width: 2,
-                      ),
-                    ),
-                  ),
                 ),
               ),
               Visibility(
@@ -304,16 +311,17 @@ class _LoginState extends State<Login> {
                   maintainState: true,
                   visible: googleVisible,
                   child: ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
                       child: Container(
                           width: 320,
-                          margin: EdgeInsets.only(bottom: 20),
+                          margin: const EdgeInsets.only(bottom: 20),
                           child: LinearProgressIndicator(
                             minHeight: 2,
                             backgroundColor: Colors.blueGrey[800],
-                            valueColor: AlwaysStoppedAnimation(Colors.white),
+                            valueColor:
+                                const AlwaysStoppedAnimation(Colors.white),
                           )))),
-              Container(
+              SizedBox(
                 height: 30,
                 child: TextButton(
                   onPressed: () {
@@ -321,9 +329,9 @@ class _LoginState extends State<Login> {
                         context,
                         MaterialPageRoute(
                             builder: (BuildContext context) =>
-                                PaginaRegistro()));
+                                const PaginaRegistro()));
                   },
-                  child: Text(
+                  child: const Text(
                     'Registrar',
                     style: TextStyle(
                       fontSize: 15,
@@ -348,17 +356,18 @@ class _LoginState extends State<Login> {
             email: _emailController.text.trim(),
             password: _contrasenaController.text.trim());
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => new Home()));
+            context, MaterialPageRoute(builder: (context) => const Home()));
         setState(() {
           _cambiarEstadoIndicadorProgreso();
         });
       } on FirebaseAuthException catch (e) {
-        if (e.code == "user-not-found")
+        if (e.code == "user-not-found") {
           mostrarSnackBar("Usuario desconocido", context);
-        else if (e.code == "wrong-password")
+        } else if (e.code == "wrong-password") {
           mostrarSnackBar("Contraseña incorrecta", context);
-        else
+        } else {
           mostrarSnackBar("Lo sentimos, hubo un error", context);
+        }
         setState(() {
           _cambiarEstadoIndicadorProgreso();
         });
@@ -367,22 +376,22 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> accederGoogle(BuildContext context) async {
-    final FirebaseAuth _auth = FirebaseAuth.instance;
-    final GoogleSignIn _googleSignIn = GoogleSignIn();
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final GoogleSignIn googleSignIn = GoogleSignIn();
 
     try {
-      final GoogleSignInAccount? _googleSignInAccount =
-          await _googleSignIn.signIn();
-      final GoogleSignInAuthentication _googleSignInAuthentication =
-          await _googleSignInAccount!.authentication;
+      final GoogleSignInAccount? googleSignInAccount =
+          await googleSignIn.signIn();
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount!.authentication;
 
       final AuthCredential credential = GoogleAuthProvider.credential(
-          accessToken: _googleSignInAuthentication.accessToken,
-          idToken: _googleSignInAuthentication.idToken);
-      await _auth.signInWithCredential(credential);
+          accessToken: googleSignInAuthentication.accessToken,
+          idToken: googleSignInAuthentication.idToken);
+      await auth.signInWithCredential(credential);
       _formKey.currentState!.save();
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => new Home()));
+          context, MaterialPageRoute(builder: (context) => const Home()));
     } catch (e) {
       mostrarSnackBar("Lo sentimos, se produjo un error", context);
     } finally {
