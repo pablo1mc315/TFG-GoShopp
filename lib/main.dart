@@ -40,7 +40,7 @@ class MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: Login());
+    return const MaterialApp(debugShowCheckedModeBanner: false, home: Login());
   }
 }
 
@@ -85,27 +85,17 @@ class _LoginState extends State<Login> {
           child: Column(
             children: <Widget>[
               const Padding(
-                padding: EdgeInsets.only(top: 120.0, bottom: 0.0),
+                padding: EdgeInsets.only(top: 200.0, bottom: 0.0),
                 child: Text(
-                  'Firebase Auth',
+                  'GoShopp',
                   style: TextStyle(
                     fontSize: 40,
-                    color: Colors.white70,
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 0, bottom: 50.0),
-                child: Center(
-                  child: Container(
-                      width: 200,
-                      height: 150,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0)),
-                      child: Image.asset('assets/auth.png')),
-                ),
-              ),
+              const SizedBox(height: 100),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: TextFormField(
@@ -133,13 +123,12 @@ class _LoginState extends State<Login> {
                         borderSide: BorderSide(color: Colors.white, width: 1.5),
                       ),
                       labelText: 'Email',
-                      hintText: 'Email'),
+                      hintText: 'Introduzca su correo electrónico'),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(
                     left: 15.0, right: 15.0, top: 10.0, bottom: 30.0),
-                //padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
                 child: TextFormField(
                   controller: _contrasenaController,
                   obscureText: !_contrasenaVisible,
@@ -180,7 +169,7 @@ class _LoginState extends State<Login> {
                         borderSide: BorderSide(color: Colors.white, width: 2),
                       ),
                       labelText: 'Contraseña',
-                      hintText: 'Contraseña'),
+                      hintText: 'Introduzca su contraseña'),
                 ),
               ),
               SizedBox(
@@ -189,10 +178,8 @@ class _LoginState extends State<Login> {
                 child: ElevatedButton(
                   onPressed: () {
                     if (!_emailController.text.contains('@')) {
-                      mostrarSnackBar('Email no correcto', context);
-                    } else if (_contrasenaController.text.length < 6) {
                       mostrarSnackBar(
-                          'La contraseña debe contener al menos 6 caracteres',
+                          'El correo introducido no tiene un formato correcto.',
                           context);
                     } else {
                       setState(() {
@@ -215,8 +202,7 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                   child: const Text(
-                    'Acceder',
-                    //style: TextStyle(color: Colors.white, fontSize: 20,),
+                    'Iniciar sesión',
                     style: TextStyle(
                       fontSize: 19,
                       color: Colors.white,
@@ -247,7 +233,7 @@ class _LoginState extends State<Login> {
                 child: TextButton(
                   onPressed: () {},
                   child: const Text(
-                    '¿Olvidó la contraseña?',
+                    '¿Olvidaste tu contraseña?',
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.white,
@@ -284,13 +270,13 @@ class _LoginState extends State<Login> {
                     child: Row(
                       children: <Widget>[
                         Image(
-                          image: AssetImage("assets/google_logo.png"),
+                          image: AssetImage("images/google_logo.png"),
                           height: 30.0,
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 40, right: 55),
+                          padding: EdgeInsets.only(left: 40, right: 30),
                           child: Text(
-                            'Acceder con Google',
+                            'Iniciar sesión con Google',
                             style: TextStyle(
                               fontSize: 19,
                               color: Colors.white,
@@ -332,7 +318,7 @@ class _LoginState extends State<Login> {
                                 const PaginaRegistro()));
                   },
                   child: const Text(
-                    'Registrar',
+                    '¿Aún no tienes una cuenta? Regístrate.',
                     style: TextStyle(
                       fontSize: 15,
                       color: Colors.white,
@@ -361,13 +347,9 @@ class _LoginState extends State<Login> {
           _cambiarEstadoIndicadorProgreso();
         });
       } on FirebaseAuthException catch (e) {
-        if (e.code == "user-not-found") {
-          mostrarSnackBar("Usuario desconocido", context);
-        } else if (e.code == "wrong-password") {
-          mostrarSnackBar("Contraseña incorrecta", context);
-        } else {
-          mostrarSnackBar("Lo sentimos, hubo un error", context);
-        }
+        mostrarSnackBar(
+            "El correo y/o la contraseña introducidos no son correctos.",
+            context);
         setState(() {
           _cambiarEstadoIndicadorProgreso();
         });
