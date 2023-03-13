@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
+import 'package:goshopp/contr_reset.dart';
 
 import 'package:goshopp/inicio.dart';
 import 'package:goshopp/registro.dart';
@@ -231,7 +232,13 @@ class _LoginState extends State<Login> {
                 height: 30,
                 width: 300,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                const ResetPassword()));
+                  },
                   child: const Text(
                     '¿Olvidaste tu contraseña?',
                     style: TextStyle(
@@ -338,7 +345,7 @@ class _LoginState extends State<Login> {
     if (formState!.validate()) {
       formState.save();
       try {
-        UserCredential credencial = await auth.signInWithEmailAndPassword(
+        await auth.signInWithEmailAndPassword(
             email: _emailController.text.trim(),
             password: _contrasenaController.text.trim());
         Navigator.push(
@@ -347,9 +354,9 @@ class _LoginState extends State<Login> {
           _cambiarEstadoIndicadorProgreso();
         });
       } on FirebaseAuthException catch (e) {
-        mostrarSnackBar(
-            "El correo y/o la contraseña introducidos no son correctos.",
-            context);
+        if (e.code == "user-not-found" || e.code == "wrong-password")
+          mostrarSnackBar(
+              "Los valores introducidos no son correctos.", context);
         setState(() {
           _cambiarEstadoIndicadorProgreso();
         });

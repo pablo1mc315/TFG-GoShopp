@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "168782612947-thbn25qvecj66elen2gmd5nthfjkr5e6.apps.googleusercontent.com",
+          "client_id": "168782612947-fqsmrnck1u176inkfe2bkgm59opu11uk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.goshopp",
+            "certificate_hash": "45f9082ca7fba2d927a756911adac22e8f4743bb"
+          }
+        },
+        {
+          "client_id": "168782612947-560pv7r711tv588g2tjit8rija0ecj4c.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,8 +35,15 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "168782612947-thbn25qvecj66elen2gmd5nthfjkr5e6.apps.googleusercontent.com",
+              "client_id": "168782612947-560pv7r711tv588g2tjit8rija0ecj4c.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "168782612947-gf6t4chreadodnscgl7v05df18htq4cf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.goshopp"
+              }
             }
           ]
         }

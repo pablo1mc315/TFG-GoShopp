@@ -44,16 +44,29 @@ class PaginaRegistroState extends State<PaginaRegistro> {
             key: _formKey,
             child: Column(
               children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.only(top: 150.0, bottom: 50),
-                  child: const Text(
-                    'Nuevo usuario',
+                const Column(children: <Widget>[
+                  SizedBox(
+                    height: 150,
+                  ),
+                  Text(
+                    'Crea tu cuenta',
                     style: TextStyle(
-                      fontSize: 30,
+                      fontSize: 35,
+                      fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
                   ),
-                ),
+                  Text(
+                    'y únete a GoShopp',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 80,
+                  ),
+                ]),
                 Padding(
                   padding: const EdgeInsets.only(
                       left: 15.0, right: 15.0, top: 20, bottom: 0),
@@ -82,7 +95,7 @@ class PaginaRegistroState extends State<PaginaRegistro> {
                               BorderSide(color: Colors.white, width: 1.5),
                         ),
                         labelText: 'Email',
-                        hintText: 'Email'),
+                        hintText: 'Introduzca un correo electrónico válido'),
                   ),
                 ),
                 Padding(
@@ -113,8 +126,8 @@ class PaginaRegistroState extends State<PaginaRegistro> {
                           borderSide:
                               BorderSide(color: Colors.white, width: 1.5),
                         ),
-                        labelText: 'Nombre',
-                        hintText: 'Nombre'),
+                        labelText: 'Nombre de usuario',
+                        hintText: 'Introduzca un nombre de usuario'),
                   ),
                 ),
                 Padding(
@@ -161,7 +174,7 @@ class PaginaRegistroState extends State<PaginaRegistro> {
                               BorderSide(color: Colors.white, width: 1.5),
                         ),
                         labelText: 'Contraseña',
-                        hintText: 'Contraseña'),
+                        hintText: 'Debe tener al menos 6 caracteres'),
                   ),
                 ),
                 Padding(
@@ -206,8 +219,8 @@ class PaginaRegistroState extends State<PaginaRegistro> {
                           borderSide:
                               BorderSide(color: Colors.white, width: 1.5),
                         ),
-                        labelText: 'Repite contraseña',
-                        hintText: 'Repite contraseña'),
+                        labelText: 'Repetir Contraseña',
+                        hintText: 'Introduzca su contraseña de nuevo'),
                   ),
                 ),
                 SizedBox(
@@ -215,24 +228,29 @@ class PaginaRegistroState extends State<PaginaRegistro> {
                   width: 350,
                   child: ElevatedButton(
                     onPressed: () {
-                      if (!_emailController.text.contains('@')) {
+                      if (_usuarioController.text.isEmpty ||
+                          _emailController.text.isEmpty ||
+                          _contrasenaController1.text.isEmpty ||
+                          _contrasenaController2.text.isEmpty) {
                         mostrarSnackBar(
-                            'Introduzca un email correcto', context);
-                      } else if (_usuarioController.text.isEmpty) {
-                        mostrarSnackBar('Introduzca su nombre', context);
+                            'Debe rellenar todos los campos.', context);
+                      } else if (!_emailController.text.contains('@')) {
+                        mostrarSnackBar(
+                            'El correo introducido no tiene un formato correcto.',
+                            context);
                       } else if (_contrasenaController1.text.length < 6) {
                         mostrarSnackBar(
-                            'La contraseña debe tener al menos 6 caracteres',
+                            'La contraseña debe tener al menos 6 caracteres.',
                             context);
                       } else if (_contrasenaController1.text !=
                           _contrasenaController2.text) {
                         mostrarSnackBar(
-                            'Las contraseñas no coinciden', context);
+                            'Las contraseñas no coinciden.', context);
                       } else {
                         setState(() {
                           cambiarVisibilidadIndicadorProgreso();
                         });
-                        registroNuevoUsuario(context);
+                        registrarNuevoUsuario(context);
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -249,7 +267,7 @@ class PaginaRegistroState extends State<PaginaRegistro> {
                       ),
                     ),
                     child: const Text(
-                      'Registrar',
+                      'Regístrate',
                       style: TextStyle(
                         fontSize: 19,
                         color: Colors.white,
@@ -292,22 +310,19 @@ class PaginaRegistroState extends State<PaginaRegistro> {
     super.dispose();
   }
 
-  Future<void> registroNuevoUsuario(BuildContext context) async {
-    User usuario;
+  Future<void> registrarNuevoUsuario(BuildContext context) async {
     try {
-      usuario = (await auth.createUserWithEmailAndPassword(
-              email: _emailController.text.trim(),
-              password: _contrasenaController1.text.trim()))
-          .user!;
+      await auth.createUserWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _contrasenaController1.text.trim());
       mostrarSnackBar("Usuario creado correctamente", context);
       Navigator.pop(context);
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const Home()));
     } on FirebaseAuthException catch (e) {
-      if (e.code == "weak-password") {
-        mostrarSnackBar("Contraseña demasidado débil", context);
-      } else if (e.code == "email-already-in-use") {
-        mostrarSnackBar("Ese usuario ya existe", context);
+      if (e.code == "email-already-in-use") {
+        mostrarSnackBar(
+            "Ya existe un usuario con ese correo electrónico.", context);
       } else {
         mostrarSnackBar("Lo sentimos, hubo un error", context);
       }

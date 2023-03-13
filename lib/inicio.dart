@@ -18,23 +18,27 @@ class Home extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        leading: Container(),
-        title: TextButton.icon(
-          onPressed: () {
-            _salir(context);
-          },
-          label: const Text('Salir',
-              style: TextStyle(fontSize: 25, color: Colors.white)),
-          icon: const Icon(
-            Icons.logout,
-            color: Colors.white70,
+          leading: Container(),
+          leadingWidth: 0,
+          title: TextButton.icon(
+            onPressed: () {
+              _cerrarSesion(context);
+            },
+            label: const Text('Cerrar sesión',
+                style: TextStyle(
+                  fontSize: 22,
+                  color: Colors.white,
+                )),
+            icon: const Icon(
+              Icons.logout,
+              color: Colors.white,
+              size: 25,
+            ),
           ),
-        ),
-        backgroundColor: Colors.lightBlue[900],
-      ),
+          backgroundColor: Colors.lightBlue[900]),
       body: Center(
         child: Text(
-          'Bienvenido \n' + email!,
+          'Bienvenido \n $email',
           style: const TextStyle(fontSize: 25),
           textAlign: TextAlign.center,
         ),
@@ -42,7 +46,7 @@ class Home extends StatelessWidget {
     );
   }
 
-  void _salir(BuildContext context) async {
+  void _cerrarSesion(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
     Navigator.pop(context);
   }
