@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:goshopp/screens/login/inicio.dart';
+import 'package:goshopp/screens/inicio.dart';
 import 'package:goshopp/screens/login/auxiliar_login.dart';
 
 class PaginaRegistro extends StatefulWidget {
@@ -13,8 +13,8 @@ class PaginaRegistro extends StatefulWidget {
 }
 
 class PaginaRegistroState extends State<PaginaRegistro> {
-  final bool _contrasenaVisible1 = false;
-  final bool _contrasenaVisible2 = false;
+  static bool _contrasenaVisible1 = false;
+  static bool _contrasenaVisible2 = false;
   static bool visible = false;
   FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -68,21 +68,116 @@ class PaginaRegistroState extends State<PaginaRegistro> {
                     height: 80,
                   ),
                 ]),
+
+                // Mostrar campo de texto del formulario para el email
                 mostrarCampoTextoForm(_emailController, 'Email',
                     'Introduzca un correo electrónico válido'),
+
+                // Mostrar campo de texto del formulario para el nombre de usuario
                 mostrarCampoTextoForm(_usuarioController, 'Nombre de usuario',
                     'Introduzca un nombre de usuario'),
-                mostrarCampoPasswordForm(
-                    _contrasenaController1,
-                    _contrasenaVisible1,
-                    "Contraseña",
-                    "Debe tener al menos 6 caracteres"),
-                mostrarCampoPasswordForm(
-                    _contrasenaController2,
-                    _contrasenaVisible2,
-                    "Repetir contraseña",
-                    "Introduzca su contraseña de nuevo"),
+
+                // Introducir contraseña
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 15.0, right: 15.0, top: 10.0, bottom: 0.0),
+                  child: TextFormField(
+                    keyboardType: TextInputType.visiblePassword,
+                    controller: _contrasenaController1,
+                    obscureText: !_contrasenaVisible1,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                        prefixIcon: const Icon(
+                          Icons.lock_outline_rounded,
+                          color: Colors.white70,
+                        ),
+                        suffixIcon: IconButton(
+                            icon: Icon(
+                              // Según el valor de passwordVisible se elige el icono
+                              _contrasenaVisible1
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Colors.white70,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _contrasenaVisible1 = !_contrasenaVisible1;
+                              });
+                            }),
+                        filled: true,
+                        fillColor: Colors.black12,
+                        labelStyle: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
+                        hintStyle: const TextStyle(color: Colors.white54),
+                        enabledBorder: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                          borderSide:
+                              BorderSide(color: Colors.white, width: 0.5),
+                        ),
+                        focusedBorder: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                          borderSide:
+                              BorderSide(color: Colors.white, width: 1.5),
+                        ),
+                        labelText: "Contraseña",
+                        hintText: "Debe tener al menos 6 caracteres"),
+                  ),
+                ),
+
+                // Repetir contraseña
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 15.0, right: 15.0, top: 10.0, bottom: 0.0),
+                  child: TextFormField(
+                    keyboardType: TextInputType.visiblePassword,
+                    controller: _contrasenaController2,
+                    obscureText: !_contrasenaVisible2,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                        prefixIcon: const Icon(
+                          Icons.lock_outline_rounded,
+                          color: Colors.white70,
+                        ),
+                        suffixIcon: IconButton(
+                            icon: Icon(
+                              // Según el valor de passwordVisible se elige el icono
+                              _contrasenaVisible2
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Colors.white70,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _contrasenaVisible2 = !_contrasenaVisible2;
+                              });
+                            }),
+                        filled: true,
+                        fillColor: Colors.black12,
+                        labelStyle: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
+                        hintStyle: const TextStyle(color: Colors.white54),
+                        enabledBorder: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                          borderSide:
+                              BorderSide(color: Colors.white, width: 0.5),
+                        ),
+                        focusedBorder: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                          borderSide:
+                              BorderSide(color: Colors.white, width: 1.5),
+                        ),
+                        labelText: "Contraseña",
+                        hintText: "Intrduzca su contraseña de nuevo"),
+                  ),
+                ),
+
                 const SizedBox(height: 30),
+
+                // Botón que registra a un usuario en la aplicación
                 SizedBox(
                   height: 50,
                   width: 350,
@@ -136,6 +231,8 @@ class PaginaRegistroState extends State<PaginaRegistro> {
                     ),
                   ),
                 ),
+
+                // Barra de progreso del botón de registro
                 Visibility(
                   maintainSize: true,
                   maintainAnimation: true,
@@ -162,54 +259,6 @@ class PaginaRegistroState extends State<PaginaRegistro> {
   }
 
   // ================ Funciones auxiliares ================ //
-
-  // Función que muestra un campo de contraseña para un formulario.
-  Padding mostrarCampoPasswordForm(TextEditingController controller,
-      bool visible, String label, String hint) {
-    return Padding(
-      padding: const EdgeInsets.only(
-          left: 15.0, right: 15.0, top: 10.0, bottom: 0.0),
-      child: TextFormField(
-        keyboardType: TextInputType.visiblePassword,
-        controller: controller,
-        obscureText: !visible,
-        style: const TextStyle(color: Colors.white),
-        decoration: InputDecoration(
-            prefixIcon: const Icon(
-              Icons.lock_outline_rounded,
-              color: Colors.white70,
-            ),
-            suffixIcon: IconButton(
-                icon: Icon(
-                  // Según el valor de passwordVisible se elige el icono
-                  visible ? Icons.visibility : Icons.visibility_off,
-                  color: Colors.white70,
-                ),
-                onPressed: () {
-                  setState(() {
-                    visible = !visible;
-                  });
-                }),
-            filled: true,
-            fillColor: Colors.black12,
-            labelStyle: const TextStyle(
-              fontSize: 16,
-              color: Colors.white,
-            ),
-            hintStyle: const TextStyle(color: Colors.white54),
-            enabledBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(5.0)),
-              borderSide: BorderSide(color: Colors.white, width: 0.5),
-            ),
-            focusedBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(5.0)),
-              borderSide: BorderSide(color: Colors.white, width: 1.5),
-            ),
-            labelText: label,
-            hintText: hint),
-      ),
-    );
-  }
 
   @override
   void dispose() {

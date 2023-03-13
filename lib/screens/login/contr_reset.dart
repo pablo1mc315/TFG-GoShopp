@@ -37,14 +37,18 @@ class ResetPasswordState extends State<ResetPassword> {
               ),
               textAlign: TextAlign.center,
             ),
+
             // Mostrar el campo de texto del formulario para el email
             mostrarCampoTextoForm(_emailController, 'Email',
                 'Introduzca un correo electrónico válido'),
+
             const SizedBox(height: 30),
+
+            // Botón para envial el email de reseteo de contraseña
             SizedBox(
               height: 50,
               width: 350,
-              child: botonEnviarCorreoResetPassword(context),
+              child: botonEnviarCorreoResetPassword(context, _emailController),
             )
           ],
         ))));
@@ -53,13 +57,16 @@ class ResetPasswordState extends State<ResetPassword> {
   // ================ Funciones auxiliares ================ //
 
   // Botón que envía un correo para restablecer la contraseña
-  ElevatedButton botonEnviarCorreoResetPassword(BuildContext context) {
+  ElevatedButton botonEnviarCorreoResetPassword(
+      BuildContext context, TextEditingController controller) {
     return ElevatedButton(
       onPressed: () {
-        if (_emailController.text.isNotEmpty) {
+        if (controller.text.isNotEmpty) {
           FirebaseAuth.instance
-              .sendPasswordResetEmail(email: _emailController.text)
+              .sendPasswordResetEmail(email: controller.text)
               .then((value) => Navigator.of(context).pop());
+          mostrarSnackBar(
+              "Se ha enviado un correo a la dirección indicada.", context);
         }
       },
       style: ElevatedButton.styleFrom(

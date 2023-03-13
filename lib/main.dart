@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:goshopp/screens/login/contr_reset.dart';
-import 'package:goshopp/screens/login/inicio.dart';
+import 'package:goshopp/screens/inicio.dart';
 import 'package:goshopp/screens/login/registro.dart';
 import 'package:goshopp/screens/login/auxiliar_login.dart';
 
@@ -96,12 +96,63 @@ class _LoginState extends State<Login> {
                   ),
                 ),
               ),
+
               const SizedBox(height: 100),
+
+              // Introducir correo electrónico
               mostrarCampoTextoForm(_emailController, 'Email',
                   'Introduzca su correo electrónico'),
-              mostrarCampoPasswordForm(_contrasenaController,
-                  _contrasenaVisible, "Contraseña", "Introduzca su contraseña"),
+
+              // Introducir contraseña
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 15.0, right: 15.0, top: 10.0, bottom: 0.0),
+                child: TextFormField(
+                  keyboardType: TextInputType.visiblePassword,
+                  controller: _contrasenaController,
+                  obscureText: !_contrasenaVisible,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                      prefixIcon: const Icon(
+                        Icons.lock_outline_rounded,
+                        color: Colors.white70,
+                      ),
+                      suffixIcon: IconButton(
+                          icon: Icon(
+                            // Según el valor de passwordVisible se elige el icono
+                            _contrasenaVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: Colors.white70,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _contrasenaVisible = !_contrasenaVisible;
+                            });
+                          }),
+                      filled: true,
+                      fillColor: Colors.black12,
+                      labelStyle: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                      hintStyle: const TextStyle(color: Colors.white54),
+                      enabledBorder: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        borderSide: BorderSide(color: Colors.white, width: 0.5),
+                      ),
+                      focusedBorder: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                        borderSide: BorderSide(color: Colors.white, width: 1.5),
+                      ),
+                      labelText: "Contraseña",
+                      hintText: "Introduzca su contraseña"),
+                ),
+              ),
+
               const SizedBox(height: 20),
+
+              // Botón de inicio de sesión
               SizedBox(
                 height: 50,
                 width: 350,
@@ -141,6 +192,8 @@ class _LoginState extends State<Login> {
                   ),
                 ),
               ),
+
+              // Barra de progreso del botón de inicio de sesión
               Visibility(
                   maintainSize: true,
                   maintainAnimation: true,
@@ -157,6 +210,8 @@ class _LoginState extends State<Login> {
                             valueColor:
                                 const AlwaysStoppedAnimation(Colors.white),
                           )))),
+
+              // Botón de reseteo de contraseña
               SizedBox(
                 height: 30,
                 width: 300,
@@ -177,6 +232,8 @@ class _LoginState extends State<Login> {
                   ),
                 ),
               ),
+
+              // Botón de inicio de sesión con Google
               Container(
                 height: 60,
                 width: 350,
@@ -227,6 +284,8 @@ class _LoginState extends State<Login> {
                   ),
                 ),
               ),
+
+              // Barra de progreso del botón de inicio de sesión con Google
               Visibility(
                   maintainSize: true,
                   maintainAnimation: true,
@@ -243,6 +302,8 @@ class _LoginState extends State<Login> {
                             valueColor:
                                 const AlwaysStoppedAnimation(Colors.white),
                           )))),
+
+              // Botón para acceder a la página de registro
               SizedBox(
                 height: 30,
                 child: TextButton(
@@ -270,54 +331,6 @@ class _LoginState extends State<Login> {
   }
 
   // ================ Funciones auxiliares ================ //
-
-  // Función que muestra un campo de contraseña para un formulario.
-  Padding mostrarCampoPasswordForm(TextEditingController controller,
-      bool visible, String label, String hint) {
-    return Padding(
-      padding: const EdgeInsets.only(
-          left: 15.0, right: 15.0, top: 10.0, bottom: 0.0),
-      child: TextFormField(
-        keyboardType: TextInputType.visiblePassword,
-        controller: controller,
-        obscureText: !visible,
-        style: const TextStyle(color: Colors.white),
-        decoration: InputDecoration(
-            prefixIcon: const Icon(
-              Icons.lock_outline_rounded,
-              color: Colors.white70,
-            ),
-            suffixIcon: IconButton(
-                icon: Icon(
-                  // Según el valor de passwordVisible se elige el icono
-                  visible ? Icons.visibility : Icons.visibility_off,
-                  color: Colors.white70,
-                ),
-                onPressed: () {
-                  setState(() {
-                    visible = !visible;
-                  });
-                }),
-            filled: true,
-            fillColor: Colors.black12,
-            labelStyle: const TextStyle(
-              fontSize: 16,
-              color: Colors.white,
-            ),
-            hintStyle: const TextStyle(color: Colors.white54),
-            enabledBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(5.0)),
-              borderSide: BorderSide(color: Colors.white, width: 0.5),
-            ),
-            focusedBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(5.0)),
-              borderSide: BorderSide(color: Colors.white, width: 1.5),
-            ),
-            labelText: label,
-            hintText: hint),
-      ),
-    );
-  }
 
   // Función que inicia sesión en la aplicación mediante email y contraseña.
   Future<void> acceder(BuildContext context) async {
