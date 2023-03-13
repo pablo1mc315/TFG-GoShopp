@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
-import 'package:goshopp/contr_reset.dart';
-
-import 'package:goshopp/inicio.dart';
-import 'package:goshopp/registro.dart';
-import 'package:goshopp/auxiliar.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
+import 'package:goshopp/screens/login/contr_reset.dart';
+import 'package:goshopp/screens/login/inicio.dart';
+import 'package:goshopp/screens/login/registro.dart';
+import 'package:goshopp/screens/login/auxiliar_login.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,10 +57,10 @@ class _LoginState extends State<Login> {
   static bool visible = false;
   static bool googleVisible = false;
 
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _contrasenaController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _contrasenaController = TextEditingController();
 
   FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -97,82 +97,11 @@ class _LoginState extends State<Login> {
                 ),
               ),
               const SizedBox(height: 100),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: TextFormField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: const InputDecoration(
-                      prefixIcon: Icon(
-                        Icons.mail_outline_rounded,
-                        color: Colors.white70,
-                      ),
-                      filled: true,
-                      fillColor: Colors.black12,
-                      labelStyle: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                      ),
-                      hintStyle: TextStyle(
-                        color: Colors.white54,
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white, width: 0.5),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white, width: 1.5),
-                      ),
-                      labelText: 'Email',
-                      hintText: 'Introduzca su correo electrónico'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 15.0, right: 15.0, top: 10.0, bottom: 30.0),
-                child: TextFormField(
-                  controller: _contrasenaController,
-                  obscureText: !_contrasenaVisible,
-                  keyboardType: TextInputType.visiblePassword,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                      prefixIcon: const Icon(
-                        Icons.lock_outline_rounded,
-                        color: Colors.white70,
-                      ),
-                      suffixIcon: IconButton(
-                          icon: Icon(
-                            _contrasenaVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                            color: Colors.white70,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _contrasenaVisible = !_contrasenaVisible;
-                            });
-                          }),
-                      filled: true,
-                      fillColor: Colors.black12,
-                      labelStyle: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                      ),
-                      hintStyle: const TextStyle(
-                        color: Colors.white54,
-                      ),
-                      enabledBorder: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                        borderSide: BorderSide(color: Colors.white, width: 0.5),
-                      ),
-                      focusedBorder: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                        borderSide: BorderSide(color: Colors.white, width: 2),
-                      ),
-                      labelText: 'Contraseña',
-                      hintText: 'Introduzca su contraseña'),
-                ),
-              ),
+              mostrarCampoTextoForm(_emailController, 'Email',
+                  'Introduzca su correo electrónico'),
+              mostrarCampoPasswordForm(_contrasenaController,
+                  _contrasenaVisible, "Contraseña", "Introduzca su contraseña"),
+              const SizedBox(height: 20),
               SizedBox(
                 height: 50,
                 width: 350,
@@ -277,7 +206,7 @@ class _LoginState extends State<Login> {
                     child: Row(
                       children: <Widget>[
                         Image(
-                          image: AssetImage("images/google_logo.png"),
+                          image: AssetImage("assets/logos/google_logo.png"),
                           height: 30.0,
                         ),
                         Padding(
@@ -340,6 +269,57 @@ class _LoginState extends State<Login> {
     );
   }
 
+  // ================ Funciones auxiliares ================ //
+
+  // Función que muestra un campo de contraseña para un formulario.
+  Padding mostrarCampoPasswordForm(TextEditingController controller,
+      bool visible, String label, String hint) {
+    return Padding(
+      padding: const EdgeInsets.only(
+          left: 15.0, right: 15.0, top: 10.0, bottom: 0.0),
+      child: TextFormField(
+        keyboardType: TextInputType.visiblePassword,
+        controller: controller,
+        obscureText: !visible,
+        style: const TextStyle(color: Colors.white),
+        decoration: InputDecoration(
+            prefixIcon: const Icon(
+              Icons.lock_outline_rounded,
+              color: Colors.white70,
+            ),
+            suffixIcon: IconButton(
+                icon: Icon(
+                  // Según el valor de passwordVisible se elige el icono
+                  visible ? Icons.visibility : Icons.visibility_off,
+                  color: Colors.white70,
+                ),
+                onPressed: () {
+                  setState(() {
+                    visible = !visible;
+                  });
+                }),
+            filled: true,
+            fillColor: Colors.black12,
+            labelStyle: const TextStyle(
+              fontSize: 16,
+              color: Colors.white,
+            ),
+            hintStyle: const TextStyle(color: Colors.white54),
+            enabledBorder: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+              borderSide: BorderSide(color: Colors.white, width: 0.5),
+            ),
+            focusedBorder: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+              borderSide: BorderSide(color: Colors.white, width: 1.5),
+            ),
+            labelText: label,
+            hintText: hint),
+      ),
+    );
+  }
+
+  // Función que inicia sesión en la aplicación mediante email y contraseña.
   Future<void> acceder(BuildContext context) async {
     final formState = _formKey.currentState;
     if (formState!.validate()) {
@@ -364,6 +344,7 @@ class _LoginState extends State<Login> {
     }
   }
 
+  // Función que inicia sesión en la aplicación mediante cuenta de Google.
   Future<void> accederGoogle(BuildContext context) async {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final GoogleSignIn googleSignIn = GoogleSignIn();
@@ -390,10 +371,12 @@ class _LoginState extends State<Login> {
     }
   }
 
+  // Función que hace visible o no la barra de carga de progreso.
   void _cambiarEstadoIndicadorProgreso() {
     visible = !visible;
   }
 
+  // Función que hace visible o no la barra de carga de progreso de Google.
   void _cambiarEstadoIndicadorProgresoGoogle() {
     googleVisible = !googleVisible;
   }
