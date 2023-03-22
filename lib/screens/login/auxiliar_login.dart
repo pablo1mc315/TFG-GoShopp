@@ -5,8 +5,13 @@ import 'package:flutter/material.dart';
 // Función que muestra un SnackBar con información
 void mostrarSnackBar(String message, BuildContext context) async {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    content: Text(message),
-    duration: const Duration(milliseconds: 2000),
+    content: Text(
+      message,
+      style: const TextStyle(fontSize: 17),
+    ),
+    duration: const Duration(milliseconds: 2500),
+    backgroundColor: const Color.fromARGB(255, 160, 10, 0),
+    padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
   ));
 }
 
