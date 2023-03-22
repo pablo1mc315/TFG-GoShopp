@@ -8,6 +8,7 @@ import 'package:goshopp/screens/login/contr_reset.dart';
 import 'package:goshopp/screens/inicio.dart';
 import 'package:goshopp/screens/login/registro.dart';
 import 'package:goshopp/screens/login/auxiliar_login.dart';
+import 'package:goshopp/screens/login/verificacion.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -341,8 +342,17 @@ class _LoginState extends State<Login> {
         await auth.signInWithEmailAndPassword(
             email: _emailController.text.trim(),
             password: _contrasenaController.text.trim());
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const Home()));
+
+        if (auth.currentUser!.emailVerified) {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => const Home()));
+        } else {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const VerificacionCorreo()));
+        }
+
         setState(() {
           _cambiarEstadoIndicadorProgreso();
         });

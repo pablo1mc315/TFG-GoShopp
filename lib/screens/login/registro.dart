@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:goshopp/screens/inicio.dart';
 import 'package:goshopp/screens/login/auxiliar_login.dart';
+import 'package:goshopp/screens/login/verificacion.dart';
 
 class PaginaRegistro extends StatefulWidget {
   const PaginaRegistro({super.key});
@@ -277,8 +277,8 @@ class PaginaRegistroState extends State<PaginaRegistro> {
           password: _contrasenaController1.text.trim());
       mostrarSnackBar("Usuario creado correctamente", context);
       Navigator.pop(context);
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const Home()));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const VerificacionCorreo()));
     } on FirebaseAuthException catch (e) {
       if (e.code == "email-already-in-use") {
         mostrarSnackBar(
