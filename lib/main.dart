@@ -79,7 +79,7 @@ class _LoginState extends State<Login> {
 
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: Colors.lightBlue[900],
+      backgroundColor: const Color.fromARGB(255, 0, 100, 190),
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,

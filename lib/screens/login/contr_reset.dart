@@ -20,7 +20,7 @@ class ResetPasswordState extends State<ResetPassword> {
         appBar: AppBar(
           backgroundColor: Colors.black45,
         ),
-        backgroundColor: Colors.lightBlue[900],
+        backgroundColor: const Color.fromARGB(255, 0, 100, 190),
         // Body
         body: SingleChildScrollView(
             child: Form(
@@ -32,7 +32,7 @@ class ResetPasswordState extends State<ResetPassword> {
             const Text(
               'Introduzca su correo para restablecer su contraseña.',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 20,
                 color: Colors.white,
               ),
               textAlign: TextAlign.center,

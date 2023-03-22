@@ -35,7 +35,7 @@ class Home extends StatelessWidget {
               size: 25,
             ),
           ),
-          backgroundColor: Colors.lightBlue[900]),
+          backgroundColor: const Color.fromARGB(255, 0, 100, 190)),
       body: Center(
         child: Text(
           'Bienvenido \n $email',
