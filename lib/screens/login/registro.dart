@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:email_validator/email_validator.dart';
 
 import 'package:goshopp/screens/login/auxiliar_login.dart';
 import 'package:goshopp/screens/login/verificacion.dart';
@@ -189,7 +190,8 @@ class PaginaRegistroState extends State<PaginaRegistro> {
                           _contrasenaController2.text.isEmpty) {
                         mostrarSnackBar(
                             'Debe rellenar todos los campos.', context);
-                      } else if (!_emailController.text.contains('@')) {
+                      } else if (!EmailValidator.validate(
+                          _emailController.text)) {
                         mostrarSnackBar(
                             'El correo introducido no tiene un formato correcto.',
                             context);

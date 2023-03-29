@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -159,7 +160,7 @@ class _LoginState extends State<Login> {
                 width: 350,
                 child: ElevatedButton(
                   onPressed: () {
-                    if (!_emailController.text.contains('@')) {
+                    if (!EmailValidator.validate(_emailController.text)) {
                       mostrarSnackBar(
                           'El correo introducido no tiene un formato correcto.',
                           context);
@@ -357,9 +358,12 @@ class _LoginState extends State<Login> {
           _cambiarEstadoIndicadorProgreso();
         });
       } on FirebaseAuthException catch (e) {
-        if (e.code == "user-not-found" || e.code == "wrong-password")
+        if (e.code == "user-not-found" || e.code == "wrong-password") {
           mostrarSnackBar(
               "Los valores introducidos no son correctos.", context);
+        } else {
+          mostrarSnackBar("Asegúrese de rellenar todos los campos.", context);
+        }
         setState(() {
           _cambiarEstadoIndicadorProgreso();
         });
