@@ -306,7 +306,7 @@ class _LoginState extends State<Login> {
 
               // Botón para acceder a la página de registro
               SizedBox(
-                height: 30,
+                height: 35,
                 child: TextButton(
                   onPressed: () {
                     Navigator.push(
