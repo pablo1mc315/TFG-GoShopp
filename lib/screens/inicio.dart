@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
+import 'package:goshopp/main.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -48,6 +49,9 @@ class Home extends StatelessWidget {
 
   void _cerrarSesion(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
-    Navigator.pop(context);
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const MainPage()),
+        (route) => false);
   }
 }

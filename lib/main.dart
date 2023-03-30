@@ -10,6 +10,7 @@ import 'package:goshopp/screens/inicio.dart';
 import 'package:goshopp/screens/login/registro.dart';
 import 'package:goshopp/screens/login/auxiliar_login.dart';
 import 'package:goshopp/screens/login/verificacion.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,6 +59,7 @@ class _LoginState extends State<Login> {
   static bool _contrasenaVisible = false;
   static bool visible = false;
   static bool googleVisible = false;
+  bool checkBoxMarcado = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -68,6 +70,7 @@ class _LoginState extends State<Login> {
 
   @override
   void initState() {
+    _cargarCredencialesUsuario();
     super.initState();
     visible = false;
     googleVisible = false;
@@ -152,7 +155,22 @@ class _LoginState extends State<Login> {
                 ),
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
+
+              // Recordar mis credenciales
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Checkbox(
+                        value: checkBoxMarcado,
+                        side: const BorderSide(color: Colors.white, width: 2),
+                        activeColor: Colors.black45,
+                        onChanged: _recordarCredenciales),
+                    const Text("Recordar mis credenciales",
+                        style: TextStyle(fontSize: 17, color: Colors.white))
+                  ]),
+
+              const SizedBox(height: 10),
 
               // Botón de inicio de sesión
               SizedBox(
@@ -406,6 +424,42 @@ class _LoginState extends State<Login> {
   // Función que hace visible o no la barra de carga de progreso de Google.
   void _cambiarEstadoIndicadorProgresoGoogle() {
     googleVisible = !googleVisible;
+  }
+
+  // Función que controla el recordar o no las credenciales del usuario.
+  void _recordarCredenciales(bool? value) {
+    checkBoxMarcado = value!;
+    SharedPreferences.getInstance().then(
+      (prefs) {
+        prefs.setBool("recordarCredenciales", value);
+        prefs.setString('email', _emailController.text);
+        prefs.setString('password', _contrasenaController.text);
+      },
+    );
+    setState(() {
+      checkBoxMarcado = value;
+    });
+  }
+
+  // Función que carga o no los datos del usuario.
+  void _cargarCredencialesUsuario() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var email = prefs.getString("email") ?? "";
+      var password = prefs.getString("password") ?? "";
+      var recordarCredenciales = prefs.getBool("recordarCredenciales") ?? false;
+
+      if (recordarCredenciales) {
+        setState(() {
+          checkBoxMarcado = true;
+        });
+
+        _emailController.text = email;
+        _contrasenaController.text = password;
+      }
+    } catch (e) {
+      mostrarSnackBar("Lo sentimos, se ha producido un error.", context);
+    }
   }
 
   @override

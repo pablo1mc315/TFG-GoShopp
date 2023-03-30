@@ -38,6 +38,7 @@ dependencies:
 
   # Extra
   email_validator: '^2.1.16'
+  shared_preferences: '^2.0.20'
 
 
   # The following adds the Cupertino Icons font to your application.
