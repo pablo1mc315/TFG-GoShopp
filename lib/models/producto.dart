@@ -1,31 +1,36 @@
+// Enumerado que distingue los distintos tipos de productos que puede haber
+
+enum TipoProducto {
+  bricolaje,
+  bebida,
+  belleza,
+  comida,
+  deporte,
+  electrodomestico,
+  medicamento,
+  mobiliario,
+  ocio,
+  ropa,
+  tecnologia
+}
+
 // Clase que representa cada producto de una lista de la compra
 
 class Producto {
   // ======= ATRIBUTOS =======
 
-  String? _nombre;
-  double? _precio;
-  // Foto
-  final bool _estaComprado = false;
+  String? nombre;
+  double? precio;
+  int? cantidad;
+  String? medida;
+  TipoProducto? tipo;
+  bool? estaComprado;
 
   // ======= CONSTRUCTOR =======
 
-  Producto(String nombre, double precio) {
-    _nombre = nombre;
-    _precio = precio;
-  }
-
-  // ======= GETTERS =======
-
-  String? get nombre {
-    return _nombre;
-  }
-
-  double? get precio {
-    return _precio;
-  }
-
-  bool get estaComprado {
-    return _estaComprado;
+  Producto(String nombreProducto, double precioProducto) {
+    nombre = nombreProducto;
+    precio = precioProducto;
+    estaComprado = false;
   }
 }

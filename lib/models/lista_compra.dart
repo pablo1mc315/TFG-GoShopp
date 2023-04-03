@@ -7,29 +7,16 @@ class ListaCompra {
   // ======= ATRIBUTOS =======
 
   String? nombre;
-  Usuario? _propietario;
-  List<Producto>? _productosLista;
-  List<Producto>? _productosComprados;
+  Usuario? propietario;
+  List<Producto>? productosLista;
+  List<Producto>? productosComprados;
 
   // ======= CONSTRUCTOR =======
 
-  ListaCompra(String nombreLista, Usuario propietario) {
+  ListaCompra(String nombreLista, Usuario propietarioLista) {
     nombre = nombreLista;
-    _propietario = propietario;
-    _productosLista = [];
-  }
-
-  // ======= GETTERS =======
-
-  Usuario? get propietario {
-    return _propietario;
-  }
-
-  List<Producto>? get productosLista {
-    return _productosLista;
-  }
-
-  List<Producto>? get productosComprados {
-    return _productosComprados;
+    propietario = propietario;
+    productosLista = [];
+    productosComprados = [];
   }
 }
