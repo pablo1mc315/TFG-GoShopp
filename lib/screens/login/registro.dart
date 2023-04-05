@@ -274,9 +274,13 @@ class PaginaRegistroState extends State<PaginaRegistro> {
   // Función que registra un nuevo usuario mediante email y contraseña.
   Future<void> registrarNuevoUsuario(BuildContext context) async {
     try {
-      await auth.createUserWithEmailAndPassword(
+      final credenciales = await auth.createUserWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _contrasenaController1.text.trim());
+
+      await credenciales.user!
+          .updateDisplayName(_usuarioController.text.trim());
+
       mostrarSnackBar("Usuario creado correctamente", context);
       Navigator.pop(context);
       Navigator.push(context,

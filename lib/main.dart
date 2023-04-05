@@ -29,17 +29,6 @@ class MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-    _estaUsuarioAutenticado();
-  }
-
-  void _estaUsuarioAutenticado() {
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      if (user == null) {
-        print("Usuario no autenticado");
-      } else {
-        print("Usuario autenticado");
-      }
-    });
   }
 
   @override
