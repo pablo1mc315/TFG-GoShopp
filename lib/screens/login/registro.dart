@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -5,6 +8,7 @@ import 'package:email_validator/email_validator.dart';
 
 import 'package:goshopp/screens/login/auxiliar_login.dart';
 import 'package:goshopp/screens/login/verificacion.dart';
+import 'package:image_picker/image_picker.dart';
 
 class PaginaRegistro extends StatefulWidget {
   const PaginaRegistro({super.key});
@@ -18,6 +22,8 @@ class PaginaRegistroState extends State<PaginaRegistro> {
   static bool _contrasenaVisible2 = false;
   static bool visible = false;
   FirebaseAuth auth = FirebaseAuth.instance;
+  XFile? imagenPerfil;
+  String imagenbase64 = '';
 
   @override
   void initState() {
@@ -27,6 +33,7 @@ class PaginaRegistroState extends State<PaginaRegistro> {
 
   // Controladores de los campos del formulario
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final ImagePicker _imagenController = ImagePicker();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _usuarioController = TextEditingController();
   final TextEditingController _contrasenaController1 = TextEditingController();
@@ -46,11 +53,11 @@ class PaginaRegistroState extends State<PaginaRegistro> {
             key: _formKey,
             child: Column(
               children: <Widget>[
-                const Column(children: <Widget>[
-                  SizedBox(
-                    height: 150,
+                Column(children: <Widget>[
+                  const SizedBox(
+                    height: 100,
                   ),
-                  Text(
+                  const Text(
                     'Crea tu cuenta',
                     style: TextStyle(
                       fontSize: 35,
@@ -58,16 +65,40 @@ class PaginaRegistroState extends State<PaginaRegistro> {
                       color: Colors.white,
                     ),
                   ),
-                  Text(
+                  const Text(
                     'y únete a GoShopp',
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.white,
                     ),
                   ),
-                  SizedBox(
-                    height: 80,
+                  const SizedBox(
+                    height: 60,
                   ),
+                  GestureDetector(
+                      onTap: () async {
+                        imagenPerfil = await _imagenController.pickImage(
+                            source: ImageSource.gallery);
+
+                        if (imagenPerfil != null) {
+                          final bytes =
+                              File(imagenPerfil!.path).readAsBytesSync();
+                          imagenbase64 = base64Encode(bytes);
+                        }
+
+                        setState(() {});
+                      },
+                      child: imagenPerfil == null
+                          ? const Image(
+                              width: 160,
+                              height: 160,
+                              image: AssetImage("assets/img/profile.png"))
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(200),
+                              child: Image.file(File(imagenPerfil!.path)))),
+                  const SizedBox(
+                    height: 50,
+                  )
                 ]),
 
                 // Mostrar campo de texto del formulario para el email
