@@ -13,9 +13,6 @@ class Home extends StatelessWidget {
     ]);
 
     final User? usuario = FirebaseAuth.instance.currentUser;
-    String? email = "";
-
-    if (usuario != null) email = usuario.email;
 
     return Scaffold(
       appBar: AppBar(
@@ -39,7 +36,7 @@ class Home extends StatelessWidget {
           backgroundColor: const Color.fromARGB(255, 0, 100, 190)),
       body: Center(
         child: Text(
-          'Bienvenido \n $email',
+          'Bienvenido \n ${usuario!.displayName}',
           style: const TextStyle(fontSize: 25),
           textAlign: TextAlign.center,
         ),
