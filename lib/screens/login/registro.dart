@@ -1,6 +1,6 @@
-import 'dart:convert';
 import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,8 +22,8 @@ class PaginaRegistroState extends State<PaginaRegistro> {
   static bool _contrasenaVisible2 = false;
   static bool visible = false;
   FirebaseAuth auth = FirebaseAuth.instance;
+  final almacen = FirebaseStorage.instance;
   XFile? imagenPerfil;
-  String imagenbase64 = '';
 
   @override
   void initState() {
@@ -73,31 +73,47 @@ class PaginaRegistroState extends State<PaginaRegistro> {
                     ),
                   ),
                   const SizedBox(
-                    height: 60,
+                    height: 40,
                   ),
-                  GestureDetector(
-                      onTap: () async {
-                        imagenPerfil = await _imagenController.pickImage(
-                            source: ImageSource.gallery);
 
-                        if (imagenPerfil != null) {
-                          final bytes =
-                              File(imagenPerfil!.path).readAsBytesSync();
-                          imagenbase64 = base64Encode(bytes);
-                        }
+                  // Mostrar selector de imagen de perfil
+                  Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 7),
+                        child: Center(
+                            child: imagenPerfil == null
+                                ? const Image(
+                                    width: 160,
+                                    height: 160,
+                                    image: AssetImage("assets/img/profile.png"))
+                                : ClipRRect(
+                                    borderRadius: BorderRadius.circular(200),
+                                    child: Image.file(
+                                      File(imagenPerfil!.path),
+                                      width: 160,
+                                      height: 160,
+                                    ))),
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          imagenPerfil = await _imagenController.pickImage(
+                              source: ImageSource.gallery);
 
-                        setState(() {});
-                      },
-                      child: imagenPerfil == null
-                          ? const Image(
-                              width: 160,
-                              height: 160,
-                              image: AssetImage("assets/img/profile.png"))
-                          : ClipRRect(
-                              borderRadius: BorderRadius.circular(200),
-                              child: Image.file(File(imagenPerfil!.path)))),
+                          setState(() {});
+                        },
+                        child: const CircleAvatar(
+                          radius: 16,
+                          backgroundColor: Colors.black,
+                          child: Icon(Icons.add),
+                        ),
+                      )
+                    ],
+                  ),
+
                   const SizedBox(
-                    height: 50,
+                    height: 40,
                   )
                 ]),
 
@@ -202,7 +218,7 @@ class PaginaRegistroState extends State<PaginaRegistro> {
                           borderSide:
                               BorderSide(color: Colors.white, width: 1.5),
                         ),
-                        labelText: "Contraseña",
+                        labelText: "Repita su contraseña",
                         hintText: "Intrduzca su contraseña de nuevo"),
                   ),
                 ),
@@ -305,12 +321,25 @@ class PaginaRegistroState extends State<PaginaRegistro> {
   // Función que registra un nuevo usuario mediante email y contraseña.
   Future<void> registrarNuevoUsuario(BuildContext context) async {
     try {
+      // Registramos el usuario con email y password
       final credenciales = await auth.createUserWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _contrasenaController1.text.trim());
 
+      // Añadimos nombre de usuario
       await credenciales.user!
           .updateDisplayName(_usuarioController.text.trim());
+
+      // Añadimos imagen de perfil
+      // final String nombreFichero = imagenPerfil!.path.split("/").last;
+      // final ref = almacen.ref().child("ImagenesPerfil/$nombreFichero");
+      // final UploadTask tarea = ref.putFile(File(imagenPerfil!.path));
+      // final TaskSnapshot snapshot = await tarea.whenComplete(() => true);
+      // final String url = await snapshot.ref.getDownloadURL();
+      // print(url);
+
+      // await credenciales.user!.updatePhotoURL(url);
+      // print(credenciales.user!.photoURL);
 
       mostrarSnackBar("Usuario creado correctamente", context);
       Navigator.pop(context);
@@ -324,7 +353,8 @@ class PaginaRegistroState extends State<PaginaRegistro> {
         mostrarSnackBar("Lo sentimos, hubo un error", context);
       }
     } catch (e) {
-      mostrarSnackBar("Lo sentimos, hubo un error", context);
+      mostrarSnackBar(e.toString(), context);
+      print(e.toString());
     } finally {
       setState(() {
         cambiarVisibilidadIndicadorProgreso();
