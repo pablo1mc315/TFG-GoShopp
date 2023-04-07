@@ -94,8 +94,11 @@ class _LoginState extends State<Login> {
               const SizedBox(height: 100),
 
               // Introducir correo electrónico
-              mostrarCampoTextoForm(_emailController, 'Email',
-                  'Introduzca su correo electrónico'),
+              mostrarCampoTextoForm(
+                  _emailController,
+                  'Email',
+                  'Introduzca su correo electrónico',
+                  Icons.mail_outline_rounded),
 
               // Introducir contraseña
               Padding(

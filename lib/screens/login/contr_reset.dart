@@ -39,8 +39,11 @@ class ResetPasswordState extends State<ResetPassword> {
             ),
 
             // Mostrar el campo de texto del formulario para el email
-            mostrarCampoTextoForm(_emailController, 'Email',
-                'Introduzca un correo electrónico válido'),
+            mostrarCampoTextoForm(
+                _emailController,
+                'Email',
+                'Introduzca un correo electrónico válido',
+                Icons.mail_outline_rounded),
 
             const SizedBox(height: 30),
 

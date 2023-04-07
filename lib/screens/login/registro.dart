@@ -118,12 +118,18 @@ class PaginaRegistroState extends State<PaginaRegistro> {
                 ]),
 
                 // Mostrar campo de texto del formulario para el email
-                mostrarCampoTextoForm(_emailController, 'Email',
-                    'Introduzca un correo electrónico válido'),
+                mostrarCampoTextoForm(
+                    _emailController,
+                    'Email',
+                    'Introduzca un correo electrónico válido',
+                    Icons.mail_outline_rounded),
 
                 // Mostrar campo de texto del formulario para el nombre de usuario
-                mostrarCampoTextoForm(_usuarioController, 'Nombre de usuario',
-                    'Introduzca un nombre de usuario'),
+                mostrarCampoTextoForm(
+                    _usuarioController,
+                    'Nombre de usuario',
+                    'Introduzca un nombre de usuario',
+                    Icons.person_outline_rounded),
 
                 // Introducir contraseña
                 Padding(

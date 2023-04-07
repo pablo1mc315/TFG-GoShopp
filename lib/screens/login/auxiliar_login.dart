@@ -16,8 +16,8 @@ void mostrarSnackBar(String message, BuildContext context) async {
 }
 
 // Función que muestra un campo de texto para un formulario.
-Padding mostrarCampoTextoForm(
-    TextEditingController controller, String label, String hint) {
+Padding mostrarCampoTextoForm(TextEditingController controller, String label,
+    String hint, IconData icono) {
   return Padding(
     padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 10, bottom: 0),
     child: TextFormField(
@@ -25,8 +25,8 @@ Padding mostrarCampoTextoForm(
       keyboardType: TextInputType.emailAddress,
       style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
-          prefixIcon: const Icon(
-            Icons.mail_outline_rounded,
+          prefixIcon: Icon(
+            icono,
             color: Colors.white70,
           ),
           filled: true,
