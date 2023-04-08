@@ -14,32 +14,132 @@ class Home extends StatelessWidget {
 
     final User? usuario = FirebaseAuth.instance.currentUser;
 
-    return Scaffold(
-      appBar: AppBar(
-          leading: Container(),
-          leadingWidth: 0,
-          title: TextButton.icon(
-            onPressed: () {
-              _cerrarSesion(context);
-            },
-            label: const Text('Cerrar sesión',
-                style: TextStyle(
-                  fontSize: 22,
-                  color: Colors.white,
-                )),
-            icon: const Icon(
-              Icons.logout,
-              color: Colors.white,
-              size: 25,
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+            toolbarHeight: 75,
+            iconTheme: const IconThemeData(size: 35, color: Colors.white),
+            centerTitle: true,
+            title: const Text(
+              "GoShopp",
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
-          ),
-          backgroundColor: const Color.fromARGB(255, 0, 100, 190)),
-      body: Center(
-        child: Text(
-          'Bienvenido \n ${usuario!.displayName}',
-          style: const TextStyle(fontSize: 25),
-          textAlign: TextAlign.center,
+            backgroundColor: const Color.fromARGB(255, 0, 100, 190),
+            bottom: const TabBar(indicatorColor: Colors.white, tabs: <Widget>[
+              Tab(text: "Mis Grupos"),
+              Tab(text: "Mis Listas")
+            ])),
+
+        // Barra lateral
+        drawer: Drawer(
+          backgroundColor: const Color.fromARGB(255, 0, 40, 76),
+          elevation: 50,
+          child: Column(children: <Widget>[
+            // Imagen de perfil o, en caso de que no exista, la inicial
+            Padding(
+              padding: const EdgeInsets.only(top: 120, bottom: 30),
+              child: CircleAvatar(
+                  radius: 60,
+                  backgroundColor: Colors.white,
+                  child: usuario!.photoURL == null
+                      ? Text(
+                          usuario.displayName![0].toUpperCase(),
+                          style: const TextStyle(
+                              fontSize: 75,
+                              color: Color.fromARGB(255, 0, 40, 76)),
+                        )
+                      : Image.network(usuario.photoURL.toString())),
+            ),
+
+            // Nombre de usuario
+            Text(
+              "@${usuario.displayName}",
+              style: const TextStyle(fontSize: 23, color: Colors.white),
+            ),
+
+            const SizedBox(height: 30),
+
+            // Botón de editar perfil
+            SizedBox(
+                height: 50,
+                width: 250,
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Navegar hacia "Editar perfil"
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    elevation: 8,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      side: const BorderSide(
+                        color: Colors.white70,
+                        width: 2,
+                      ),
+                    ),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                    child: Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.edit_note,
+                          size: 35,
+                        ),
+                        Padding(
+                            padding: EdgeInsets.only(left: 15),
+                            child: Text('Editar perfil',
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  color: Colors.white,
+                                )))
+                      ],
+                    ),
+                  ),
+                )),
+
+            const SizedBox(height: 10),
+
+            // Botón de cerrar sesión
+            SizedBox(
+              height: 50,
+              width: 250,
+              child: ElevatedButton(
+                onPressed: () {
+                  _cerrarSesion(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.black45,
+                  shadowColor: Colors.black45,
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    side: const BorderSide(
+                      color: Colors.white70,
+                      width: 2,
+                    ),
+                  ),
+                ),
+                child: const Text('Cerrar sesión',
+                    style: TextStyle(
+                      fontSize: 22,
+                      color: Colors.white,
+                    )),
+              ),
+            ),
+          ]),
         ),
+
+        // Body
+        body: const TabBarView(children: <Widget>[
+          // Pestaña "Mis Grupos"
+          Center(child: Text("Mostrar aquí los grupos")),
+
+          // Pestaña "Mis Listas"
+          Center(child: Text("Mostrar aquí las listas"))
+        ]),
       ),
     );
   }
