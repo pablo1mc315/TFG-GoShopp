@@ -101,6 +101,47 @@ class Home extends StatelessWidget {
 
             const SizedBox(height: 10),
 
+            // Botón de información
+            SizedBox(
+                height: 50,
+                width: 250,
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Navegar hacia "Acerca de"
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    elevation: 8,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      side: const BorderSide(
+                        color: Colors.white70,
+                        width: 2,
+                      ),
+                    ),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                    child: Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.info_outline,
+                          size: 35,
+                        ),
+                        Padding(
+                            padding: EdgeInsets.only(left: 15),
+                            child: Text('Sobre nosotros',
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  color: Colors.white,
+                                )))
+                      ],
+                    ),
+                  ),
+                )),
+
+            const SizedBox(height: 10),
+
             // Botón de cerrar sesión
             SizedBox(
               height: 50,
