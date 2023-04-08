@@ -7,6 +7,7 @@ class ListaCompra {
   // ======= ATRIBUTOS =======
 
   String? nombre;
+  String? descripcion;
   Usuario? propietario;
   List<Producto>? productosLista;
   List<Producto>? productosComprados;
