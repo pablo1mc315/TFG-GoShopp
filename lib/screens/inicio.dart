@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:goshopp/main.dart';
 
+import 'info.dart';
+
 class Home extends StatelessWidget {
   const Home({super.key});
 
@@ -85,7 +87,7 @@ class Home extends StatelessWidget {
                       children: <Widget>[
                         Icon(
                           Icons.edit_note,
-                          size: 35,
+                          size: 30,
                         ),
                         Padding(
                             padding: EdgeInsets.only(left: 15),
@@ -107,7 +109,8 @@ class Home extends StatelessWidget {
                 width: 250,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Navegar hacia "Acerca de"
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const Info()));
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,
@@ -126,7 +129,7 @@ class Home extends StatelessWidget {
                       children: <Widget>[
                         Icon(
                           Icons.info_outline,
-                          size: 35,
+                          size: 30,
                         ),
                         Padding(
                             padding: EdgeInsets.only(left: 15),
