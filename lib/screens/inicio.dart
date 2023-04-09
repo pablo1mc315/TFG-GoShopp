@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:goshopp/main.dart';
+import 'package:goshopp/screens/usuarios/editar.dart';
 
 import 'info.dart';
 
@@ -68,7 +69,11 @@ class Home extends StatelessWidget {
                 width: 250,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Navegar hacia "Editar perfil"
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                const EditarPerfil()));
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,
