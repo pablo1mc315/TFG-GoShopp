@@ -6,8 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:email_validator/email_validator.dart';
 
-import 'package:goshopp/screens/login/auxiliar_login.dart';
-import 'package:goshopp/screens/login/verificacion.dart';
+import 'package:goshopp/screens/usuarios/auxiliar_login.dart';
+import 'package:goshopp/screens/usuarios/verificacion.dart';
 import 'package:image_picker/image_picker.dart';
 
 class PaginaRegistro extends StatefulWidget {

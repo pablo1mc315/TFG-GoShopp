@@ -5,11 +5,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import 'package:goshopp/screens/login/contr_reset.dart';
+import 'package:goshopp/screens/usuarios/contr_reset.dart';
 import 'package:goshopp/screens/inicio.dart';
-import 'package:goshopp/screens/login/registro.dart';
-import 'package:goshopp/screens/login/auxiliar_login.dart';
-import 'package:goshopp/screens/login/verificacion.dart';
+import 'package:goshopp/screens/usuarios/registro.dart';
+import 'package:goshopp/screens/usuarios/auxiliar_login.dart';
+import 'package:goshopp/screens/usuarios/verificacion.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
