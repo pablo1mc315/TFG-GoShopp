@@ -41,19 +41,23 @@ class Home extends StatelessWidget {
           child: Column(children: <Widget>[
             // Imagen de perfil o, en caso de que no exista, la inicial
             Padding(
-              padding: const EdgeInsets.only(top: 120, bottom: 30),
-              child: CircleAvatar(
-                  radius: 60,
-                  backgroundColor: Colors.white,
-                  child: usuario!.photoURL == null
-                      ? Text(
-                          usuario.displayName![0].toUpperCase(),
-                          style: const TextStyle(
-                              fontSize: 75,
-                              color: Color.fromARGB(255, 0, 40, 76)),
-                        )
-                      : Image.network(usuario.photoURL.toString())),
-            ),
+                padding: const EdgeInsets.only(top: 120, bottom: 30),
+                child: CircleAvatar(
+                    radius: 60,
+                    backgroundColor: Colors.white,
+                    child: usuario!.photoURL == null
+                        ? Text(
+                            usuario.displayName![0].toUpperCase(),
+                            style: const TextStyle(
+                                fontSize: 75,
+                                color: Color.fromARGB(255, 0, 40, 76)),
+                          )
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(200),
+                            child: Image.network(
+                              usuario.photoURL.toString(),
+                              scale: 0.5,
+                            )))),
 
             // Nombre de usuario
             Text(
