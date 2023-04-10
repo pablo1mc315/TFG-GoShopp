@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:goshopp/main.dart';
+import 'package:goshopp/screens/listas.dart';
 import 'package:goshopp/screens/usuarios/editar.dart';
 
 import 'info.dart';
@@ -191,7 +192,7 @@ class Home extends StatelessWidget {
           Center(child: Text("Mostrar aquí los grupos")),
 
           // Pestaña "Mis Listas"
-          Center(child: Text("Mostrar aquí las listas"))
+          Center(child: ListasPersonales())
         ]),
       ),
     );

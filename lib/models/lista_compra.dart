@@ -14,8 +14,9 @@ class ListaCompra {
 
   // ======= CONSTRUCTOR =======
 
-  ListaCompra(String nombreLista, Usuario propietarioLista) {
-    nombre = nombreLista;
+  ListaCompra(String n, String d, Usuario p) {
+    nombre = n;
+    descripcion = d;
     propietario = propietario;
     productosLista = [];
     productosComprados = [];
