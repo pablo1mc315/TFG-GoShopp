@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:goshopp/main.dart';
-import 'package:goshopp/screens/listas.dart';
+import 'package:goshopp/screens/listas/listas.dart';
 import 'package:goshopp/screens/usuarios/editar.dart';
 
 import 'info.dart';
@@ -187,9 +187,9 @@ class Home extends StatelessWidget {
         ),
 
         // Body
-        body: const TabBarView(children: <Widget>[
+        body: TabBarView(children: <Widget>[
           // Pestaña "Mis Grupos"
-          Center(child: Text("Mostrar aquí los grupos")),
+          const Center(child: Text("Mostrar aquí los grupos")),
 
           // Pestaña "Mis Listas"
           Center(child: ListasPersonales())

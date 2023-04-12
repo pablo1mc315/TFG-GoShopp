@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,7 +21,6 @@ class PaginaRegistroState extends State<PaginaRegistro> {
   static bool _contrasenaVisible2 = false;
   static bool visible = false;
   FirebaseAuth auth = FirebaseAuth.instance;
-  final almacen = FirebaseStorage.instance;
   XFile? imagenPerfil;
 
   @override
@@ -335,17 +333,6 @@ class PaginaRegistroState extends State<PaginaRegistro> {
       // Añadimos nombre de usuario
       await credenciales.user!
           .updateDisplayName(_usuarioController.text.trim());
-
-      // Añadimos imagen de perfil
-      // final String nombreFichero = imagenPerfil!.path.split("/").last;
-      // final ref = almacen.ref().child("ImagenesPerfil/$nombreFichero");
-      // final UploadTask tarea = ref.putFile(File(imagenPerfil!.path));
-      // final TaskSnapshot snapshot = await tarea.whenComplete(() => true);
-      // final String url = await snapshot.ref.getDownloadURL();
-      // print(url);
-
-      // await credenciales.user!.updatePhotoURL(url);
-      // print(credenciales.user!.photoURL);
 
       mostrarSnackBar("Usuario creado correctamente", context);
       Navigator.pop(context);

@@ -12,7 +12,7 @@ import 'package:goshopp/screens/usuarios/auxiliar_login.dart';
 import 'package:goshopp/screens/usuarios/verificacion.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const MainPage());
