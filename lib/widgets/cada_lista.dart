@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:goshopp/models/tipoproducto.dart';
 
-class ProductoWidget extends StatelessWidget {
+class CadaListaWidget extends StatelessWidget {
   final String? nombre;
-  final double? precio;
-  final int? cantidad;
-  final String? medida;
-  final TipoProducto? tipo;
-  final bool? estaComprado;
+  final String? descripcion;
 
-  ProductoWidget(this.nombre, this.precio, this.cantidad, this.medida,
-      this.tipo, this.estaComprado);
+  CadaListaWidget(this.nombre, this.descripcion);
 
   @override
   Widget build(BuildContext context) {
@@ -31,17 +25,16 @@ class ProductoWidget extends StatelessWidget {
               onPressed: null,
               child: Wrap(
                 children: <Widget>[
-                  Row(
-                    children: [Text(nombre.toString())],
+                  Column(
+                    children: [
+                      Text(nombre.toString()),
+                      Text(descripcion.toString())
+                    ],
                   )
                 ],
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 1),
-            child: Text("$precio euros"),
-          )
         ],
       ),
     );
