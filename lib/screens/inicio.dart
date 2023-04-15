@@ -218,10 +218,11 @@ class _HomeState extends State<Home> {
   }
 
   void _cerrarSesion(BuildContext context) async {
-    await FirebaseAuth.instance.signOut();
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => const MainPage()),
-        (route) => false);
+    await FirebaseAuth.instance.signOut().then((value) {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const MainPage()),
+          (route) => false);
+    });
   }
 }

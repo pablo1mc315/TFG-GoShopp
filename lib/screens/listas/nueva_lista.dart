@@ -1,11 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:goshopp/models/lista_compra.dart';
-import 'package:goshopp/models/usuario.dart';
 import 'package:goshopp/screens/usuarios/auxiliar_login.dart';
 
 class NuevaLista extends StatefulWidget {
-  NuevaLista({super.key});
+  const NuevaLista({super.key});
 
   @override
   State<NuevaLista> createState() => _NuevaListaState();
@@ -19,9 +16,6 @@ class _NuevaListaState extends State<NuevaLista> {
 
   @override
   Widget build(BuildContext context) {
-    final usuario = Usuario(FirebaseAuth.instance.currentUser!.email.toString(),
-        FirebaseAuth.instance.currentUser!.displayName.toString(), "");
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 0, 100, 190),
@@ -109,8 +103,8 @@ class _NuevaListaState extends State<NuevaLista> {
                         mostrarSnackBar(
                             'El título es un campo obligatorio.', context);
                       } else {
-                        final lista = ListaCompra(_tituloController.text,
-                            _descripcionController.text);
+                        // final lista = ListaCompra(_tituloController.text,
+                        //     _descripcionController.text);
                         // crearNuevaLista(context, lista);
                       }
                     },

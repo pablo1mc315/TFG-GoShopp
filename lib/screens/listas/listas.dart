@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:goshopp/models/lista_compra.dart';
 import 'package:goshopp/screens/listas/nueva_lista.dart';
-import 'package:goshopp/widgets/cada_lista.dart';
 
 class ListasPersonales extends StatefulWidget {
   const ListasPersonales({super.key});
@@ -27,7 +25,8 @@ class _ListasPersonalesState extends State<ListasPersonales> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (BuildContext context) => NuevaLista()));
+                              builder: (BuildContext context) =>
+                                  const NuevaLista()));
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 0, 100, 190),

@@ -44,10 +44,10 @@ class Login extends StatefulWidget {
   const Login({super.key});
 
   @override
-  _LoginState createState() => _LoginState();
+  LoginState createState() => LoginState();
 }
 
-class _LoginState extends State<Login> {
+class LoginState extends State<Login> {
   static bool _contrasenaVisible = false;
   static bool visible = false;
   static bool googleVisible = false;
@@ -353,19 +353,21 @@ class _LoginState extends State<Login> {
     if (formState!.validate()) {
       formState.save();
       try {
-        await auth.signInWithEmailAndPassword(
-            email: _emailController.text.trim(),
-            password: _contrasenaController.text.trim());
-
-        if (auth.currentUser!.emailVerified) {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => const Home()));
-        } else {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const VerificacionCorreo()));
-        }
+        await auth
+            .signInWithEmailAndPassword(
+                email: _emailController.text.trim(),
+                password: _contrasenaController.text.trim())
+            .then((value) {
+          if (auth.currentUser!.emailVerified) {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => const Home()));
+          } else {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const VerificacionCorreo()));
+          }
+        });
 
         setState(() {
           _cambiarEstadoIndicadorProgreso();
@@ -398,10 +400,11 @@ class _LoginState extends State<Login> {
       final AuthCredential credential = GoogleAuthProvider.credential(
           accessToken: googleSignInAuthentication.accessToken,
           idToken: googleSignInAuthentication.idToken);
-      await auth.signInWithCredential(credential);
-      _formKey.currentState!.save();
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const Home()));
+      await auth.signInWithCredential(credential).then((value) {
+        _formKey.currentState!.save();
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const Home()));
+      });
     } catch (e) {
       mostrarSnackBar("Lo sentimos, se produjo un error", context);
     } finally {

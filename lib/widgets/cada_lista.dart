@@ -4,7 +4,7 @@ class CadaListaWidget extends StatelessWidget {
   final String? nombre;
   final String? descripcion;
 
-  CadaListaWidget(this.nombre, this.descripcion);
+  const CadaListaWidget(this.nombre, this.descripcion, {super.key});
 
   @override
   Widget build(BuildContext context) {
