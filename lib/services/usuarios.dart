@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:goshopp/models/usuario.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
@@ -24,4 +25,12 @@ Future<void> addUsuario(Usuario usuario, String id) async {
   };
 
   await db.collection('usuarios').doc(id).set(datosUsuario);
+}
+
+// Actualizar el nombre de usuario
+Future<void> modificarNombreUsuario(String uid, String nuevoNombre) async {
+  await db
+      .collection('usuarios')
+      .doc(uid)
+      .update({"nombreUsuario": nuevoNombre});
 }

@@ -3,12 +3,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:goshopp/main.dart';
 import 'package:goshopp/screens/listas/listas.dart';
+import 'package:goshopp/screens/usuarios/editar.dart';
 import 'package:goshopp/services/usuarios.dart';
 import 'package:goshopp/screens/info.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({super.key});
 
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -78,12 +84,14 @@ class Home extends StatelessWidget {
                         height: 50,
                         width: 250,
                         child: ElevatedButton(
-                          onPressed: () {
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (BuildContext context) =>
-                            //             const EditarPerfil()));
+                          onPressed: () async {
+                            await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        const EditarPerfil())).then((value) {
+                              setState(() {});
+                            });
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,
