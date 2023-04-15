@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:goshopp/models/usuario.dart';
 
 import 'package:goshopp/screens/usuarios/auxiliar_login.dart';
 import 'package:goshopp/screens/usuarios/verificacion.dart';
+import 'package:goshopp/services/usuarios.dart';
 import 'package:image_picker/image_picker.dart';
 
 class PaginaRegistro extends StatefulWidget {
@@ -331,13 +333,23 @@ class PaginaRegistroState extends State<PaginaRegistro> {
           password: _contrasenaController1.text.trim());
 
       // Añadimos nombre de usuario
-      await credenciales.user!
-          .updateDisplayName(_usuarioController.text.trim());
+      await credenciales.user!.updateDisplayName(_usuarioController.text);
 
-      mostrarSnackBar("Usuario creado correctamente", context);
-      Navigator.pop(context);
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const VerificacionCorreo()));
+      // TODO: añadir la url de la imagen de perfil seleccionada
+      String url = '';
+
+      // Añadimos también el usuario creado a la base de datos
+      Usuario nuevoUsuario =
+          Usuario(_emailController.text, _usuarioController.text, url);
+
+      await addUsuario(nuevoUsuario, credenciales.user!.uid).then((_) {
+        mostrarSnackBar("Usuario creado correctamente", context);
+        Navigator.pop(context);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const VerificacionCorreo()));
+      });
     } on FirebaseAuthException catch (e) {
       if (e.code == "email-already-in-use") {
         mostrarSnackBar(
@@ -347,7 +359,6 @@ class PaginaRegistroState extends State<PaginaRegistro> {
       }
     } catch (e) {
       mostrarSnackBar(e.toString(), context);
-      print(e.toString());
     } finally {
       setState(() {
         cambiarVisibilidadIndicadorProgreso();

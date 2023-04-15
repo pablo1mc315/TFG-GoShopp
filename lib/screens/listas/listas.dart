@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:goshopp/models/lista_compra.dart';
-import 'package:goshopp/db/lista_compra_db.dart';
 import 'package:goshopp/screens/listas/nueva_lista.dart';
 import 'package:goshopp/widgets/cada_lista.dart';
 
 class ListasPersonales extends StatefulWidget {
-  ListasPersonales({super.key});
-
-  final listaCompraDB = ListaCompraDB();
+  const ListasPersonales({super.key});
 
   @override
   State<ListasPersonales> createState() => _ListasPersonalesState();
@@ -52,22 +48,22 @@ class _ListasPersonalesState extends State<ListasPersonales> {
                   )),
 
               // Mostramos cada una de las listas del usuario
-              _mostrarListas(),
+              //_mostrarListas(),
             ],
           )),
     );
   }
 
-  Widget _mostrarListas() {
-    return Expanded(
-        child: FirebaseAnimatedList(
-      query: widget.listaCompraDB.getListas(),
-      itemBuilder: (context, snapshot, animation, index) {
-        final json = snapshot.value as Map<dynamic, dynamic>;
-        final lista = ListaCompra.fromJson(json);
+  // Widget _mostrarListas() {
+  //   return Expanded(
+  //       child: FirebaseAnimatedList(
+  //     query: widget.listaCompraDB.getListas(),
+  //     itemBuilder: (context, snapshot, animation, index) {
+  //       final json = snapshot.value as Map<dynamic, dynamic>;
+  //       final lista = ListaCompra.fromJson(json);
 
-        return CadaListaWidget(lista.nombre, lista.descripcion);
-      },
-    ));
-  }
+  //       return CadaListaWidget(lista.nombre, lista.descripcion);
+  //     },
+  //   ));
+  // }
 }

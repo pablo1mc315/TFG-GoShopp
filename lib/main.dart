@@ -2,19 +2,22 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:goshopp/firebase_options.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:goshopp/screens/usuarios/contr_reset.dart';
 import 'package:goshopp/screens/inicio.dart';
 import 'package:goshopp/screens/usuarios/registro.dart';
 import 'package:goshopp/screens/usuarios/auxiliar_login.dart';
 import 'package:goshopp/screens/usuarios/verificacion.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+      name: 'goshopp-d4eb4', options: DefaultFirebaseOptions.currentPlatform);
+
   runApp(const MainPage());
 }
 

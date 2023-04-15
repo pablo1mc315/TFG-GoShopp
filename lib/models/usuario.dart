@@ -13,7 +13,7 @@ class Usuario {
   // ======= CONSTRUCTOR =======
 
   Usuario(String e, String nU, String? url) {
-    email = email;
+    email = e;
     nombreUsuario = nU;
     urlFotoPerfil = url;
     listas = [];

@@ -1,14 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:goshopp/db/lista_compra_db.dart';
 import 'package:goshopp/models/lista_compra.dart';
 import 'package:goshopp/models/usuario.dart';
 import 'package:goshopp/screens/usuarios/auxiliar_login.dart';
 
 class NuevaLista extends StatefulWidget {
   NuevaLista({super.key});
-
-  final listaCompraDB = ListaCompraDB();
 
   @override
   State<NuevaLista> createState() => _NuevaListaState();
@@ -114,7 +111,7 @@ class _NuevaListaState extends State<NuevaLista> {
                       } else {
                         final lista = ListaCompra(_tituloController.text,
                             _descripcionController.text);
-                        crearNuevaLista(context, lista);
+                        // crearNuevaLista(context, lista);
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -158,15 +155,15 @@ class _NuevaListaState extends State<NuevaLista> {
   }
 
   // Función que registra un nuevo usuario mediante email y contraseña.
-  Future<void> crearNuevaLista(BuildContext context, ListaCompra lista) async {
-    try {
-      // Guardamos la lista creada en la base de datos
-      widget.listaCompraDB.guardarLista(lista);
+  // Future<void> crearNuevaLista(BuildContext context, ListaCompra lista) async {
+  //   try {
+  //     // Guardamos la lista creada en la base de datos
+  //     widget.listaCompraDB.guardarLista(lista);
 
-      mostrarSnackBar("Lista creada correctamente", context);
-      Navigator.pop(context);
-    } catch (e) {
-      mostrarSnackBar("Lo sentimos, hubo un error", context);
-    }
-  }
+  //     mostrarSnackBar("Lista creada correctamente", context);
+  //     Navigator.pop(context);
+  //   } catch (e) {
+  //     mostrarSnackBar("Lo sentimos, hubo un error", context);
+  //   }
+  // }
 }
