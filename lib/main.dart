@@ -5,6 +5,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:goshopp/firebase_options.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:goshopp/models/usuario.dart';
+import 'package:goshopp/services/usuarios.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:goshopp/screens/usuarios/contr_reset.dart';
@@ -394,16 +396,29 @@ class LoginState extends State<Login> {
     try {
       final GoogleSignInAccount? googleSignInAccount =
           await googleSignIn.signIn();
+
       final GoogleSignInAuthentication googleSignInAuthentication =
           await googleSignInAccount!.authentication;
 
       final AuthCredential credential = GoogleAuthProvider.credential(
           accessToken: googleSignInAuthentication.accessToken,
           idToken: googleSignInAuthentication.idToken);
-      await auth.signInWithCredential(credential).then((value) {
+
+      await auth.signInWithCredential(credential).then((value) async {
         _formKey.currentState!.save();
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const Home()));
+
+        // Añadimos también el usuario creado a la base de datos
+        Usuario nuevoUsuario = Usuario(
+            auth.currentUser!.email.toString(),
+            auth.currentUser!.displayName.toString(),
+            auth.currentUser!.photoURL);
+
+        await addUsuario(nuevoUsuario, auth.currentUser!.uid).then((_) {
+          mostrarSnackBar("Usuario creado correctamente", context);
+
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => const Home()));
+        });
       });
     } catch (e) {
       mostrarSnackBar("Lo sentimos, se produjo un error", context);

@@ -14,16 +14,20 @@ Future<Usuario> getUsuario(String uid) async {
   return usuario;
 }
 
-// Función que añade un usuario a la base de datos
+// Función que añade un usuario a la base de datos si no existe en ella
 Future<void> addUsuario(Usuario usuario, String id) async {
-  Map<String, dynamic> datosUsuario = {
-    "email": usuario.email,
-    "nombreUsuario": usuario.nombreUsuario,
-    "urlFotoPerfil": usuario.urlFotoPerfil,
-    "listas": usuario.listas
-  };
+  db.collection('usuarios').doc(id).get().then((user) async {
+    if (!user.exists) {
+      Map<String, dynamic> datosUsuario = {
+        "email": usuario.email,
+        "nombreUsuario": usuario.nombreUsuario,
+        "urlFotoPerfil": usuario.urlFotoPerfil,
+        "listas": usuario.listas
+      };
 
-  await db.collection('usuarios').doc(id).set(datosUsuario);
+      await db.collection('usuarios').doc(id).set(datosUsuario);
+    }
+  });
 }
 
 // Actualizar el nombre de usuario
