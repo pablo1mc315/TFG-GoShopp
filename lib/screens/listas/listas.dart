@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:goshopp/screens/listas/cada_lista.dart';
 import 'package:goshopp/screens/listas/nueva_lista.dart';
+import 'package:goshopp/services/listas.dart';
 
 class ListasPersonales extends StatefulWidget {
   const ListasPersonales({super.key});
@@ -9,60 +12,73 @@ class ListasPersonales extends StatefulWidget {
 }
 
 class _ListasPersonalesState extends State<ListasPersonales> {
+  final User? usuario = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-          padding: const EdgeInsets.all(16),
+      body: Center(
           child: Column(
-            children: <Widget>[
-              // Botón para crear nuevas listas
-              SizedBox(
-                  height: 45,
-                  width: 200,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  const NuevaLista()));
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 0, 100, 190),
-                      elevation: 5,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        side: const BorderSide(
-                          color: Colors.white70,
-                          width: 2,
-                        ),
+        children: <Widget>[
+          // Botón para crear nuevas listas
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: SizedBox(
+                height: 50,
+                width: 150,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                const NuevaLista())).then((value) {
+                      setState(() {});
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 0, 40, 76),
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      side: const BorderSide(
+                        color: Colors.white70,
+                        width: 2,
                       ),
                     ),
-                    child: const Text('Nueva lista',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                        )),
-                  )),
+                  ),
+                  child: const Text('Nueva lista',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      )),
+                )),
+          ),
 
-              // Mostramos cada una de las listas del usuario
-              //_mostrarListas(),
-            ],
-          )),
+          // Mostramos cada una de las listas del usuario
+          FutureBuilder(
+              future: getListasCompraUsuario(usuario!.uid),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  List<Widget> widgets = [];
+                  for (var lista in snapshot.data!) {
+                    widgets
+                        .add(CadaListaWidget(lista.nombre, lista.descripcion));
+                  }
+                  return Expanded(
+                      child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: ListView(shrinkWrap: true, children: widgets),
+                  ));
+                } else {
+                  return const Text(
+                    "Aún no has creado ninguna lista.",
+                    style: TextStyle(fontSize: 16),
+                  );
+                }
+              })
+        ],
+      )),
     );
   }
-
-  // Widget _mostrarListas() {
-  //   return Expanded(
-  //       child: FirebaseAnimatedList(
-  //     query: widget.listaCompraDB.getListas(),
-  //     itemBuilder: (context, snapshot, animation, index) {
-  //       final json = snapshot.value as Map<dynamic, dynamic>;
-  //       final lista = ListaCompra.fromJson(json);
-
-  //       return CadaListaWidget(lista.nombre, lista.descripcion);
-  //     },
-  //   ));
-  // }
 }
