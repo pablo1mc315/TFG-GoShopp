@@ -36,8 +36,8 @@ class _HomeState extends State<Home> {
             ),
             backgroundColor: const Color.fromARGB(255, 0, 100, 190),
             bottom: const TabBar(indicatorColor: Colors.white, tabs: <Widget>[
-              Tab(text: "Mis Grupos"),
-              Tab(text: "Mis Listas")
+              Tab(text: "Mis Listas"),
+              Tab(text: "Mis Grupos")
             ])),
 
         // Barra lateral
@@ -207,11 +207,11 @@ class _HomeState extends State<Home> {
 
         // Body
         body: const TabBarView(children: <Widget>[
-          // Pestaña "Mis Grupos"
-          Center(child: Text("Mostrar aquí los grupos")),
-
           // Pestaña "Mis Listas"
-          Center(child: ListasPersonales())
+          Center(child: ListasPersonales()),
+
+          // Pestaña "Mis Grupos"
+          Center(child: Text("Mostrar aquí los grupos"))
         ]),
       ),
     );

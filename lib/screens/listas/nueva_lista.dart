@@ -110,6 +110,7 @@ class _NuevaListaState extends State<NuevaLista> {
                       } else {
                         // Añadimos una nueva lista con esos valores
                         ListaCompra nuevaLista = ListaCompra(
+                            "",
                             _tituloController.text,
                             _descripcionController.text);
 

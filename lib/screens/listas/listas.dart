@@ -62,8 +62,8 @@ class _ListasPersonalesState extends State<ListasPersonales> {
                 if (snapshot.hasData) {
                   List<Widget> widgets = [];
                   for (var lista in snapshot.data!) {
-                    widgets
-                        .add(CadaListaWidget(lista.nombre, lista.descripcion));
+                    widgets.add(CadaListaWidget(
+                        lista.id, lista.nombre, lista.descripcion));
                   }
                   return Expanded(
                       child: Padding(
