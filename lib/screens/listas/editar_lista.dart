@@ -112,7 +112,7 @@ class _EditarListaState extends State<EditarLista> {
                     onPressed: () async {
                       if (_tituloController.text.isEmpty) {
                         mostrarSnackBar(
-                            "La lista debe tener un título", context);
+                            "La lista debe tener un título", "error", context);
                       } else {
                         await editarListaCompraUsuario(
                                 _tituloController.text,
@@ -121,7 +121,7 @@ class _EditarListaState extends State<EditarLista> {
                                 usuario!.uid)
                             .then((_) {
                           mostrarSnackBar(
-                              "Lista modificada correctamente", context);
+                              "Lista modificada correctamente", "ok", context);
                           Navigator.pop(context);
                           Navigator.push(
                               context,

@@ -3,14 +3,22 @@
 import 'package:flutter/material.dart';
 
 // Función que muestra un SnackBar con información
-void mostrarSnackBar(String message, BuildContext context) async {
+void mostrarSnackBar(String message, String tipo, BuildContext context) async {
+  Color colorFondo = Colors.grey;
+
+  if (tipo == "ok") {
+    colorFondo = Colors.green;
+  } else if (tipo == "error") {
+    colorFondo = const Color.fromARGB(255, 160, 10, 0);
+  }
+
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
     content: Text(
       message,
       style: const TextStyle(fontSize: 17),
     ),
     duration: const Duration(milliseconds: 2500),
-    backgroundColor: const Color.fromARGB(255, 160, 10, 0),
+    backgroundColor: colorFondo,
     padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
   ));
 }

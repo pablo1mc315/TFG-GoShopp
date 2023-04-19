@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -160,7 +159,8 @@ class EditarPerfilState extends State<EditarPerfil> {
                   child: ElevatedButton(
                     onPressed: () async {
                       if (_textoController.text.isEmpty) {
-                        mostrarSnackBar('El campo es obligatorio.', context);
+                        mostrarSnackBar(
+                            'El campo es obligatorio.', "error", context);
                       } else {
                         await modificarNombreUsuario(
                                 usuario!.uid, _textoController.text)
@@ -169,6 +169,7 @@ class EditarPerfilState extends State<EditarPerfil> {
                           Navigator.pop(context);
                           mostrarSnackBar(
                               'Nombre de usuario modificado correctamente.',
+                              "ok",
                               context);
                         });
                       }

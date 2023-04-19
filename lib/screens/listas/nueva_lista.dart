@@ -105,8 +105,8 @@ class _NuevaListaState extends State<NuevaLista> {
                   child: ElevatedButton(
                     onPressed: () async {
                       if (_tituloController.text.isEmpty) {
-                        mostrarSnackBar(
-                            'El título es un campo obligatorio.', context);
+                        mostrarSnackBar('El título es un campo obligatorio.',
+                            "error", context);
                       } else {
                         // Añadimos una nueva lista con esos valores
                         ListaCompra nuevaLista = ListaCompra(
@@ -117,7 +117,7 @@ class _NuevaListaState extends State<NuevaLista> {
                         await addListaCompraUsuario(nuevaLista, usuario!.uid)
                             .then((_) {
                           mostrarSnackBar(
-                              "Lista creada correctamente", context);
+                              "Lista creada correctamente", "ok", context);
                           Navigator.pop(context);
                         });
                       }

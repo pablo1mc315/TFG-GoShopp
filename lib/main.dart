@@ -178,6 +178,7 @@ class LoginState extends State<Login> {
                     if (!EmailValidator.validate(_emailController.text)) {
                       mostrarSnackBar(
                           'El correo introducido no tiene un formato correcto.',
+                          "error",
                           context);
                     } else {
                       setState(() {
@@ -377,9 +378,10 @@ class LoginState extends State<Login> {
       } on FirebaseAuthException catch (e) {
         if (e.code == "user-not-found" || e.code == "wrong-password") {
           mostrarSnackBar(
-              "Los valores introducidos no son correctos.", context);
+              "Los valores introducidos no son correctos.", "error", context);
         } else {
-          mostrarSnackBar("Asegúrese de rellenar todos los campos.", context);
+          mostrarSnackBar(
+              "Asegúrese de rellenar todos los campos.", "error", context);
         }
         setState(() {
           _cambiarEstadoIndicadorProgreso();
@@ -414,14 +416,14 @@ class LoginState extends State<Login> {
             auth.currentUser!.photoURL);
 
         await addUsuario(nuevoUsuario, auth.currentUser!.uid).then((_) {
-          mostrarSnackBar("Usuario creado correctamente", context);
+          mostrarSnackBar("Usuario creado correctamente", "ok", context);
 
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => const Home()));
         });
       });
     } catch (e) {
-      mostrarSnackBar("Lo sentimos, se produjo un error", context);
+      mostrarSnackBar("Lo sentimos, se produjo un error", "error", context);
     } finally {
       setState(() {
         _cambiarEstadoIndicadorProgresoGoogle();
@@ -471,7 +473,8 @@ class LoginState extends State<Login> {
         _contrasenaController.text = password;
       }
     } catch (e) {
-      mostrarSnackBar("Lo sentimos, se ha producido un error.", context);
+      mostrarSnackBar(
+          "Lo sentimos, se ha producido un error.", "error", context);
     }
   }
 

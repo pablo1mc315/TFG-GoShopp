@@ -68,8 +68,8 @@ class ResetPasswordState extends State<ResetPassword> {
           FirebaseAuth.instance
               .sendPasswordResetEmail(email: controller.text)
               .then((value) => Navigator.of(context).pop());
-          mostrarSnackBar(
-              "Se ha enviado un correo a la dirección indicada.", context);
+          mostrarSnackBar("Se ha enviado un correo a la dirección indicada.",
+              "ok", context);
         }
       },
       style: ElevatedButton.styleFrom(
