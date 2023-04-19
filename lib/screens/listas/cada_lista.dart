@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:goshopp/screens/inicio.dart';
-import 'package:goshopp/screens/listas/listas.dart';
+import 'package:goshopp/screens/listas/editar_lista.dart';
 import 'package:goshopp/services/listas.dart';
 
 class CadaListaWidget extends StatefulWidget {
@@ -40,68 +40,94 @@ class _CadaListaWidgetState extends State<CadaListaWidget> {
             children: [
               SizedBox(
                   height: 50,
-                  child: Row(children: [
-                    const Padding(
-                      padding: EdgeInsets.only(right: 15),
-                      child: Icon(
-                        Icons.playlist_add_check_circle_outlined,
-                        size: 30,
-                      ),
-                    ),
-                    Text(widget.nombre.toString(),
-                        style: const TextStyle(
-                          fontSize: 22,
-                        )),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 160),
-                      child: IconButton(
-                        splashRadius: 10,
-                        onPressed: () async {
-                          bool borrar = false;
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 5),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // Título de la lista
+                          Text(widget.nombre.toString(),
+                              style: const TextStyle(
+                                fontSize: 22,
+                              )),
 
-                          borrar = await showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: const Text(
-                                      "¿Está seguro de que desea borrar por completo la lista seleccionada?"),
-                                  actions: [
-                                    TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context, false);
-                                        },
-                                        child: const Text("Cancelar",
-                                            style: TextStyle(
-                                                color: Colors.red,
-                                                fontSize: 18))),
-                                    TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context, true);
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder:
-                                                      (BuildContext context) =>
-                                                          const Home()));
-                                        },
-                                        child: const Text("Sí, estoy seguro",
-                                            style: TextStyle(fontSize: 18)))
-                                  ],
-                                );
-                              });
+                          // Botón para editar la lista
+                          Row(
+                            children: [
+                              IconButton(
+                                splashRadius: 20,
+                                onPressed: () async {
+                                  await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  EditarLista(
+                                                      widget.listaID,
+                                                      widget.nombre,
+                                                      widget.descripcion)))
+                                      .then((value) {
+                                    setState(() {});
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.edit,
+                                  size: 25,
+                                ),
+                              ),
 
-                          if (borrar) {
-                            eliminarListaCompraUsuario(
-                                usuario!.uid, widget.listaID.toString());
-                          }
-                        },
-                        icon: const Icon(
-                          Icons.cancel_presentation,
-                          size: 30,
-                        ),
-                      ),
-                    ),
-                  ])),
+                              // Botón para borrar la lista
+                              IconButton(
+                                splashRadius: 20,
+                                onPressed: () async {
+                                  bool borrar = false;
+
+                                  borrar = await showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: const Text(
+                                              "¿Está seguro de que desea borrar por completo la lista seleccionada?"),
+                                          actions: [
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context, false);
+                                                },
+                                                child: const Text("Cancelar",
+                                                    style: TextStyle(
+                                                        color: Colors.red,
+                                                        fontSize: 18))),
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context, true);
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (BuildContext
+                                                                  context) =>
+                                                              const Home()));
+                                                },
+                                                child: const Text(
+                                                    "Sí, estoy seguro",
+                                                    style: TextStyle(
+                                                        fontSize: 18)))
+                                          ],
+                                        );
+                                      });
+
+                                  if (borrar) {
+                                    eliminarListaCompraUsuario(usuario!.uid,
+                                        widget.listaID.toString());
+                                  }
+                                },
+                                icon: const Icon(
+                                  Icons.delete,
+                                  size: 25,
+                                ),
+                              )
+                            ],
+                          ),
+                        ]),
+                  )),
               SizedBox(
                   height: 85,
                   width: 350,

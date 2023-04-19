@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:goshopp/main.dart';
 import 'package:goshopp/screens/listas/listas.dart';
-import 'package:goshopp/screens/usuarios/editar.dart';
+import 'package:goshopp/screens/usuarios/editar_usuario.dart';
 import 'package:goshopp/services/usuarios.dart';
 import 'package:goshopp/screens/info.dart';
 
