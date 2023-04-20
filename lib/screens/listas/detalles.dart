@@ -125,46 +125,12 @@ class _ListaDetallesState extends State<ListaDetalles> {
                         icon: const Icon(Icons.expand_more),
                         iconSize: 22,
                         splashRadius: 20,
+                        tooltip: "Seleccionar tipo de producto",
                         onSelected: (value) {
                           _tipoProducto = value;
                           setState(() {});
                         },
-                        itemBuilder: ((context) =>
-                            <PopupMenuEntry<TipoProducto>>[
-                              const PopupMenuItem(
-                                  value: TipoProducto.bricolaje,
-                                  child: Text("Bricolaje")),
-                              const PopupMenuItem(
-                                  value: TipoProducto.bebida,
-                                  child: Text("Bebida")),
-                              const PopupMenuItem(
-                                  value: TipoProducto.belleza,
-                                  child: Text("Belleza")),
-                              const PopupMenuItem(
-                                  value: TipoProducto.comida,
-                                  child: Text("Comida")),
-                              const PopupMenuItem(
-                                  value: TipoProducto.deporte,
-                                  child: Text("Deporte")),
-                              const PopupMenuItem(
-                                  value: TipoProducto.electrodomestico,
-                                  child: Text("Electrodoméstico")),
-                              const PopupMenuItem(
-                                  value: TipoProducto.medicamento,
-                                  child: Text("Medicamento")),
-                              const PopupMenuItem(
-                                  value: TipoProducto.mobiliario,
-                                  child: Text("Mobiliario")),
-                              const PopupMenuItem(
-                                  value: TipoProducto.ocio,
-                                  child: Text("Ocio")),
-                              const PopupMenuItem(
-                                  value: TipoProducto.ropa,
-                                  child: Text("Ropa")),
-                              const PopupMenuItem(
-                                  value: TipoProducto.tecnologia,
-                                  child: Text("Tecnología"))
-                            ])),
+                        itemBuilder: ((context) => mostrarTiposProducto)),
                   ],
                 ),
               ),
@@ -197,8 +163,34 @@ class _ListaDetallesState extends State<ListaDetalles> {
       ),
     );
   }
+
+  // Función que muestra los distintos tipo de producto seleccionables
+  List<PopupMenuEntry<TipoProducto>> get mostrarTiposProducto {
+    return <PopupMenuEntry<TipoProducto>>[
+      const PopupMenuItem(
+          value: TipoProducto.bricolaje, child: Text("Bricolaje")),
+      const PopupMenuItem(value: TipoProducto.bebida, child: Text("Bebida")),
+      const PopupMenuItem(value: TipoProducto.belleza, child: Text("Belleza")),
+      const PopupMenuItem(value: TipoProducto.comida, child: Text("Comida")),
+      const PopupMenuItem(value: TipoProducto.deporte, child: Text("Deporte")),
+      const PopupMenuItem(
+          value: TipoProducto.electrodomestico,
+          child: Text("Electrodoméstico")),
+      const PopupMenuItem(
+          value: TipoProducto.medicamento, child: Text("Medicamento")),
+      const PopupMenuItem(
+          value: TipoProducto.mobiliario, child: Text("Mobiliario")),
+      const PopupMenuItem(value: TipoProducto.ocio, child: Text("Ocio")),
+      const PopupMenuItem(value: TipoProducto.ropa, child: Text("Ropa")),
+      const PopupMenuItem(
+          value: TipoProducto.tecnologia, child: Text("Tecnología"))
+    ];
+  }
 }
 
+// ================ Funciones auxiliares ================ //
+
+// Función que devuelve el nombre del tipo de producto seleccionado
 String getNombre(TipoProducto tipo) {
   var nombre = "";
 
