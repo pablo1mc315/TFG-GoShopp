@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:goshopp/screens/inicio.dart';
+import 'package:goshopp/screens/listas/detalles.dart';
 import 'package:goshopp/screens/listas/editar_lista.dart';
 import 'package:goshopp/services/listas.dart';
 
@@ -27,7 +28,13 @@ class _CadaListaWidgetState extends State<CadaListaWidget> {
         height: 150,
         width: 350,
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => ListaDetalles(
+                        widget.listaID, widget.nombre, widget.descripcion)));
+          },
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white,
             backgroundColor: const Color.fromARGB(255, 0, 40, 76),

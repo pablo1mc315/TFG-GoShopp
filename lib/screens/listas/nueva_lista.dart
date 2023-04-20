@@ -98,7 +98,7 @@ class _NuevaListaState extends State<NuevaLista> {
 
                 const SizedBox(height: 30),
 
-                // Botón que registra a un usuario en la aplicación
+                // Botón que registra la nueva lista en la BD
                 SizedBox(
                   height: 50,
                   width: 100,

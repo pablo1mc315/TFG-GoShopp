@@ -71,10 +71,7 @@ class _ListasPersonalesState extends State<ListasPersonales> {
                     child: ListView(shrinkWrap: true, children: widgets),
                   ));
                 } else {
-                  return const Text(
-                    "Aún no has creado ninguna lista.",
-                    style: TextStyle(fontSize: 16),
-                  );
+                  return const CircularProgressIndicator();
                 }
               })
         ],

@@ -14,9 +14,10 @@ class Producto {
 
   // ======= CONSTRUCTOR =======
 
-  Producto(String nombreProducto, double precioProducto) {
-    nombre = nombreProducto;
-    precio = precioProducto;
+  Producto(String n, double p, TipoProducto t) {
+    nombre = n;
+    precio = p;
+    tipo = t;
     estaComprado = false;
   }
 }
