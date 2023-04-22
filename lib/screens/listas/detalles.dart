@@ -1,6 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:goshopp/models/producto.dart';
 import 'package:goshopp/models/tipoproducto.dart';
+import 'package:goshopp/screens/listas/cada_producto.dart';
+import 'package:goshopp/screens/usuarios/auxiliar_login.dart';
+import 'package:goshopp/services/productos.dart';
 
 class ListaDetalles extends StatefulWidget {
   final String? listaID;
@@ -14,7 +18,6 @@ class ListaDetalles extends StatefulWidget {
 }
 
 class _ListaDetallesState extends State<ListaDetalles> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nombreController = TextEditingController();
   final TextEditingController _precioController = TextEditingController();
   TipoProducto _tipoProducto = TipoProducto.comida;
@@ -106,59 +109,108 @@ class _ListaDetallesState extends State<ListaDetalles> {
           const SizedBox(height: 10),
 
           // Botón que registra el nuevo producto en la lista
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Selector de tipo de producto
-              TextButton(
-                onPressed: () {},
-                style: ButtonStyle(
-                    foregroundColor: MaterialStateProperty.all(
-                        const Color.fromARGB(255, 0, 100, 190)),
-                    fixedSize:
-                        MaterialStateProperty.all(const Size.fromHeight(20))),
-                child: Row(
-                  children: [
-                    Text("Tipo: ${getNombre(_tipoProducto)}"),
-                    PopupMenuButton<TipoProducto>(
-                        padding: const EdgeInsets.all(0),
-                        icon: const Icon(Icons.expand_more),
-                        iconSize: 22,
-                        splashRadius: 20,
-                        tooltip: "Seleccionar tipo de producto",
-                        onSelected: (value) {
-                          _tipoProducto = value;
-                          setState(() {});
-                        },
-                        itemBuilder: ((context) => mostrarTiposProducto)),
-                  ],
-                ),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            // Selector de tipo de producto
+            TextButton(
+              onPressed: () {},
+              style: ButtonStyle(
+                  foregroundColor: MaterialStateProperty.all(
+                      const Color.fromARGB(255, 0, 100, 190)),
+                  fixedSize:
+                      MaterialStateProperty.all(const Size.fromHeight(20))),
+              child: Row(
+                children: [
+                  Text("Tipo: ${getNombre(_tipoProducto)}"),
+                  PopupMenuButton<TipoProducto>(
+                      padding: const EdgeInsets.all(0),
+                      icon: const Icon(Icons.expand_more),
+                      iconSize: 22,
+                      splashRadius: 20,
+                      tooltip: "Seleccionar tipo de producto",
+                      onSelected: (value) {
+                        _tipoProducto = value;
+                        setState(() {});
+                      },
+                      itemBuilder: ((context) => mostrarTiposProducto)),
+                ],
               ),
+            ),
 
-              // Botón que registra el nuevo producto en la lista
-              SizedBox(
-                  height: 40,
-                  width: 100,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 0, 40, 76),
-                      elevation: 3,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        side: const BorderSide(
-                          color: Colors.white70,
-                          width: 2,
-                        ),
+            // Botón que registra el nuevo producto en la lista
+            SizedBox(
+                height: 40,
+                width: 100,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (_nombreController.text.isEmpty ||
+                        _precioController.text.isEmpty) {
+                      mostrarSnackBar(
+                          'Debe rellenar todos los campos.', "error", context);
+                    } else {
+                      // Añadimos un nuevo producto con esos valores
+                      Producto nuevoProducto = Producto(
+                          "",
+                          _nombreController.text,
+                          double.parse(_precioController.text),
+                          _tipoProducto);
+
+                      await addProductoUsuario(nuevoProducto,
+                              widget.listaID.toString(), usuario!.uid)
+                          .then((_) {
+                        mostrarSnackBar(
+                            "Producto añadido correctamente", "ok", context);
+                        setState(() {});
+                      });
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 0, 40, 76),
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      side: const BorderSide(
+                        color: Colors.white70,
+                        width: 2,
                       ),
                     ),
-                    child: const Text('Añadir',
-                        style: TextStyle(
-                          fontSize: 18,
-                        )),
-                  )),
-            ],
-          ),
+                  ),
+                  child: const Text('Añadir',
+                      style: TextStyle(
+                        fontSize: 18,
+                      )),
+                ))
+          ]),
+
+          const SizedBox(height: 25),
+
+          const Text("Productos:",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25,
+                  color: Color.fromARGB(255, 0, 100, 190))),
+
+          const SizedBox(height: 25),
+
+          // Mostramos todos los productos de la lista
+          FutureBuilder(
+              future:
+                  getProductosUsuario(usuario!.uid, widget.listaID.toString()),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  List<Widget> widgets = [];
+                  for (var producto in snapshot.data!) {
+                    widgets.add(CadaProductoWidget(widget.listaID, producto.id,
+                        producto.nombre, producto.precio, producto.tipo));
+                  }
+                  return Expanded(
+                      child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: ListView(shrinkWrap: true, children: widgets),
+                  ));
+                } else {
+                  return const CircularProgressIndicator();
+                }
+              })
         ]),
       ),
     );

@@ -5,16 +5,16 @@ import 'package:goshopp/models/tipoproducto.dart';
 class Producto {
   // ======= ATRIBUTOS =======
 
+  String? id;
   String? nombre;
   double? precio;
-  int? cantidad;
-  String? medida;
   TipoProducto? tipo;
   bool? estaComprado;
 
   // ======= CONSTRUCTOR =======
 
-  Producto(String n, double p, TipoProducto t) {
+  Producto(String idP, String n, double p, TipoProducto t) {
+    id = idP;
     nombre = n;
     precio = p;
     tipo = t;

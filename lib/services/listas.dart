@@ -29,9 +29,7 @@ Future<void> addListaCompraUsuario(ListaCompra listaNueva, String uid) async {
     "id": listaNueva.id,
     "nombre": listaNueva.nombre,
     "descripcion": listaNueva.descripcion,
-    "idPropietario": uid,
-    "productosLista": listaNueva.productosLista,
-    "productosComprados": listaNueva.productosComprados
+    "idPropietario": uid
   };
 
   // Creamos una lista nueva con los parámetros introducidos por el usuario
@@ -53,7 +51,7 @@ Future<void> addListaCompraUsuario(ListaCompra listaNueva, String uid) async {
       .update({'id': idLista});
 }
 
-// Función que edita una lista de la compra de un usuario
+// Función que elimina una lista de la compra de un usuario
 Future<void> eliminarListaCompraUsuario(String uid, String lid) async {
   await db
       .collection('usuarios')
@@ -63,7 +61,7 @@ Future<void> eliminarListaCompraUsuario(String uid, String lid) async {
       .delete();
 }
 
-// Función que elimina una lista de la compra de un usuario
+// Función que edita una lista de la compra de un usuario
 Future<void> editarListaCompraUsuario(
     String nuevoTitulo, String nuevaDescr, String lid, String uid) async {
   await db
