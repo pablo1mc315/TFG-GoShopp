@@ -109,8 +109,8 @@ class _ListaDetallesState extends State<ListaDetalles> {
                           'Debe rellenar todos los campos.', "error", context);
                     } else {
                       // Añadimos un nuevo producto con esos valores
-                      Producto nuevoProducto =
-                          Producto("", _nombreController.text, _tipoProducto);
+                      Producto nuevoProducto = Producto(
+                          "", _nombreController.text, _tipoProducto, false);
 
                       await addProductoUsuario(nuevoProducto,
                               widget.listaID.toString(), usuario!.uid)
@@ -157,12 +157,17 @@ class _ListaDetallesState extends State<ListaDetalles> {
                 if (snapshot.hasData) {
                   List<Widget> widgets = [];
                   for (var producto in snapshot.data!) {
-                    widgets.add(CadaProductoWidget(widget.listaID, producto.id,
-                        producto.nombre, producto.precio, producto.tipo));
+                    widgets.add(CadaProductoWidget(
+                        widget.listaID,
+                        producto.id,
+                        producto.nombre,
+                        producto.precio,
+                        producto.tipo,
+                        producto.estaComprado));
                   }
                   return Expanded(
                       child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: ListView(shrinkWrap: true, children: widgets),
                   ));
                 } else {

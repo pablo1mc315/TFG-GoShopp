@@ -10,9 +10,10 @@ class CadaProductoWidget extends StatefulWidget {
   final String? nombre;
   final double? precio;
   final TipoProducto? tipo;
+  bool? estaComprado;
 
-  const CadaProductoWidget(
-      this.listaID, this.productoID, this.nombre, this.precio, this.tipo,
+  CadaProductoWidget(this.listaID, this.productoID, this.nombre, this.precio,
+      this.tipo, this.estaComprado,
       {super.key});
 
   @override
@@ -67,17 +68,12 @@ class _CadaProductoWidgetState extends State<CadaProductoWidget> {
                         IconButton(
                           splashRadius: 20,
                           onPressed: () async {
-                            bool estaComprado = await estaCompradoUsuario(
-                                usuario!.uid,
-                                widget.listaID!,
-                                widget.productoID!);
-
                             comprarProductoUsuario(
-                                usuario.uid,
+                                usuario!.uid,
                                 widget.listaID.toString(),
                                 widget.productoID.toString());
 
-                            estaComprado = !estaComprado;
+                            widget.estaComprado = !widget.estaComprado!;
                             setState(() {});
                           },
                           icon: const Icon(
@@ -130,7 +126,12 @@ class _CadaProductoWidgetState extends State<CadaProductoWidget> {
                             color: Color.fromARGB(255, 0, 40, 76),
                             size: 25,
                           ),
-                        )
+                        ),
+
+                        Icon(widget.estaComprado! ? Icons.done : Icons.close,
+                            color: widget.estaComprado!
+                                ? Colors.green
+                                : Colors.red)
                       ],
                     ),
                   ]))
