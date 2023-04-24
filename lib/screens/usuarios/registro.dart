@@ -345,6 +345,8 @@ class PaginaRegistroState extends State<PaginaRegistro> {
         url = await subirImagen(imagenSubida!);
       }
 
+      await credenciales.user!.updatePhotoURL(url);
+
       // Añadimos también el usuario creado a la base de datos
       Usuario nuevoUsuario =
           Usuario(_emailController.text, _usuarioController.text, url);
@@ -366,7 +368,6 @@ class PaginaRegistroState extends State<PaginaRegistro> {
       }
     } catch (e) {
       mostrarSnackBar(e.toString(), "error", context);
-      print(e.toString());
     } finally {
       setState(() {
         cambiarVisibilidadIndicadorProgreso();

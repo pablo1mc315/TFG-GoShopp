@@ -36,3 +36,8 @@ Future<void> modificarNombreUsuario(String uid, String nuevoNombre) async {
       .doc(uid)
       .update({"nombreUsuario": nuevoNombre});
 }
+
+// Actualizar la imagen de perfil del usuario
+Future<void> modificarFotoPerfilUsuario(String uid, String url) async {
+  await db.collection('usuarios').doc(uid).update({"urlFotoPerfil": url});
+}

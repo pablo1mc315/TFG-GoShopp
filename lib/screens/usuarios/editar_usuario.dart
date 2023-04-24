@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:goshopp/screens/usuarios/auxiliar_login.dart';
+import 'package:goshopp/services/imagenes.dart';
 import 'package:goshopp/services/usuarios.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -18,7 +19,7 @@ class EditarPerfilState extends State<EditarPerfil> {
   final TextEditingController _textoController = TextEditingController();
   final User? usuario = FirebaseAuth.instance.currentUser;
   FirebaseAuth auth = FirebaseAuth.instance;
-  XFile? imagenPerfil;
+  File? imagenSubida;
 
   @override
   void initState() {
@@ -27,7 +28,6 @@ class EditarPerfilState extends State<EditarPerfil> {
 
   // Controladores de los campos del formulario
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final ImagePicker _imagenController = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
@@ -65,10 +65,13 @@ class EditarPerfilState extends State<EditarPerfil> {
                     ),
                     InkWell(
                       onTap: () async {
-                        imagenPerfil = await _imagenController.pickImage(
-                            source: ImageSource.gallery);
+                        final XFile? imagenPerfil = await getImagen();
 
-                        setState(() {});
+                        setState(() {
+                          if (imagenPerfil != null) {
+                            imagenSubida = File(imagenPerfil.path);
+                          }
+                        });
                       },
                       child: const CircleAvatar(
                           radius: 20,
@@ -85,14 +88,17 @@ class EditarPerfilState extends State<EditarPerfil> {
                   height: 50,
                   width: 190,
                   child: ElevatedButton(
-                    onPressed: () {
-                      // if (_textoController.text.isEmpty) {
-                      //   mostrarSnackBar('El campo es obligatorio.', context);
-                      // } else {
-                      // final lista = ListaCompra(_tituloController.text,
-                      //     _descripcionController.text);
-                      // crearNuevaLista(context, lista);
-                      // }
+                    onPressed: () async {
+                      if (imagenSubida != null) {
+                        final url = await subirImagen(imagenSubida!);
+                        modificarFotoPerfilUsuario(usuario!.uid, url);
+                        await usuario!.updatePhotoURL(url).then((_) {
+                          mostrarSnackBar(
+                              "Imagen de perfil modificada correctamente.",
+                              "ok",
+                              context);
+                        });
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
@@ -205,22 +211,43 @@ class EditarPerfilState extends State<EditarPerfil> {
     );
   }
 
-  mostrarImagenPerfil() {
-    if (imagenPerfil == null) {
-      return Text(
-        usuario!.displayName![0].toUpperCase(),
-        style: const TextStyle(fontSize: 100, color: Colors.white),
-      );
-    } else if (usuario!.photoURL != null) {
-      return Image.network(usuario!.photoURL.toString());
-    } else {
-      return ClipRRect(
-          borderRadius: BorderRadius.circular(200),
-          child: Image.file(
-            File(imagenPerfil!.path),
-            width: 160,
-            height: 160,
-          ));
+  Widget mostrarImagenPerfil() {
+    Widget devolver;
+    bool tieneFoto = false;
+
+    if (usuario!.photoURL != null) {
+      tieneFoto = true;
     }
+
+    if (tieneFoto) {
+      if (imagenSubida != null) {
+        devolver = ClipRRect(
+            borderRadius: BorderRadius.circular(200),
+            child: Image.file(
+              File(imagenSubida!.path),
+              width: 160,
+              height: 160,
+            ));
+      } else {
+        devolver = Image.network(usuario!.photoURL.toString());
+      }
+    } else {
+      if (imagenSubida != null) {
+        devolver = ClipRRect(
+            borderRadius: BorderRadius.circular(200),
+            child: Image.file(
+              File(imagenSubida!.path),
+              width: 160,
+              height: 160,
+            ));
+      } else {
+        devolver = Text(
+          usuario!.displayName![0].toUpperCase(),
+          style: const TextStyle(fontSize: 100, color: Colors.white),
+        );
+      }
+    }
+
+    return devolver;
   }
 }
