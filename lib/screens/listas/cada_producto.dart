@@ -47,12 +47,14 @@ class _CadaProductoWidgetState extends State<CadaProductoWidget> {
                         // Precio y tipo
                         Row(
                           children: [
-                            Text("${widget.precio.toString()} € - ",
-                                style: const TextStyle(
-                                  fontSize: 15,
-                                  color: Color.fromARGB(255, 0, 40, 76),
-                                )),
-                            Text(getNombre(widget.tipo!))
+                            Text(getNombre(widget.tipo!)),
+
+                            // Mostrar le precio cuando se compre toda la lista
+                            // Text(" - ${widget.precio.toString()} €",
+                            //     style: const TextStyle(
+                            //       fontSize: 15,
+                            //       color: Color.fromARGB(255, 0, 40, 76),
+                            //     ))
                           ],
                         ),
                       ],

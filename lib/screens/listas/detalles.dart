@@ -19,7 +19,6 @@ class ListaDetalles extends StatefulWidget {
 
 class _ListaDetallesState extends State<ListaDetalles> {
   final TextEditingController _nombreController = TextEditingController();
-  final TextEditingController _precioController = TextEditingController();
   TipoProducto _tipoProducto = TipoProducto.comida;
 
   @override
@@ -48,63 +47,26 @@ class _ListaDetallesState extends State<ListaDetalles> {
 
           const SizedBox(height: 35),
 
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            // Nombre del producto
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.6,
-              child: TextFormField(
-                controller: _nombreController,
-                style: const TextStyle(
-                    fontSize: 20, color: Color.fromARGB(255, 0, 100, 190)),
-                decoration: const InputDecoration(
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    labelText: "Añadir nuevo producto",
-                    labelStyle: TextStyle(
-                        fontSize: 22, color: Color.fromARGB(255, 0, 100, 190)),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                        borderSide: BorderSide(
-                            color: Color.fromARGB(255, 0, 100, 190), width: 2)),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                        borderSide: BorderSide(
-                            color: Color.fromARGB(255, 0, 100, 190),
-                            width: 3))),
-              ),
+          SizedBox(
+            child: TextFormField(
+              controller: _nombreController,
+              style: const TextStyle(
+                  fontSize: 20, color: Color.fromARGB(255, 0, 100, 190)),
+              decoration: const InputDecoration(
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                  labelText: "Añadir nuevo producto",
+                  labelStyle: TextStyle(
+                      fontSize: 22, color: Color.fromARGB(255, 0, 100, 190)),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                      borderSide: BorderSide(
+                          color: Color.fromARGB(255, 0, 100, 190), width: 2)),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                      borderSide: BorderSide(
+                          color: Color.fromARGB(255, 0, 100, 190), width: 3))),
             ),
-
-            // Precio del producto
-            SizedBox(
-                width: MediaQuery.of(context).size.width * 0.25,
-                child: TextFormField(
-                  controller: _precioController,
-                  keyboardType: TextInputType.number,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    color: Color.fromARGB(255, 0, 100, 190),
-                  ),
-                  decoration: const InputDecoration(
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      suffixText: "€",
-                      suffixStyle: TextStyle(
-                          fontSize: 22,
-                          color: Color.fromARGB(255, 0, 100, 190)),
-                      labelText: "Precio",
-                      labelStyle: TextStyle(
-                          fontSize: 22,
-                          color: Color.fromARGB(255, 0, 100, 190)),
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                          borderSide: BorderSide(
-                              color: Color.fromARGB(255, 0, 100, 190),
-                              width: 2)),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                          borderSide: BorderSide(
-                              color: Color.fromARGB(255, 0, 100, 190),
-                              width: 3))),
-                ))
-          ]),
+          ),
 
           const SizedBox(height: 10),
 
@@ -142,17 +104,13 @@ class _ListaDetallesState extends State<ListaDetalles> {
                 width: 100,
                 child: ElevatedButton(
                   onPressed: () async {
-                    if (_nombreController.text.isEmpty ||
-                        _precioController.text.isEmpty) {
+                    if (_nombreController.text.isEmpty) {
                       mostrarSnackBar(
                           'Debe rellenar todos los campos.', "error", context);
                     } else {
                       // Añadimos un nuevo producto con esos valores
-                      Producto nuevoProducto = Producto(
-                          "",
-                          _nombreController.text,
-                          double.parse(_precioController.text),
-                          _tipoProducto);
+                      Producto nuevoProducto =
+                          Producto("", _nombreController.text, _tipoProducto);
 
                       await addProductoUsuario(nuevoProducto,
                               widget.listaID.toString(), usuario!.uid)
