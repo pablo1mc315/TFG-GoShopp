@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'package:goshopp/screens/login/auxiliar_login.dart';
+import 'package:goshopp/screens/usuarios/auxiliar_login.dart';
 
 class ResetPassword extends StatefulWidget {
   const ResetPassword({super.key});
@@ -39,8 +39,11 @@ class ResetPasswordState extends State<ResetPassword> {
             ),
 
             // Mostrar el campo de texto del formulario para el email
-            mostrarCampoTextoForm(_emailController, 'Email',
-                'Introduzca un correo electrónico válido'),
+            mostrarCampoTextoForm(
+                _emailController,
+                'Email',
+                'Introduzca un correo electrónico válido',
+                Icons.mail_outline_rounded),
 
             const SizedBox(height: 30),
 
@@ -65,8 +68,8 @@ class ResetPasswordState extends State<ResetPassword> {
           FirebaseAuth.instance
               .sendPasswordResetEmail(email: controller.text)
               .then((value) => Navigator.of(context).pop());
-          mostrarSnackBar(
-              "Se ha enviado un correo a la dirección indicada.", context);
+          mostrarSnackBar("Se ha enviado un correo a la dirección indicada.",
+              "ok", context);
         }
       },
       style: ElevatedButton.styleFrom(

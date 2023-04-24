@@ -60,10 +60,11 @@ class _VerificacionCorreoState extends State<VerificacionCorreo> {
 
   Future<void> comprobarSiEmailVerificado() async {
     usuario = auth.currentUser;
-    await usuario?.reload();
-    if (usuario!.emailVerified) {
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const Home()));
-    }
+    await usuario?.reload().then((value) {
+      if (usuario!.emailVerified) {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const Home()));
+      }
+    });
   }
 }

@@ -1,10 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:goshopp/models/usuario.dart';
 
-import 'package:goshopp/screens/login/auxiliar_login.dart';
-import 'package:goshopp/screens/login/verificacion.dart';
+import 'package:goshopp/screens/usuarios/auxiliar_login.dart';
+import 'package:goshopp/screens/usuarios/verificacion.dart';
+import 'package:goshopp/services/imagenes.dart';
+import 'package:goshopp/services/usuarios.dart';
+import 'package:image_picker/image_picker.dart';
 
 class PaginaRegistro extends StatefulWidget {
   const PaginaRegistro({super.key});
@@ -31,6 +37,7 @@ class PaginaRegistroState extends State<PaginaRegistro> {
   final TextEditingController _usuarioController = TextEditingController();
   final TextEditingController _contrasenaController1 = TextEditingController();
   final TextEditingController _contrasenaController2 = TextEditingController();
+  File? imagenSubida;
 
   @override
   Widget build(BuildContext context) {
@@ -46,11 +53,11 @@ class PaginaRegistroState extends State<PaginaRegistro> {
             key: _formKey,
             child: Column(
               children: <Widget>[
-                const Column(children: <Widget>[
-                  SizedBox(
-                    height: 150,
+                Column(children: <Widget>[
+                  const SizedBox(
+                    height: 100,
                   ),
-                  Text(
+                  const Text(
                     'Crea tu cuenta',
                     style: TextStyle(
                       fontSize: 35,
@@ -58,25 +65,72 @@ class PaginaRegistroState extends State<PaginaRegistro> {
                       color: Colors.white,
                     ),
                   ),
-                  Text(
+                  const Text(
                     'y únete a GoShopp',
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.white,
                     ),
                   ),
-                  SizedBox(
-                    height: 80,
+                  const SizedBox(
+                    height: 40,
                   ),
+
+                  // Mostrar selector de imagen de perfil
+                  Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 7),
+                        child: Center(
+                            child: imagenSubida == null
+                                ? const Image(
+                                    width: 160,
+                                    height: 160,
+                                    image: AssetImage("assets/img/profile.png"))
+                                : ClipRRect(
+                                    borderRadius: BorderRadius.circular(200),
+                                    child: Image.file(
+                                      imagenSubida!,
+                                      width: 160,
+                                      height: 160,
+                                    ))),
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          final XFile? imagenPerfil = await getImagen();
+
+                          setState(() {
+                            imagenSubida = File(imagenPerfil!.path);
+                          });
+                        },
+                        child: const CircleAvatar(
+                          radius: 16,
+                          backgroundColor: Colors.black,
+                          child: Icon(Icons.add),
+                        ),
+                      )
+                    ],
+                  ),
+
+                  const SizedBox(
+                    height: 40,
+                  )
                 ]),
 
                 // Mostrar campo de texto del formulario para el email
-                mostrarCampoTextoForm(_emailController, 'Email',
-                    'Introduzca un correo electrónico válido'),
+                mostrarCampoTextoForm(
+                    _emailController,
+                    'Email',
+                    'Introduzca un correo electrónico válido',
+                    Icons.mail_outline_rounded),
 
                 // Mostrar campo de texto del formulario para el nombre de usuario
-                mostrarCampoTextoForm(_usuarioController, 'Nombre de usuario',
-                    'Introduzca un nombre de usuario'),
+                mostrarCampoTextoForm(
+                    _usuarioController,
+                    'Nombre de usuario',
+                    'Introduzca un nombre de usuario',
+                    Icons.person_outline_rounded),
 
                 // Introducir contraseña
                 Padding(
@@ -171,7 +225,7 @@ class PaginaRegistroState extends State<PaginaRegistro> {
                           borderSide:
                               BorderSide(color: Colors.white, width: 1.5),
                         ),
-                        labelText: "Contraseña",
+                        labelText: "Repita su contraseña",
                         hintText: "Intrduzca su contraseña de nuevo"),
                   ),
                 ),
@@ -188,21 +242,23 @@ class PaginaRegistroState extends State<PaginaRegistro> {
                           _emailController.text.isEmpty ||
                           _contrasenaController1.text.isEmpty ||
                           _contrasenaController2.text.isEmpty) {
-                        mostrarSnackBar(
-                            'Debe rellenar todos los campos.', context);
+                        mostrarSnackBar('Debe rellenar todos los campos.',
+                            "error", context);
                       } else if (!EmailValidator.validate(
                           _emailController.text)) {
                         mostrarSnackBar(
                             'El correo introducido no tiene un formato correcto.',
+                            "error",
                             context);
                       } else if (_contrasenaController1.text.length < 6) {
                         mostrarSnackBar(
                             'La contraseña debe tener al menos 6 caracteres.',
+                            "error",
                             context);
                       } else if (_contrasenaController1.text !=
                           _contrasenaController2.text) {
                         mostrarSnackBar(
-                            'Las contraseñas no coinciden.', context);
+                            'Las contraseñas no coinciden.', "error", context);
                       } else {
                         setState(() {
                           cambiarVisibilidadIndicadorProgreso();
@@ -274,22 +330,44 @@ class PaginaRegistroState extends State<PaginaRegistro> {
   // Función que registra un nuevo usuario mediante email y contraseña.
   Future<void> registrarNuevoUsuario(BuildContext context) async {
     try {
-      await auth.createUserWithEmailAndPassword(
+      // Registramos el usuario con email y password
+      final credenciales = await auth.createUserWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _contrasenaController1.text.trim());
-      mostrarSnackBar("Usuario creado correctamente", context);
-      Navigator.pop(context);
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const VerificacionCorreo()));
+
+      // Añadimos nombre de usuario
+      await credenciales.user!.updateDisplayName(_usuarioController.text);
+
+      // Añadimos la url de la imagen de perfil seleccionada
+      String url = '';
+
+      if (imagenSubida != null) {
+        url = await subirImagen(imagenSubida!);
+      }
+
+      await credenciales.user!.updatePhotoURL(url);
+
+      // Añadimos también el usuario creado a la base de datos
+      Usuario nuevoUsuario =
+          Usuario(_emailController.text, _usuarioController.text, url);
+
+      await addUsuario(nuevoUsuario, credenciales.user!.uid).then((_) {
+        mostrarSnackBar("Usuario creado correctamente", "ok", context);
+        Navigator.pop(context);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const VerificacionCorreo()));
+      });
     } on FirebaseAuthException catch (e) {
       if (e.code == "email-already-in-use") {
-        mostrarSnackBar(
-            "Ya existe un usuario con ese correo electrónico.", context);
+        mostrarSnackBar("Ya existe un usuario con ese correo electrónico.",
+            "error", context);
       } else {
-        mostrarSnackBar("Lo sentimos, hubo un error", context);
+        mostrarSnackBar("Lo sentimos, hubo un error", "error", context);
       }
     } catch (e) {
-      mostrarSnackBar("Lo sentimos, hubo un error", context);
+      mostrarSnackBar(e.toString(), "error", context);
     } finally {
       setState(() {
         cambiarVisibilidadIndicadorProgreso();

@@ -2,18 +2,24 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:goshopp/firebase_options.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:goshopp/models/usuario.dart';
+import 'package:goshopp/services/usuarios.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:goshopp/screens/login/contr_reset.dart';
+import 'package:goshopp/screens/usuarios/contr_reset.dart';
 import 'package:goshopp/screens/inicio.dart';
-import 'package:goshopp/screens/login/registro.dart';
-import 'package:goshopp/screens/login/auxiliar_login.dart';
-import 'package:goshopp/screens/login/verificacion.dart';
+import 'package:goshopp/screens/usuarios/registro.dart';
+import 'package:goshopp/screens/usuarios/auxiliar_login.dart';
+import 'package:goshopp/screens/usuarios/verificacion.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+      name: 'goshopp-d4eb4', options: DefaultFirebaseOptions.currentPlatform);
+
   runApp(const MainPage());
 }
 
@@ -28,17 +34,6 @@ class MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-    _estaUsuarioAutenticado();
-  }
-
-  void _estaUsuarioAutenticado() {
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      if (user == null) {
-        print("Usuario no autenticado");
-      } else {
-        print("Usuario autenticado");
-      }
-    });
   }
 
   @override
@@ -51,13 +46,14 @@ class Login extends StatefulWidget {
   const Login({super.key});
 
   @override
-  _LoginState createState() => _LoginState();
+  LoginState createState() => LoginState();
 }
 
-class _LoginState extends State<Login> {
+class LoginState extends State<Login> {
   static bool _contrasenaVisible = false;
   static bool visible = false;
   static bool googleVisible = false;
+  bool checkBoxMarcado = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -68,6 +64,7 @@ class _LoginState extends State<Login> {
 
   @override
   void initState() {
+    _cargarCredencialesUsuario();
     super.initState();
     visible = false;
     googleVisible = false;
@@ -102,8 +99,11 @@ class _LoginState extends State<Login> {
               const SizedBox(height: 100),
 
               // Introducir correo electrónico
-              mostrarCampoTextoForm(_emailController, 'Email',
-                  'Introduzca su correo electrónico'),
+              mostrarCampoTextoForm(
+                  _emailController,
+                  'Email',
+                  'Introduzca su correo electrónico',
+                  Icons.mail_outline_rounded),
 
               // Introducir contraseña
               Padding(
@@ -152,7 +152,22 @@ class _LoginState extends State<Login> {
                 ),
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
+
+              // Recordar mis credenciales
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Checkbox(
+                        value: checkBoxMarcado,
+                        side: const BorderSide(color: Colors.white, width: 2),
+                        activeColor: Colors.black45,
+                        onChanged: _recordarCredenciales),
+                    const Text("Recordar mis credenciales",
+                        style: TextStyle(fontSize: 17, color: Colors.white))
+                  ]),
+
+              const SizedBox(height: 10),
 
               // Botón de inicio de sesión
               SizedBox(
@@ -163,6 +178,7 @@ class _LoginState extends State<Login> {
                     if (!EmailValidator.validate(_emailController.text)) {
                       mostrarSnackBar(
                           'El correo introducido no tiene un formato correcto.',
+                          "error",
                           context);
                     } else {
                       setState(() {
@@ -340,19 +356,21 @@ class _LoginState extends State<Login> {
     if (formState!.validate()) {
       formState.save();
       try {
-        await auth.signInWithEmailAndPassword(
-            email: _emailController.text.trim(),
-            password: _contrasenaController.text.trim());
-
-        if (auth.currentUser!.emailVerified) {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => const Home()));
-        } else {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const VerificacionCorreo()));
-        }
+        await auth
+            .signInWithEmailAndPassword(
+                email: _emailController.text.trim(),
+                password: _contrasenaController.text.trim())
+            .then((value) {
+          if (auth.currentUser!.emailVerified) {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => const Home()));
+          } else {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const VerificacionCorreo()));
+          }
+        });
 
         setState(() {
           _cambiarEstadoIndicadorProgreso();
@@ -360,9 +378,10 @@ class _LoginState extends State<Login> {
       } on FirebaseAuthException catch (e) {
         if (e.code == "user-not-found" || e.code == "wrong-password") {
           mostrarSnackBar(
-              "Los valores introducidos no son correctos.", context);
+              "Los valores introducidos no son correctos.", "error", context);
         } else {
-          mostrarSnackBar("Asegúrese de rellenar todos los campos.", context);
+          mostrarSnackBar(
+              "Asegúrese de rellenar todos los campos.", "error", context);
         }
         setState(() {
           _cambiarEstadoIndicadorProgreso();
@@ -379,18 +398,32 @@ class _LoginState extends State<Login> {
     try {
       final GoogleSignInAccount? googleSignInAccount =
           await googleSignIn.signIn();
+
       final GoogleSignInAuthentication googleSignInAuthentication =
           await googleSignInAccount!.authentication;
 
       final AuthCredential credential = GoogleAuthProvider.credential(
           accessToken: googleSignInAuthentication.accessToken,
           idToken: googleSignInAuthentication.idToken);
-      await auth.signInWithCredential(credential);
-      _formKey.currentState!.save();
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const Home()));
+
+      await auth.signInWithCredential(credential).then((value) async {
+        _formKey.currentState!.save();
+
+        // Añadimos también el usuario creado a la base de datos
+        Usuario nuevoUsuario = Usuario(
+            auth.currentUser!.email.toString(),
+            auth.currentUser!.displayName.toString(),
+            auth.currentUser!.photoURL);
+
+        await addUsuario(nuevoUsuario, auth.currentUser!.uid).then((_) {
+          mostrarSnackBar("Usuario creado correctamente", "ok", context);
+
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => const Home()));
+        });
+      });
     } catch (e) {
-      mostrarSnackBar("Lo sentimos, se produjo un error", context);
+      mostrarSnackBar("Lo sentimos, se produjo un error", "error", context);
     } finally {
       setState(() {
         _cambiarEstadoIndicadorProgresoGoogle();
@@ -406,6 +439,43 @@ class _LoginState extends State<Login> {
   // Función que hace visible o no la barra de carga de progreso de Google.
   void _cambiarEstadoIndicadorProgresoGoogle() {
     googleVisible = !googleVisible;
+  }
+
+  // Función que controla el recordar o no las credenciales del usuario.
+  void _recordarCredenciales(bool? value) {
+    checkBoxMarcado = value!;
+    SharedPreferences.getInstance().then(
+      (prefs) {
+        prefs.setBool("recordarCredenciales", value);
+        prefs.setString('email', _emailController.text);
+        prefs.setString('password', _contrasenaController.text);
+      },
+    );
+    setState(() {
+      checkBoxMarcado = value;
+    });
+  }
+
+  // Función que carga o no los datos del usuario.
+  void _cargarCredencialesUsuario() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var email = prefs.getString("email") ?? "";
+      var password = prefs.getString("password") ?? "";
+      var recordarCredenciales = prefs.getBool("recordarCredenciales") ?? false;
+
+      if (recordarCredenciales) {
+        setState(() {
+          checkBoxMarcado = true;
+        });
+
+        _emailController.text = email;
+        _contrasenaController.text = password;
+      }
+    } catch (e) {
+      mostrarSnackBar(
+          "Lo sentimos, se ha producido un error.", "error", context);
+    }
   }
 
   @override

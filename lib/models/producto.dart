@@ -1,31 +1,23 @@
 // Clase que representa cada producto de una lista de la compra
 
+import 'package:goshopp/models/tipoproducto.dart';
+
 class Producto {
   // ======= ATRIBUTOS =======
 
-  String? _nombre;
-  double? _precio;
-  // Foto
-  final bool _estaComprado = false;
+  String? id;
+  String? nombre;
+  double? precio;
+  TipoProducto? tipo;
+  bool? estaComprado;
 
   // ======= CONSTRUCTOR =======
 
-  Producto(String nombre, double precio) {
-    _nombre = nombre;
-    _precio = precio;
-  }
-
-  // ======= GETTERS =======
-
-  String? get nombre {
-    return _nombre;
-  }
-
-  double? get precio {
-    return _precio;
-  }
-
-  bool get estaComprado {
-    return _estaComprado;
+  Producto(String idP, String n, TipoProducto t, bool c) {
+    id = idP;
+    nombre = n;
+    precio = -1;
+    tipo = t;
+    estaComprado = c;
   }
 }
