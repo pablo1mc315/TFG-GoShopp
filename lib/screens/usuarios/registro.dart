@@ -8,6 +8,7 @@ import 'package:goshopp/models/usuario.dart';
 
 import 'package:goshopp/screens/usuarios/auxiliar_login.dart';
 import 'package:goshopp/screens/usuarios/verificacion.dart';
+import 'package:goshopp/services/imagenes.dart';
 import 'package:goshopp/services/usuarios.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -23,7 +24,6 @@ class PaginaRegistroState extends State<PaginaRegistro> {
   static bool _contrasenaVisible2 = false;
   static bool visible = false;
   FirebaseAuth auth = FirebaseAuth.instance;
-  XFile? imagenPerfil;
 
   @override
   void initState() {
@@ -33,11 +33,11 @@ class PaginaRegistroState extends State<PaginaRegistro> {
 
   // Controladores de los campos del formulario
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final ImagePicker _imagenController = ImagePicker();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _usuarioController = TextEditingController();
   final TextEditingController _contrasenaController1 = TextEditingController();
   final TextEditingController _contrasenaController2 = TextEditingController();
+  File? imagenSubida;
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +83,7 @@ class PaginaRegistroState extends State<PaginaRegistro> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 7),
                         child: Center(
-                            child: imagenPerfil == null
+                            child: imagenSubida == null
                                 ? const Image(
                                     width: 160,
                                     height: 160,
@@ -91,17 +91,18 @@ class PaginaRegistroState extends State<PaginaRegistro> {
                                 : ClipRRect(
                                     borderRadius: BorderRadius.circular(200),
                                     child: Image.file(
-                                      File(imagenPerfil!.path),
+                                      imagenSubida!,
                                       width: 160,
                                       height: 160,
                                     ))),
                       ),
                       InkWell(
                         onTap: () async {
-                          imagenPerfil = await _imagenController.pickImage(
-                              source: ImageSource.gallery);
+                          final XFile? imagenPerfil = await getImagen();
 
-                          setState(() {});
+                          setState(() {
+                            imagenSubida = File(imagenPerfil!.path);
+                          });
                         },
                         child: const CircleAvatar(
                           radius: 16,
@@ -337,8 +338,12 @@ class PaginaRegistroState extends State<PaginaRegistro> {
       // Añadimos nombre de usuario
       await credenciales.user!.updateDisplayName(_usuarioController.text);
 
-      // TODO: añadir la url de la imagen de perfil seleccionada
+      // Añadimos la url de la imagen de perfil seleccionada
       String url = '';
+
+      if (imagenSubida != null) {
+        url = await subirImagen(imagenSubida!);
+      }
 
       // Añadimos también el usuario creado a la base de datos
       Usuario nuevoUsuario =
@@ -361,6 +366,7 @@ class PaginaRegistroState extends State<PaginaRegistro> {
       }
     } catch (e) {
       mostrarSnackBar(e.toString(), "error", context);
+      print(e.toString());
     } finally {
       setState(() {
         cambiarVisibilidadIndicadorProgreso();
