@@ -4,6 +4,7 @@ import 'package:goshopp/models/tipoproducto.dart';
 import 'package:goshopp/screens/listas/detalles.dart';
 import 'package:goshopp/services/productos.dart';
 
+// ignore: must_be_immutable
 class CadaProductoWidget extends StatefulWidget {
   final String? listaID;
   final String? productoID;
