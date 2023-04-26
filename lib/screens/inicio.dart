@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:goshopp/main.dart';
+import 'package:goshopp/screens/grupos/grupos.dart';
 import 'package:goshopp/screens/listas/listas.dart';
 import 'package:goshopp/screens/usuarios/editar_usuario.dart';
 import 'package:goshopp/services/usuarios.dart';
@@ -211,7 +212,7 @@ class _HomeState extends State<Home> {
           Center(child: ListasPersonales()),
 
           // Pestaña "Mis Grupos"
-          Center(child: Text("Mostrar aquí los grupos"))
+          Center(child: ListaGrupos())
         ]),
       ),
     );
