@@ -48,3 +48,8 @@ Future<void> eliminarUsuario(String nombreUsuario, String gid) async {
     "listaParticipantes": FieldValue.arrayRemove([nombreUsuario])
   });
 }
+
+// Función que elimina un grupo por completo
+Future<void> borrarGrupo(String gid) async {
+  await db.collection('grupos').doc(gid).delete();
+}
