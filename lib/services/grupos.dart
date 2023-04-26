@@ -18,11 +18,11 @@ Future<void> crearGrupo(Grupo grupoNuevo, String admin) async {
 }
 
 // Función que obtiene los grupos a los que pertenece un usuario por su ID
-Future<List<Grupo>> getGrupos(String nombreUsuario) async {
+Future<List<Grupo>> getGrupos(String email) async {
   List<Grupo> grupos = [];
   await db
       .collection('grupos')
-      .where("listaParticipantes", arrayContains: nombreUsuario)
+      .where("listaParticipantes", arrayContains: email)
       .get()
       .then((value) {
     for (var resultado in value.docs) {
