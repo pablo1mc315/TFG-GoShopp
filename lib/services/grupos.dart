@@ -1,55 +1,31 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:goshopp/models/grupo.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 
+// Función que obtiene la lista de grupos de un usuario
+getGruposUsuario(String uid) async {
+  return db.collection('usuarios').doc(uid).snapshots();
+}
+
 // Función que crea un nuevo grupo
-Future<void> crearGrupo(Grupo grupoNuevo, String admin) async {
-  Map<String, dynamic> grupo = {
-    "id": grupoNuevo.id,
-    "nombre": grupoNuevo.nombre,
-    "admin": admin,
-    "listaParticipantes": grupoNuevo.listaParticipantes,
-    "listasActivas": grupoNuevo.listasActivas
-  };
-
-  // Creamos el grupo nuevo en la base de datos
-  await db.collection('grupos').add(grupo);
-}
-
-// Función que obtiene los grupos a los que pertenece un usuario por su ID
-Future<List<Grupo>> getGrupos(String email) async {
-  List<Grupo> grupos = [];
-  await db
-      .collection('grupos')
-      .where("listaParticipantes", arrayContains: email)
-      .get()
-      .then((value) {
-    for (var resultado in value.docs) {
-      Grupo grupo = Grupo(resultado['id'], resultado['nombre'],
-          resultado['admin'], resultado['listaParticipantes']);
-      grupos.add(grupo);
-    }
+Future crearGrupo(String email, String uid, String nombre) async {
+  DocumentReference refG = await db.collection('grupos').add({
+    "id": "",
+    "nombre": nombre,
+    "admin": email,
+    "participantes": [],
+    "ultimoMensaje": "",
+    "usuarioUltimoMensaje": ""
   });
 
-  return grupos;
-}
-
-// Función que añade a un usuario a un grupo
-Future<void> addUsuario(String nombreUsuario, String gid) async {
-  await db.collection('grupos').doc(gid).update({
-    "listaParticipantes": FieldValue.arrayUnion([nombreUsuario])
+  await refG.update({
+    "id": refG.id,
+    "participantes": FieldValue.arrayUnion([email])
   });
-}
 
-// Función que elimina a un usuario de un grupo
-Future<void> eliminarUsuario(String nombreUsuario, String gid) async {
-  await db.collection('grupos').doc(gid).update({
-    "listaParticipantes": FieldValue.arrayRemove([nombreUsuario])
+  DocumentReference refU = db.collection('usuarios').doc(uid);
+
+  return await refU.update({
+    "grupos": FieldValue.arrayUnion([(refG.id)])
   });
-}
-
-// Función que elimina un grupo por completo
-Future<void> borrarGrupo(String gid) async {
-  await db.collection('grupos').doc(gid).delete();
 }

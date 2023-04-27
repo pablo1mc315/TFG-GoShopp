@@ -8,8 +8,11 @@ class Grupo {
   String? id;
   String? nombre;
   String? admin;
-  List<String>? listaParticipantes;
+  List<String>? participantes;
   List<ListaCompra>? listasActivas;
+  String? ultimoMensaje;
+  String? usuarioUltimoMensaje;
+  String? horaUltimoMensaje;
 
   // ======= CONSTRUCTOR =======
 
@@ -17,7 +20,10 @@ class Grupo {
     id = idGrupo;
     nombre = n;
     admin = a;
-    listaParticipantes = p;
+    participantes = p;
     listasActivas = [];
+    ultimoMensaje = "";
+    usuarioUltimoMensaje = "";
+    horaUltimoMensaje = "";
   }
 }
