@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:goshopp/screens/grupos/cada_grupo.dart';
 import 'package:goshopp/screens/usuarios/auxiliar_login.dart';
 import 'package:goshopp/services/grupos.dart';
 
@@ -12,8 +13,8 @@ class ListaGrupos extends StatefulWidget {
 
 class _ListaGruposState extends State<ListaGrupos> {
   bool _cargando = false;
-  final User? usuario = FirebaseAuth.instance.currentUser;
   String? nombreGrupo;
+  final User? usuario = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +38,15 @@ class _ListaGruposState extends State<ListaGrupos> {
                 if (snapshot.hasData) {
                   if (snapshot.data["grupos"] != null &&
                       snapshot.data["grupos"].length != 0) {
-                    // TODO: mostrar listado de grupos
-                    return const Text("Mostrar listado de grupos");
+                    return ListView.builder(
+                      itemCount: snapshot.data["grupos"].length,
+                      itemBuilder: (context, index) {
+                        int i = snapshot.data["grupos"].length - index - 1;
+                        return CadaGrupoWidget(
+                            getIdGrupo(snapshot.data["grupos"][i]),
+                            getNombreGrupo(snapshot.data["grupos"][i]));
+                      },
+                    );
                   } else {
                     return const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 30),

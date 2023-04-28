@@ -26,6 +26,16 @@ Future crearGrupo(String email, String uid, String nombre) async {
   DocumentReference refU = db.collection('usuarios').doc(uid);
 
   return await refU.update({
-    "grupos": FieldValue.arrayUnion([(refG.id)])
+    "grupos": FieldValue.arrayUnion([("${nombre}_${refG.id}")])
   });
+}
+
+// Función que devuelve el ID de un grupo
+String getIdGrupo(String nombreCompleto) {
+  return nombreCompleto.substring(nombreCompleto.indexOf("_") + 1);
+}
+
+// Función que devuelve el nombre de un grupo
+String getNombreGrupo(String nombreCompleto) {
+  return nombreCompleto.substring(0, nombreCompleto.indexOf("_"));
 }
