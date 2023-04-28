@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:goshopp/screens/usuarios/auxiliar_login.dart';
@@ -34,16 +33,23 @@ class _ListaGruposState extends State<ListaGrupos> {
       body: Center(
           child: StreamBuilder(
               stream: getGruposUsuario(usuario!.uid),
-              builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+              builder: (context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
-                  if (snapshot.data!["grupos"] != null &&
-                      snapshot.data!["grupos"].length != 0) {
+                  if (snapshot.data["grupos"] != null &&
+                      snapshot.data["grupos"].length != 0) {
                     // TODO: mostrar listado de grupos
                     return const Text("Mostrar listado de grupos");
                   } else {
-                    return const Center(
+                    return const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 30),
                         child: Text(
-                            "No se ha unido a ningún grupo. ¡Pruebe a crear uno!"));
+                          "Aún no se ha unido a ningún grupo. ¡Pruebe a crear uno!",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Color.fromARGB(255, 0, 40, 76),
+                          ),
+                          textAlign: TextAlign.center,
+                        ));
                   }
                 } else {
                   return const CircularProgressIndicator();

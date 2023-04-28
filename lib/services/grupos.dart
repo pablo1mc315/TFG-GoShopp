@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 FirebaseFirestore db = FirebaseFirestore.instance;
 
 // Función que obtiene la lista de grupos de un usuario
-getGruposUsuario(String uid) async {
+getGruposUsuario(String uid) {
   return db.collection('usuarios').doc(uid).snapshots();
 }
 

@@ -22,6 +22,7 @@ Future<void> addUsuario(Usuario usuario, String uid) async {
         "email": usuario.email,
         "nombreUsuario": usuario.nombreUsuario,
         "urlFotoPerfil": usuario.urlFotoPerfil,
+        "grupos": usuario.grupos
       };
 
       await db.collection('usuarios').doc(uid).set(datosUsuario);
