@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:goshopp/screens/grupos/chat.dart';
 
 class CadaGrupoWidget extends StatefulWidget {
   final String? idGrupo;
@@ -17,7 +18,13 @@ class _CadaGrupoWidgetState extends State<CadaGrupoWidget> {
     final User? usuario = FirebaseAuth.instance.currentUser;
 
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    Chat(widget.idGrupo, widget.nombreGrupo)));
+      },
       child: Padding(
         padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
         child: ListTile(
@@ -30,7 +37,6 @@ class _CadaGrupoWidgetState extends State<CadaGrupoWidget> {
             ),
           ),
           title: Text(widget.nombreGrupo.toString()),
-          subtitle: Text("Admin: "),
         ),
       ),
     );

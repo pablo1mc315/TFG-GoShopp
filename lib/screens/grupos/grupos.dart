@@ -66,6 +66,7 @@ class _ListaGruposState extends State<ListaGrupos> {
     );
   }
 
+  // Widget que muestra un diálogo para crear un nuevo grupo
   nuevoGrupo(BuildContext context) {
     showDialog(
         barrierDismissible: false,

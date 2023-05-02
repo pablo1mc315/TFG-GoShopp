@@ -39,3 +39,25 @@ String getIdGrupo(String nombreCompleto) {
 String getNombreGrupo(String nombreCompleto) {
   return nombreCompleto.substring(0, nombreCompleto.indexOf("_"));
 }
+
+// Función que devuelve los mensajes de un grupo
+getChats(String gid) async {
+  return db
+      .collection('grupos')
+      .doc(gid)
+      .collection("mensajes")
+      .orderBy("time")
+      .snapshots();
+}
+
+// Función que devuelve el nombre del administrador de un grupo
+getAdmin(String gid) async {
+  DocumentSnapshot snapshot = await db.collection('grupos').doc(gid).get();
+
+  return snapshot["admin"];
+}
+
+// Función que devuelve los participantes de un grupo
+getParticipantes(String gid) {
+  return db.collection("grupos").doc(gid).snapshots();
+}
