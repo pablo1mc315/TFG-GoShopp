@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:goshopp/screens/grupos/buscar_grupos.dart';
 import 'package:goshopp/screens/grupos/cada_grupo.dart';
 import 'package:goshopp/screens/usuarios/auxiliar_login.dart';
 import 'package:goshopp/services/grupos.dart';
@@ -19,17 +20,44 @@ class _ListaGruposState extends State<ListaGrupos> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          nuevoGrupo(context);
-        },
-        elevation: 0,
-        backgroundColor: const Color.fromARGB(255, 0, 40, 76),
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-          size: 30,
-        ),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          // Botón para buscar un grupo al que unirse
+          FloatingActionButton(
+            heroTag: "Buscar grupo",
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => const BuscarGrupos()));
+            },
+            elevation: 0,
+            backgroundColor: const Color.fromARGB(255, 0, 40, 76),
+            child: const Icon(
+              Icons.search,
+              color: Colors.white,
+              size: 27,
+            ),
+          ),
+
+          const SizedBox(width: 10),
+
+          // Botón para crear un nuevo grupo
+          FloatingActionButton(
+            heroTag: "Crear grupo",
+            onPressed: () {
+              nuevoGrupo(context);
+            },
+            elevation: 0,
+            backgroundColor: const Color.fromARGB(255, 0, 40, 76),
+            child: const Icon(
+              Icons.add,
+              color: Colors.white,
+              size: 30,
+            ),
+          )
+        ],
       ),
       body: Center(
           child: StreamBuilder(

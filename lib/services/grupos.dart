@@ -61,3 +61,8 @@ getAdmin(String gid) async {
 getParticipantes(String gid) {
   return db.collection("grupos").doc(gid).snapshots();
 }
+
+// Función que devuelve un lista de grupos por su nombre
+buscarGruposPorNombre(String nombreGrupo) {
+  return db.collection("grupos").where("nombre", isEqualTo: nombreGrupo).get();
+}

@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:goshopp/services/grupos.dart';
 
@@ -115,7 +114,6 @@ class _InfoGrupoState extends State<InfoGrupo> {
                 },
               );
             } else {
-              print("hola");
               return const Center(
                   child: Text(
                 "Aún no hay participantes en este grupo.",
