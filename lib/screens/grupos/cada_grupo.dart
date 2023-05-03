@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:goshopp/screens/grupos/chat.dart';
 
@@ -15,8 +14,6 @@ class CadaGrupoWidget extends StatefulWidget {
 class _CadaGrupoWidgetState extends State<CadaGrupoWidget> {
   @override
   Widget build(BuildContext context) {
-    final User? usuario = FirebaseAuth.instance.currentUser;
-
     return GestureDetector(
       onTap: () {
         Navigator.push(
