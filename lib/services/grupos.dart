@@ -66,3 +66,56 @@ getParticipantes(String gid) {
 buscarGruposPorNombre(String nombreGrupo) {
   return db.collection("grupos").where("nombre", isEqualTo: nombreGrupo).get();
 }
+
+// Función que comprueba si un usuario ya pertenece o no a un grupo
+Future<bool> yaPerteneceGrupo(
+    String nombreGrupo, String gid, String uid) async {
+  DocumentSnapshot snapshot = await db.collection("usuarios").doc(uid).get();
+  List<dynamic> grupos = await snapshot["grupos"];
+
+  if (grupos.contains("${nombreGrupo}_$gid")) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+// Función que elimina a un usuario de un grupo
+Future salirGrupo(
+    String gid, String nombreGrupo, String correo, String uid) async {
+  DocumentReference refU = db.collection("usuarios").doc(uid);
+  DocumentReference refG = db.collection("grupos").doc(gid);
+
+  DocumentSnapshot snapshot = await refU.get();
+  List<dynamic> grupos = await snapshot['grupos'];
+
+  // Si el grupo existe, lo eliminamos
+  if (grupos.contains("${nombreGrupo}_$gid")) {
+    await refU.update({
+      "grupos": FieldValue.arrayRemove(["${nombreGrupo}_$gid"])
+    });
+    await refG.update({
+      "participantes": FieldValue.arrayRemove([correo])
+    });
+  }
+}
+
+// Función que añade un usuario a un grupo
+Future entrarGrupo(
+    String gid, String nombreGrupo, String correo, String uid) async {
+  DocumentReference refU = db.collection("usuarios").doc(uid);
+  DocumentReference refG = db.collection("grupos").doc(gid);
+
+  DocumentSnapshot snapshot = await refU.get();
+  List<dynamic> grupos = await snapshot['grupos'];
+
+  // Si el grupo no existe para el usuario, lo añadimos
+  if (!grupos.contains("${nombreGrupo}_$gid")) {
+    await refU.update({
+      "grupos": FieldValue.arrayUnion(["${nombreGrupo}_$gid"])
+    });
+    await refG.update({
+      "participantes": FieldValue.arrayUnion([correo])
+    });
+  }
+}

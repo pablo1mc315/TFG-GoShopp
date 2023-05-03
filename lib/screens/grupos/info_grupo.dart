@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:goshopp/screens/inicio.dart';
 import 'package:goshopp/services/grupos.dart';
 
 class InfoGrupo extends StatefulWidget {
@@ -20,13 +22,55 @@ class _InfoGrupoState extends State<InfoGrupo> {
 
   @override
   Widget build(BuildContext context) {
+    final User? usuario = FirebaseAuth.instance.currentUser;
+
     return Scaffold(
         appBar: AppBar(
             centerTitle: true,
             title: const Text("Info del grupo"),
             backgroundColor: const Color.fromARGB(255, 0, 100, 190),
             actions: [
-              IconButton(onPressed: () {}, icon: const Icon(Icons.exit_to_app))
+              IconButton(
+                  onPressed: () {
+                    showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text("Abandonar grupo"),
+                            content: const Text(
+                                "¿Estás seguro de que deseas abandonar el grupo?"),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text("Cancelar",
+                                      style: TextStyle(
+                                          color: Colors.red, fontSize: 18))),
+                              TextButton(
+                                  onPressed: () async {
+                                    await salirGrupo(
+                                            widget.idGrupo.toString(),
+                                            widget.nombreGrupo.toString(),
+                                            usuario!.email.toString(),
+                                            usuario.uid)
+                                        .then((_) {
+                                      Navigator.pop(context);
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  const Home()));
+                                    });
+                                  },
+                                  child: const Text("Sí, estoy seguro",
+                                      style: TextStyle(fontSize: 18)))
+                            ],
+                          );
+                        });
+                  },
+                  icon: const Icon(Icons.exit_to_app))
             ]),
         body: Column(
           children: [
