@@ -46,7 +46,7 @@ getChats(String gid) async {
       .collection('grupos')
       .doc(gid)
       .collection("mensajes")
-      .orderBy("time")
+      .orderBy("hora")
       .snapshots();
 }
 
@@ -118,4 +118,13 @@ Future entrarGrupo(
       "participantes": FieldValue.arrayUnion([correo])
     });
   }
+}
+
+enviarMensaje(String gid, Map<String, dynamic> mensaje) {
+  db.collection("grupos").doc(gid).collection("mensajes").add(mensaje);
+  db.collection("grupos").doc(gid).update({
+    "ultimoMensaje": mensaje["mensaje"],
+    "usuarioUltimoMensaje": mensaje["emisor"],
+    "horaUltimoMensaje": mensaje["hora"].toString()
+  });
 }
