@@ -16,7 +16,7 @@ class Chat extends StatefulWidget {
 }
 
 class _ChatState extends State<Chat> {
-  TextEditingController _mensajeController = TextEditingController();
+  final TextEditingController _mensajeController = TextEditingController();
   Stream<QuerySnapshot>? chats;
   String admin = "";
 
