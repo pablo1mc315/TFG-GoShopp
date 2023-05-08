@@ -9,8 +9,11 @@ class CadaListaWidget extends StatefulWidget {
   final String? listaID;
   final String? nombre;
   final String? descripcion;
+  final bool isGrupal;
+  final String? idGrupo;
 
-  const CadaListaWidget(this.listaID, this.nombre, this.descripcion,
+  const CadaListaWidget(
+      this.listaID, this.nombre, this.descripcion, this.isGrupal, this.idGrupo,
       {super.key});
 
   @override
@@ -33,7 +36,11 @@ class _CadaListaWidgetState extends State<CadaListaWidget> {
                 context,
                 MaterialPageRoute(
                     builder: (BuildContext context) => ListaDetalles(
-                        widget.listaID, widget.nombre, widget.descripcion)));
+                        widget.listaID,
+                        widget.nombre,
+                        widget.descripcion,
+                        widget.isGrupal,
+                        widget.idGrupo.toString())));
           },
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white,
@@ -71,7 +78,10 @@ class _CadaListaWidgetState extends State<CadaListaWidget> {
                                                   EditarLista(
                                                       widget.listaID,
                                                       widget.nombre,
-                                                      widget.descripcion)))
+                                                      widget.descripcion,
+                                                      widget.isGrupal,
+                                                      widget.idGrupo
+                                                          .toString())))
                                       .then((value) {
                                     setState(() {});
                                   });
@@ -122,8 +132,14 @@ class _CadaListaWidgetState extends State<CadaListaWidget> {
                                       });
 
                                   if (borrar) {
-                                    eliminarListaCompraUsuario(usuario!.uid,
-                                        widget.listaID.toString());
+                                    if (widget.isGrupal) {
+                                      eliminarListaCompraGrupo(
+                                          widget.idGrupo.toString(),
+                                          widget.listaID.toString());
+                                    } else {
+                                      eliminarListaCompraUsuario(usuario!.uid,
+                                          widget.listaID.toString());
+                                    }
                                   }
                                 },
                                 icon: const Icon(

@@ -10,8 +10,12 @@ class ListaDetalles extends StatefulWidget {
   final String? listaID;
   final String? nombre;
   final String? descripcion;
+  final bool isGrupal;
+  final String? idGrupo;
 
-  const ListaDetalles(this.listaID, this.nombre, this.descripcion, {super.key});
+  const ListaDetalles(
+      this.listaID, this.nombre, this.descripcion, this.isGrupal, this.idGrupo,
+      {super.key});
 
   @override
   State<ListaDetalles> createState() => _ListaDetallesState();
@@ -112,13 +116,25 @@ class _ListaDetallesState extends State<ListaDetalles> {
                       Producto nuevoProducto = Producto(
                           "", _nombreController.text, _tipoProducto, false);
 
-                      await addProductoUsuario(nuevoProducto,
-                              widget.listaID.toString(), usuario!.uid)
-                          .then((_) {
-                        mostrarSnackBar(
-                            "Producto añadido correctamente", "ok", context);
-                        setState(() {});
-                      });
+                      if (widget.isGrupal) {
+                        await addProductoGrupo(
+                                nuevoProducto,
+                                widget.listaID.toString(),
+                                widget.idGrupo.toString())
+                            .then((_) {
+                          mostrarSnackBar(
+                              "Producto añadido correctamente", "ok", context);
+                          setState(() {});
+                        });
+                      } else {
+                        await addProductoUsuario(nuevoProducto,
+                                widget.listaID.toString(), usuario!.uid)
+                            .then((_) {
+                          mostrarSnackBar(
+                              "Producto añadido correctamente", "ok", context);
+                          setState(() {});
+                        });
+                      }
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -151,8 +167,11 @@ class _ListaDetallesState extends State<ListaDetalles> {
 
           // Mostramos todos los productos de la lista
           FutureBuilder(
-              future:
-                  getProductosUsuario(usuario!.uid, widget.listaID.toString()),
+              future: widget.isGrupal
+                  ? getProductosGrupo(
+                      widget.idGrupo.toString(), widget.listaID.toString())
+                  : getProductosUsuario(
+                      usuario!.uid, widget.listaID.toString()),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   List<Widget> widgets = [];
@@ -163,7 +182,9 @@ class _ListaDetallesState extends State<ListaDetalles> {
                         producto.nombre,
                         producto.precio,
                         producto.tipo,
-                        producto.estaComprado));
+                        producto.estaComprado,
+                        widget.isGrupal,
+                        widget.idGrupo.toString()));
                   }
                   return Expanded(
                       child: Padding(

@@ -12,9 +12,11 @@ class CadaProductoWidget extends StatefulWidget {
   final double? precio;
   final TipoProducto? tipo;
   bool? estaComprado;
+  final bool isGrupal;
+  final String? idGrupo;
 
   CadaProductoWidget(this.listaID, this.productoID, this.nombre, this.precio,
-      this.tipo, this.estaComprado,
+      this.tipo, this.estaComprado, this.isGrupal, this.idGrupo,
       {super.key});
 
   @override
@@ -69,10 +71,17 @@ class _CadaProductoWidgetState extends State<CadaProductoWidget> {
                         IconButton(
                           splashRadius: 20,
                           onPressed: () async {
-                            comprarProductoUsuario(
-                                usuario!.uid,
-                                widget.listaID.toString(),
-                                widget.productoID.toString());
+                            if (widget.isGrupal) {
+                              comprarProductoGrupo(
+                                  widget.idGrupo.toString(),
+                                  widget.listaID.toString(),
+                                  widget.productoID.toString());
+                            } else {
+                              comprarProductoUsuario(
+                                  usuario!.uid,
+                                  widget.listaID.toString(),
+                                  widget.productoID.toString());
+                            }
 
                             widget.estaComprado = !widget.estaComprado!;
                             setState(() {});
@@ -116,10 +125,17 @@ class _CadaProductoWidgetState extends State<CadaProductoWidget> {
                                 });
 
                             if (borrar) {
-                              eliminarProductoUsuario(
-                                  usuario!.uid,
-                                  widget.listaID.toString(),
-                                  widget.productoID.toString());
+                              if (widget.isGrupal) {
+                                eliminarProductoGrupo(
+                                    widget.idGrupo.toString(),
+                                    widget.listaID.toString(),
+                                    widget.productoID.toString());
+                              } else {
+                                eliminarProductoUsuario(
+                                    usuario!.uid,
+                                    widget.listaID.toString(),
+                                    widget.productoID.toString());
+                              }
                             }
                           },
                           icon: const Icon(

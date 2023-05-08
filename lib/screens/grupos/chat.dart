@@ -51,6 +51,7 @@ class _ChatState extends State<Chat> {
           backgroundColor: const Color.fromARGB(255, 0, 100, 190),
           actions: [
             IconButton(
+                splashRadius: 20,
                 onPressed: () {
                   Navigator.push(
                       context,

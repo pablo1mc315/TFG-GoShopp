@@ -4,19 +4,24 @@ import 'package:goshopp/screens/listas/cada_lista.dart';
 import 'package:goshopp/screens/listas/nueva_lista.dart';
 import 'package:goshopp/services/listas.dart';
 
-class ListasPersonales extends StatefulWidget {
-  const ListasPersonales({super.key});
+class ListasGrupales extends StatefulWidget {
+  final String? idGrupo;
+  const ListasGrupales(this.idGrupo, {super.key});
 
   @override
-  State<ListasPersonales> createState() => _ListasPersonalesState();
+  State<ListasGrupales> createState() => _ListasGrupalesState();
 }
 
-class _ListasPersonalesState extends State<ListasPersonales> {
+class _ListasGrupalesState extends State<ListasGrupales> {
   final User? usuario = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+          centerTitle: true,
+          title: const Text("Listas"),
+          backgroundColor: const Color.fromARGB(255, 0, 100, 190)),
       body: Center(
           child: Column(
         children: <Widget>[
@@ -29,10 +34,11 @@ class _ListasPersonalesState extends State<ListasPersonales> {
                 child: ElevatedButton(
                   onPressed: () async {
                     await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                const NuevaLista("", false))).then((value) {
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) => NuevaLista(
+                                    widget.idGrupo.toString(), true)))
+                        .then((value) {
                       setState(() {});
                     });
                   },
@@ -57,13 +63,13 @@ class _ListasPersonalesState extends State<ListasPersonales> {
 
           // Mostramos cada una de las listas del usuario
           FutureBuilder(
-              future: getListasCompraUsuario(usuario!.uid),
+              future: getListasCompraGrupo(widget.idGrupo.toString()),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   List<Widget> widgets = [];
                   for (var lista in snapshot.data!) {
-                    widgets.add(CadaListaWidget(
-                        lista.id, lista.nombre, lista.descripcion, false, ""));
+                    widgets.add(CadaListaWidget(lista.id, lista.nombre,
+                        lista.descripcion, true, widget.idGrupo.toString()));
                   }
                   return Expanded(
                       child: Padding(

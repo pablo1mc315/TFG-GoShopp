@@ -8,8 +8,12 @@ class EditarLista extends StatefulWidget {
   final String? listaID;
   final String? nombre;
   final String? descripcion;
+  final bool isGrupal;
+  final String? idGrupo;
 
-  const EditarLista(this.listaID, this.nombre, this.descripcion, {super.key});
+  const EditarLista(
+      this.listaID, this.nombre, this.descripcion, this.isGrupal, this.idGrupo,
+      {super.key});
 
   @override
   State<EditarLista> createState() => _EditarListaState();
@@ -114,21 +118,39 @@ class _EditarListaState extends State<EditarLista> {
                         mostrarSnackBar(
                             "La lista debe tener un título", "error", context);
                       } else {
-                        await editarListaCompraUsuario(
-                                _tituloController.text,
-                                _descripcionController.text,
-                                widget.listaID.toString(),
-                                usuario!.uid)
-                            .then((_) {
-                          mostrarSnackBar(
-                              "Lista modificada correctamente", "ok", context);
-                          Navigator.pop(context);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      const Home()));
-                        });
+                        if (widget.isGrupal) {
+                          await editarListaCompraGrupo(
+                                  _tituloController.text,
+                                  _descripcionController.text,
+                                  widget.listaID.toString(),
+                                  widget.idGrupo.toString())
+                              .then((_) {
+                            mostrarSnackBar("Lista modificada correctamente",
+                                "ok", context);
+                            Navigator.pop(context);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        const Home()));
+                          });
+                        } else {
+                          await editarListaCompraUsuario(
+                                  _tituloController.text,
+                                  _descripcionController.text,
+                                  widget.listaID.toString(),
+                                  usuario!.uid)
+                              .then((_) {
+                            mostrarSnackBar("Lista modificada correctamente",
+                                "ok", context);
+                            Navigator.pop(context);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        const Home()));
+                          });
+                        }
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -170,17 +192,4 @@ class _EditarListaState extends State<EditarLista> {
     _descripcionController.dispose();
     super.dispose();
   }
-
-  // Función que registra un nuevo usuario mediante email y contraseña.
-  // Future<void> crearNuevaLista(BuildContext context, ListaCompra lista) async {
-  //   try {
-  //     // Guardamos la lista creada en la base de datos
-  //     widget.listaCompraDB.guardarLista(lista);
-
-  //     mostrarSnackBar("Lista creada correctamente", context);
-  //     Navigator.pop(context);
-  //   } catch (e) {
-  //     mostrarSnackBar("Lo sentimos, hubo un error", context);
-  //   }
-  // }
 }

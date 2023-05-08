@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:goshopp/screens/grupos/listas_grupos.dart';
 import 'package:goshopp/screens/inicio.dart';
 import 'package:goshopp/services/grupos.dart';
 
@@ -31,6 +32,7 @@ class _InfoGrupoState extends State<InfoGrupo> {
             backgroundColor: const Color.fromARGB(255, 0, 100, 190),
             actions: [
               IconButton(
+                  splashRadius: 20,
                   onPressed: () {
                     showDialog(
                         barrierDismissible: false,
@@ -113,6 +115,29 @@ class _InfoGrupoState extends State<InfoGrupo> {
                     )
                   ],
                 ),
+              ),
+            ),
+
+            // Mostrar listas
+            Padding(
+              padding: const EdgeInsets.only(
+                  top: 20, bottom: 0, left: 20, right: 20),
+              child: TextButton(
+                onPressed: () async {
+                  await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  ListasGrupales(widget.idGrupo.toString())))
+                      .then((value) {
+                    setState(() {});
+                  });
+                },
+                child: const Text('Ver listas...',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Color.fromARGB(255, 0, 100, 190),
+                    )),
               ),
             ),
 

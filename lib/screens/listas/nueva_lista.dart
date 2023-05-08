@@ -5,7 +5,9 @@ import 'package:goshopp/screens/usuarios/auxiliar_login.dart';
 import 'package:goshopp/services/listas.dart';
 
 class NuevaLista extends StatefulWidget {
-  const NuevaLista({super.key});
+  final String? idGrupo;
+  final bool isGrupal;
+  const NuevaLista(this.idGrupo, this.isGrupal, {super.key});
 
   @override
   State<NuevaLista> createState() => _NuevaListaState();
@@ -114,12 +116,22 @@ class _NuevaListaState extends State<NuevaLista> {
                             _tituloController.text,
                             _descripcionController.text);
 
-                        await addListaCompraUsuario(nuevaLista, usuario!.uid)
-                            .then((_) {
-                          mostrarSnackBar(
-                              "Lista creada correctamente", "ok", context);
-                          Navigator.pop(context);
-                        });
+                        if (widget.isGrupal) {
+                          await addListaCompraGrupo(
+                                  nuevaLista, widget.idGrupo.toString())
+                              .then((_) {
+                            mostrarSnackBar(
+                                "Lista creada correctamente", "ok", context);
+                            Navigator.pop(context);
+                          });
+                        } else {
+                          await addListaCompraUsuario(nuevaLista, usuario!.uid)
+                              .then((_) {
+                            mostrarSnackBar(
+                                "Lista creada correctamente", "ok", context);
+                            Navigator.pop(context);
+                          });
+                        }
                       }
                     },
                     style: ElevatedButton.styleFrom(

@@ -28,6 +28,30 @@ Future<List<Producto>> getProductosUsuario(String uid, String lid) async {
   return productos;
 }
 
+// Función que obtiene los producto de una lista de un grupo por su ID
+Future<List<Producto>> getProductosGrupo(String gid, String lid) async {
+  List<Producto> productos = [];
+  CollectionReference tablaUsuarios = db.collection('grupos');
+  QuerySnapshot consulta = await tablaUsuarios
+      .doc(gid)
+      .collection('listas')
+      .doc(lid)
+      .collection('productosLista')
+      .get();
+
+  List<dynamic> resultados = consulta.docs;
+  for (var resultado in resultados) {
+    TipoProducto tipo = obtenerTipoProducto(resultado["tipo"]);
+
+    Producto producto = Producto(
+        resultado['id'], resultado['nombre'], tipo, resultado['estaComprado']);
+
+    productos.add(producto);
+  }
+
+  return productos;
+}
+
 // Función que añade un producto a una lista de la compra de un usuario
 Future<void> addProductoUsuario(
     Producto nuevoProducto, String lid, String uid) async {
@@ -64,11 +88,59 @@ Future<void> addProductoUsuario(
       .update({'id': idProducto});
 }
 
+// Función que añade un producto a una lista de la compra de un grupo
+Future<void> addProductoGrupo(
+    Producto nuevoProducto, String lid, String gid) async {
+  String idProducto = "";
+
+  Map<String, dynamic> producto = {
+    "id": nuevoProducto.id,
+    "nombre": nuevoProducto.nombre,
+    "precio": nuevoProducto.precio,
+    "tipo": nuevoProducto.tipo.toString(),
+    "estaComprado": nuevoProducto.estaComprado
+  };
+
+  // Creamos un nuevo producto con los parámetros introducidos
+  await db
+      .collection('grupos')
+      .doc(gid)
+      .collection('listas')
+      .doc(lid)
+      .collection('productosLista')
+      .add(producto)
+      .then((DocumentReference doc) {
+    idProducto = doc.id;
+  });
+
+  // Añadimos la ID del producto recién creado para poder acceder a ella
+  await db
+      .collection('grupos')
+      .doc(gid)
+      .collection('listas')
+      .doc(lid)
+      .collection('productosLista')
+      .doc(idProducto)
+      .update({'id': idProducto});
+}
+
 // Función que elimina un producto de la lista de la compra de un usuario
 Future<void> eliminarProductoUsuario(String uid, String lid, String pid) async {
   await db
       .collection('usuarios')
       .doc(uid)
+      .collection('listas')
+      .doc(lid)
+      .collection('productosLista')
+      .doc(pid)
+      .delete();
+}
+
+// Función que elimina un producto de la lista de la compra de un grupo
+Future<void> eliminarProductoGrupo(String gid, String lid, String pid) async {
+  await db
+      .collection('grupos')
+      .doc(gid)
       .collection('listas')
       .doc(lid)
       .collection('productosLista')
@@ -90,6 +162,20 @@ Future<void> comprarProductoUsuario(String uid, String lid, String pid) async {
       .update({"estaComprado": !estaComprado});
 }
 
+// Función que marca un producto de un grupo como comprado o no según su valor
+Future<void> comprarProductoGrupo(String gid, String lid, String pid) async {
+  bool estaComprado = await estaCompradoGrupo(gid, lid, pid);
+
+  await db
+      .collection('grupos')
+      .doc(gid)
+      .collection('listas')
+      .doc(lid)
+      .collection('productosLista')
+      .doc(pid)
+      .update({"estaComprado": !estaComprado});
+}
+
 // Función que comprueba si un producto de un usuario está comprado o no
 Future<bool> estaCompradoUsuario(String uid, String lid, String pid) async {
   bool estaComprado = false;
@@ -98,6 +184,26 @@ Future<bool> estaCompradoUsuario(String uid, String lid, String pid) async {
   await db
       .collection('usuarios')
       .doc(uid)
+      .collection('listas')
+      .doc(lid)
+      .collection('productosLista')
+      .doc(pid)
+      .get()
+      .then((doc) {
+    estaComprado = doc.data()!['estaComprado'];
+  });
+
+  return estaComprado;
+}
+
+// Función que comprueba si un producto de un grupo está comprado o no
+Future<bool> estaCompradoGrupo(String gid, String lid, String pid) async {
+  bool estaComprado = false;
+
+  // Obtenemos el valor actual de la variable
+  await db
+      .collection('grupos')
+      .doc(gid)
       .collection('listas')
       .doc(lid)
       .collection('productosLista')
