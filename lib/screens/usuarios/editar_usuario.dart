@@ -211,6 +211,9 @@ class EditarPerfilState extends State<EditarPerfil> {
     );
   }
 
+  // ================ Funciones auxiliares ================ //
+
+  // Widget que muestra el campo imagen de perfil dependiendo de su valor
   Widget mostrarImagenPerfil() {
     Widget devolver;
     bool tieneFoto = false;

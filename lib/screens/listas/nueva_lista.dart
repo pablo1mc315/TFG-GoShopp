@@ -173,17 +173,4 @@ class _NuevaListaState extends State<NuevaLista> {
     _descripcionController.dispose();
     super.dispose();
   }
-
-  // Función que registra un nuevo usuario mediante email y contraseña.
-  // Future<void> crearNuevaLista(BuildContext context, ListaCompra lista) async {
-  //   try {
-  //     // Guardamos la lista creada en la base de datos
-  //     widget.listaCompraDB.guardarLista(lista);
-
-  //     mostrarSnackBar("Lista creada correctamente", context);
-  //     Navigator.pop(context);
-  //   } catch (e) {
-  //     mostrarSnackBar("Lo sentimos, hubo un error", context);
-  //   }
-  // }
 }

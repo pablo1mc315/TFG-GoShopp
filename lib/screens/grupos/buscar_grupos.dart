@@ -75,6 +75,8 @@ class _BuscarGruposState extends State<BuscarGrupos> {
     );
   }
 
+  // ================ Funciones auxiliares ================ //
+
   // Función que realiza una búsqueda de los grupos que corresponden a un nombre
   iniciarBusquedaGrupos() async {
     if (_textoBusqueda.text.isNotEmpty) {

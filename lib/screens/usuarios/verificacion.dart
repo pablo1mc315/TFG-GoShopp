@@ -58,6 +58,9 @@ class _VerificacionCorreoState extends State<VerificacionCorreo> {
     );
   }
 
+  // ================ Funciones auxiliares ================ //
+
+  // Función que comprueba si el email ha sido verificado
   Future<void> comprobarSiEmailVerificado() async {
     usuario = auth.currentUser;
     await usuario?.reload().then((value) {

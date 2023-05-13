@@ -94,6 +94,8 @@ class _ListaGruposState extends State<ListaGrupos> {
     );
   }
 
+  // ================ Funciones auxiliares ================ //
+
   // Widget que muestra un diálogo para crear un nuevo grupo
   nuevoGrupo(BuildContext context) {
     showDialog(

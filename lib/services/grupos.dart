@@ -120,6 +120,7 @@ Future entrarGrupo(
   }
 }
 
+// Función que realiza el envío de un mensaje
 enviarMensaje(String gid, Map<String, dynamic> mensaje) {
   db.collection("grupos").doc(gid).collection("mensajes").add(mensaje);
   db.collection("grupos").doc(gid).update({

@@ -115,6 +115,8 @@ class _ChatState extends State<Chat> {
         ));
   }
 
+  // ================ Funciones auxiliares ================ //
+
   // Widget que muestra todos los mensajes de la conversación de un grupo
   mostrarMensajesChat() {
     final User? usuario = FirebaseAuth.instance.currentUser;

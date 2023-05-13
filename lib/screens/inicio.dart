@@ -218,6 +218,9 @@ class _HomeState extends State<Home> {
     );
   }
 
+  // ================ Funciones auxiliares ================ //
+
+  // Cerrar la sesión del usuario actual en la aplicación
   void _cerrarSesion(BuildContext context) async {
     await FirebaseAuth.instance.signOut().then((value) {
       Navigator.pushAndRemoveUntil(
