@@ -9,22 +9,17 @@ class Info extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 0, 100, 190),
       ),
-      body: const Column(
+      body: Column(
         children: <Widget>[
           Center(
             child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 50),
-                child: Text(
-                  "GoShopp",
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 0, 100, 190),
-                      fontSize: 45,
-                      fontWeight: FontWeight.bold),
-                )),
+                padding: const EdgeInsets.symmetric(vertical: 40),
+                child: Image.asset('assets/logos/logo.png',
+                    width: 250, height: 250)),
           ),
-          Center(
+          const Center(
               child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  padding: EdgeInsets.symmetric(horizontal: 25),
                   child: Text(
                     "Desarrollado por: Pablo Muñoz Castro\n\n"
                     "Esta aplicación ha sido desarrollada como Trabajo de Fin "

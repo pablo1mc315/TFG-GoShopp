@@ -84,19 +84,13 @@ class LoginState extends State<Login> {
           key: _formKey,
           child: Column(
             children: <Widget>[
-              const Padding(
-                padding: EdgeInsets.only(top: 200.0, bottom: 0.0),
-                child: Text(
-                  'GoShopp',
-                  style: TextStyle(
-                    fontSize: 40,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+              Padding(
+                padding: const EdgeInsets.only(top: 100, bottom: 0),
+                child: Image.asset('assets/logos/logo.png',
+                    width: 250, height: 250),
               ),
 
-              const SizedBox(height: 100),
+              const SizedBox(height: 30),
 
               // Introducir correo electrónico
               mostrarCampoTextoForm(
