@@ -160,7 +160,8 @@ class _InfoGrupoState extends State<InfoGrupo> {
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   return Container(
-                      padding: const EdgeInsets.all(15),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 5),
                       child: ListTile(
                           leading: CircleAvatar(
                               radius: 25,

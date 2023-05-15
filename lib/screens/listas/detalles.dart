@@ -1,10 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:goshopp/models/producto.dart';
 import 'package:goshopp/models/tipoproducto.dart';
 import 'package:goshopp/screens/listas/cada_producto.dart';
 import 'package:goshopp/screens/usuarios/auxiliar_login.dart';
+import 'package:goshopp/services/imagenes.dart';
 import 'package:goshopp/services/productos.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ListaDetalles extends StatefulWidget {
   final String? listaID;
@@ -24,6 +27,7 @@ class ListaDetalles extends StatefulWidget {
 class _ListaDetallesState extends State<ListaDetalles> {
   final TextEditingController _nombreController = TextEditingController();
   TipoProducto _tipoProducto = TipoProducto.comida;
+  String textoObtenido = "";
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +39,21 @@ class _ListaDetallesState extends State<ListaDetalles> {
         title: Text(widget.nombre.toString()),
         centerTitle: true,
         titleTextStyle: const TextStyle(fontSize: 22),
+        actions: [
+          IconButton(
+              splashRadius: 20,
+              onPressed: () async {
+                try {
+                  final ImageSource? src =
+                      await abrirModalObtenerImagen(context);
+                  getTicket(src!);
+                } catch (e) {
+                  mostrarSnackBar(
+                      "No se ha seleccionado ninguna imagen", "warn", context);
+                }
+              },
+              icon: const Icon(Icons.qr_code_scanner_rounded))
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(25),
@@ -115,6 +134,8 @@ class _ListaDetallesState extends State<ListaDetalles> {
                       // Añadimos un nuevo producto con esos valores
                       Producto nuevoProducto = Producto(
                           "", _nombreController.text, _tipoProducto, false);
+
+                      _nombreController.text = "";
 
                       if (widget.isGrupal) {
                         await addProductoGrupo(
@@ -200,6 +221,34 @@ class _ListaDetallesState extends State<ListaDetalles> {
     );
   }
 
+  // ================ Funciones auxiliares ================ //
+
+  // Obtener el ticket de la compra mediante la fuente de origen seleccionada
+  Future<void> getTicket(ImageSource src) async {
+    try {
+      final imagen = await ImagePicker().pickImage(source: src);
+
+      if (imagen == null) return;
+
+      escanearTicket(imagen);
+    } catch (e) {
+      mostrarSnackBar(
+          "Se produjo un error al seleccionar la imagen", "error", context);
+    }
+  }
+
+  // Función que escanea la imagen en busca de texto
+  Future<void> escanearTicket(XFile imagen) async {
+    final inputImagen = InputImage.fromFilePath(imagen.path);
+
+    final detectorTexto = GoogleMlKit.vision.textRecognizer();
+    RecognizedText texto = await detectorTexto.processImage(inputImagen);
+    await detectorTexto.close();
+
+    textoObtenido = texto.text;
+    setState(() {});
+  }
+
   // Función que muestra los distintos tipo de producto seleccionables
   List<PopupMenuEntry<TipoProducto>> get mostrarTiposProducto {
     return <PopupMenuEntry<TipoProducto>>[
@@ -223,8 +272,6 @@ class _ListaDetallesState extends State<ListaDetalles> {
     ];
   }
 }
-
-// ================ Funciones auxiliares ================ //
 
 // Función que devuelve el nombre del tipo de producto seleccionado
 String getNombre(TipoProducto tipo) {
