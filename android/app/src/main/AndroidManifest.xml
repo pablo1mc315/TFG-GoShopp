@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.goshopp">
-   <application
+    <application
         android:label="GoShopp"
         android:name="${applicationName}"
         android:requestLegacyExternalStorage="true"
