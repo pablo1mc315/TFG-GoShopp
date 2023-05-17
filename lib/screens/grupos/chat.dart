@@ -130,6 +130,7 @@ class _ChatState extends State<Chat> {
                 itemBuilder: (context, index) {
                   return Mensajes(
                       snapshot.data.docs[index]['mensaje'],
+                      snapshot.data.docs[index]['hora'],
                       snapshot.data.docs[index]['emisor'],
                       usuario!.displayName ==
                           snapshot.data.docs[index]['emisor']);
@@ -148,7 +149,7 @@ class _ChatState extends State<Chat> {
       Map<String, dynamic> mensaje = {
         "mensaje": _mensajeController.text,
         "emisor": usuario!.displayName,
-        "hora": DateTime.now().millisecondsSinceEpoch,
+        "hora": DateTime.now(),
       };
 
       enviarMensaje(widget.idGrupo.toString(), mensaje);

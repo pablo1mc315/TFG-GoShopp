@@ -1,11 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Mensajes extends StatefulWidget {
   final String mensaje;
+  final Timestamp hora;
   final String emisor;
   final bool enviadoPorMi;
 
-  const Mensajes(this.mensaje, this.emisor, this.enviadoPorMi, {super.key});
+  const Mensajes(this.mensaje, this.hora, this.emisor, this.enviadoPorMi,
+      {super.key});
 
   @override
   State<Mensajes> createState() => _MensajesState();
@@ -46,7 +49,7 @@ class _MensajesState extends State<Mensajes> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.emisor,
+              "${widget.emisor} - ${widget.hora.toDate().toLocal().hour}:${widget.hora.toDate().minute}",
               textAlign: TextAlign.start,
               style: const TextStyle(
                   fontSize: 15,
