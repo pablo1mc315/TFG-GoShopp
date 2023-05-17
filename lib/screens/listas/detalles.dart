@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:goshopp/models/producto.dart';
 import 'package:goshopp/models/tipoproducto.dart';
 import 'package:goshopp/screens/listas/cada_producto.dart';
@@ -72,6 +71,7 @@ class _ListaDetallesState extends State<ListaDetalles> {
 
           SizedBox(
             child: TextFormField(
+              maxLength: 20,
               controller: _nombreController,
               style: const TextStyle(
                   fontSize: 20, color: Color.fromARGB(255, 0, 100, 190)),
@@ -230,23 +230,11 @@ class _ListaDetallesState extends State<ListaDetalles> {
 
       if (imagen == null) return;
 
-      escanearTicket(imagen);
+      // TODO: Reconocer texto de la imagen
     } catch (e) {
       mostrarSnackBar(
           "Se produjo un error al seleccionar la imagen", "error", context);
     }
-  }
-
-  // Función que escanea la imagen en busca de texto
-  Future<void> escanearTicket(XFile imagen) async {
-    final inputImagen = InputImage.fromFilePath(imagen.path);
-
-    final detectorTexto = GoogleMlKit.vision.textRecognizer();
-    RecognizedText texto = await detectorTexto.processImage(inputImagen);
-    await detectorTexto.close();
-
-    textoObtenido = texto.text;
-    setState(() {});
   }
 
   // Función que muestra los distintos tipo de producto seleccionables

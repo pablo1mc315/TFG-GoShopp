@@ -47,6 +47,7 @@ class _EditarListaState extends State<EditarLista> {
                 Padding(
                   padding: const EdgeInsets.all(30),
                   child: TextFormField(
+                    maxLength: 20,
                     controller: _tituloController,
                     style: const TextStyle(
                       fontSize: 22,
