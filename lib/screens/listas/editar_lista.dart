@@ -8,12 +8,11 @@ class EditarLista extends StatefulWidget {
   final String? listaID;
   final String? nombre;
   final String? descripcion;
-  final bool isGrupal;
+  final bool? isGrupal;
   final String? idGrupo;
 
-  const EditarLista(
-      this.listaID, this.nombre, this.descripcion, this.isGrupal, this.idGrupo,
-      {super.key});
+  const EditarLista(this.listaID, this.nombre, this.descripcion,
+      {super.key, this.isGrupal = false, this.idGrupo});
 
   @override
   State<EditarLista> createState() => _EditarListaState();
@@ -119,7 +118,7 @@ class _EditarListaState extends State<EditarLista> {
                         mostrarSnackBar(
                             "La lista debe tener un título", "error", context);
                       } else {
-                        if (widget.isGrupal) {
+                        if (widget.isGrupal!) {
                           await editarListaCompraGrupo(
                                   _tituloController.text,
                                   _descripcionController.text,

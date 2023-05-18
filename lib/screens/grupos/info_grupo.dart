@@ -5,9 +5,9 @@ import 'package:goshopp/screens/inicio.dart';
 import 'package:goshopp/services/grupos.dart';
 
 class InfoGrupo extends StatefulWidget {
-  final String? idGrupo;
-  final String? nombreGrupo;
-  final String? admin;
+  final String idGrupo;
+  final String nombreGrupo;
+  final String admin;
 
   const InfoGrupo(this.idGrupo, this.nombreGrupo, this.admin, {super.key});
 

@@ -9,15 +9,14 @@ import 'package:goshopp/services/productos.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ListaDetalles extends StatefulWidget {
-  final String? listaID;
-  final String? nombre;
-  final String? descripcion;
-  final bool isGrupal;
+  final String listaID;
+  final String nombre;
+  final String descripcion;
+  final bool? isGrupal;
   final String? idGrupo;
 
-  const ListaDetalles(
-      this.listaID, this.nombre, this.descripcion, this.isGrupal, this.idGrupo,
-      {super.key});
+  const ListaDetalles(this.listaID, this.nombre, this.descripcion,
+      {super.key, this.isGrupal = false, this.idGrupo});
 
   @override
   State<ListaDetalles> createState() => _ListaDetallesState();
@@ -137,7 +136,7 @@ class _ListaDetallesState extends State<ListaDetalles> {
 
                       _nombreController.text = "";
 
-                      if (widget.isGrupal) {
+                      if (widget.isGrupal!) {
                         await addProductoGrupo(
                                 nuevoProducto,
                                 widget.listaID.toString(),
@@ -188,7 +187,7 @@ class _ListaDetallesState extends State<ListaDetalles> {
 
           // Mostramos todos los productos de la lista
           FutureBuilder(
-              future: widget.isGrupal
+              future: widget.isGrupal!
                   ? getProductosGrupo(
                       widget.idGrupo.toString(), widget.listaID.toString())
                   : getProductosUsuario(
@@ -205,12 +204,9 @@ class _ListaDetallesState extends State<ListaDetalles> {
                         producto.estaComprado!);
 
                     widgets.add(CadaProductoWidget(
-                        widget.listaID,
-                        widget.nombre,
-                        widget.descripcion,
-                        p,
-                        widget.isGrupal,
-                        widget.idGrupo.toString()));
+                        widget.listaID, widget.nombre, widget.descripcion, p,
+                        isGrupal: widget.isGrupal,
+                        idGrupo: widget.idGrupo.toString()));
                   }
                   return Expanded(
                       child: Padding(

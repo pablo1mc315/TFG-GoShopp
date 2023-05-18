@@ -7,16 +7,16 @@ import 'package:goshopp/services/productos.dart';
 
 // ignore: must_be_immutable
 class CadaProductoWidget extends StatefulWidget {
-  final String? listaID;
-  final String? listaNombre;
-  final String? listaDescripcion;
-  final Producto producto;
-  final bool isGrupal;
+  final String listaID;
+  final String listaNombre;
+  final String listaDescripcion;
+  final Producto? producto;
+  final bool? isGrupal;
   final String? idGrupo;
 
-  const CadaProductoWidget(this.listaID, this.listaNombre,
-      this.listaDescripcion, this.producto, this.isGrupal, this.idGrupo,
-      {super.key});
+  const CadaProductoWidget(
+      this.listaID, this.listaNombre, this.listaDescripcion, this.producto,
+      {super.key, this.isGrupal = false, this.idGrupo});
 
   @override
   State<CadaProductoWidget> createState() => _CadaProductoWidgetState();
@@ -41,7 +41,7 @@ class _CadaProductoWidgetState extends State<CadaProductoWidget> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Nombre del producto
-                        Text(widget.producto.nombre.toString(),
+                        Text(widget.producto!.nombre.toString(),
                             style: const TextStyle(
                               fontSize: 20,
                               color: Color.fromARGB(255, 0, 40, 76),
@@ -50,7 +50,7 @@ class _CadaProductoWidgetState extends State<CadaProductoWidget> {
                         // Precio y tipo
                         Row(
                           children: [
-                            Text(getNombre(widget.producto.tipo!)),
+                            Text(getNombre(widget.producto!.tipo!)),
                           ],
                         ),
                       ],
@@ -63,20 +63,20 @@ class _CadaProductoWidgetState extends State<CadaProductoWidget> {
                         IconButton(
                           splashRadius: 20,
                           onPressed: () async {
-                            if (widget.isGrupal) {
+                            if (widget.isGrupal!) {
                               comprarProductoGrupo(
                                   widget.idGrupo.toString(),
                                   widget.listaID.toString(),
-                                  widget.producto.id.toString());
+                                  widget.producto!.id.toString());
                             } else {
                               comprarProductoUsuario(
                                   usuario!.uid,
                                   widget.listaID.toString(),
-                                  widget.producto.id.toString());
+                                  widget.producto!.id.toString());
                             }
 
-                            widget.producto.estaComprado =
-                                !widget.producto.estaComprado!;
+                            widget.producto!.estaComprado =
+                                !widget.producto!.estaComprado!;
                             setState(() {});
                           },
                           icon: const Icon(
@@ -97,7 +97,7 @@ class _CadaProductoWidgetState extends State<CadaProductoWidget> {
                                 builder: (context) {
                                   return AlertDialog(
                                     title: Text(
-                                        "¿Está seguro de que desea eliminar '${widget.producto.nombre}' de la lista?"),
+                                        "¿Está seguro de que desea eliminar '${widget.producto!.nombre}' de la lista?"),
                                     actions: [
                                       TextButton(
                                           onPressed: () {
@@ -118,11 +118,11 @@ class _CadaProductoWidgetState extends State<CadaProductoWidget> {
                                 });
 
                             if (borrar) {
-                              if (widget.isGrupal) {
+                              if (widget.isGrupal!) {
                                 await eliminarProductoGrupo(
                                         widget.idGrupo.toString(),
                                         widget.listaID.toString(),
-                                        widget.producto.id.toString())
+                                        widget.producto!.id.toString())
                                     .then((_) {
                                   Navigator.pushReplacement(
                                       context,
@@ -132,8 +132,8 @@ class _CadaProductoWidgetState extends State<CadaProductoWidget> {
                                                   widget.listaID,
                                                   widget.listaNombre,
                                                   widget.listaDescripcion,
-                                                  widget.isGrupal,
-                                                  widget.idGrupo)));
+                                                  isGrupal: widget.isGrupal,
+                                                  idGrupo: widget.idGrupo)));
                                   mostrarSnackBar(
                                       "Producto eliminado correctamente",
                                       "ok",
@@ -143,7 +143,7 @@ class _CadaProductoWidgetState extends State<CadaProductoWidget> {
                                 await eliminarProductoUsuario(
                                         usuario!.uid,
                                         widget.listaID.toString(),
-                                        widget.producto.id.toString())
+                                        widget.producto!.id.toString())
                                     .then((_) {
                                   Navigator.pushReplacement(
                                       context,
@@ -153,8 +153,8 @@ class _CadaProductoWidgetState extends State<CadaProductoWidget> {
                                                   widget.listaID,
                                                   widget.listaNombre,
                                                   widget.listaDescripcion,
-                                                  widget.isGrupal,
-                                                  widget.idGrupo)));
+                                                  isGrupal: widget.isGrupal,
+                                                  idGrupo: widget.idGrupo)));
                                   mostrarSnackBar(
                                       "Producto eliminado correctamente",
                                       "ok",
@@ -171,10 +171,10 @@ class _CadaProductoWidgetState extends State<CadaProductoWidget> {
                         ),
 
                         Icon(
-                            widget.producto.estaComprado!
+                            widget.producto!.estaComprado!
                                 ? Icons.done
                                 : Icons.close,
-                            color: widget.producto.estaComprado!
+                            color: widget.producto!.estaComprado!
                                 ? Colors.green
                                 : Colors.red)
                       ],

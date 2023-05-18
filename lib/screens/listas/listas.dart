@@ -32,7 +32,7 @@ class _ListasPersonalesState extends State<ListasPersonales> {
                         context,
                         MaterialPageRoute(
                             builder: (BuildContext context) =>
-                                const NuevaLista("", false))).then((value) {
+                                const NuevaLista())).then((value) {
                       setState(() {});
                     });
                   },
@@ -63,7 +63,7 @@ class _ListasPersonalesState extends State<ListasPersonales> {
                   List<Widget> widgets = [];
                   for (var lista in snapshot.data!) {
                     widgets.add(CadaListaWidget(
-                        lista.id, lista.nombre, lista.descripcion, false, ""));
+                        lista.id!, lista.nombre!, lista.descripcion!));
                   }
                   return Expanded(
                       child: Padding(

@@ -6,8 +6,8 @@ import 'package:goshopp/services/listas.dart';
 
 class NuevaLista extends StatefulWidget {
   final String? idGrupo;
-  final bool isGrupal;
-  const NuevaLista(this.idGrupo, this.isGrupal, {super.key});
+  final bool? isGrupal;
+  const NuevaLista({super.key, this.idGrupo, this.isGrupal = false});
 
   @override
   State<NuevaLista> createState() => _NuevaListaState();
@@ -117,7 +117,7 @@ class _NuevaListaState extends State<NuevaLista> {
                             _tituloController.text,
                             _descripcionController.text);
 
-                        if (widget.isGrupal) {
+                        if (widget.isGrupal!) {
                           await addListaCompraGrupo(
                                   nuevaLista, widget.idGrupo.toString())
                               .then((_) {

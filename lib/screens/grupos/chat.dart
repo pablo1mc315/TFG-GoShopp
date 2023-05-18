@@ -6,8 +6,8 @@ import 'package:goshopp/screens/grupos/mensajes.dart';
 import 'package:goshopp/services/grupos.dart';
 
 class Chat extends StatefulWidget {
-  final String? idGrupo;
-  final String? nombreGrupo;
+  final String idGrupo;
+  final String nombreGrupo;
 
   const Chat(this.idGrupo, this.nombreGrupo, {super.key});
 

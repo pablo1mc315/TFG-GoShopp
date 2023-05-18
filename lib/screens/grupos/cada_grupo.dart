@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:goshopp/screens/grupos/chat.dart';
 
 class CadaGrupoWidget extends StatefulWidget {
-  final String? idGrupo;
-  final String? nombreGrupo;
+  final String idGrupo;
+  final String nombreGrupo;
 
   const CadaGrupoWidget(this.idGrupo, this.nombreGrupo, {super.key});
 
@@ -29,7 +29,7 @@ class _CadaGrupoWidgetState extends State<CadaGrupoWidget> {
             radius: 25,
             backgroundColor: const Color.fromARGB(255, 0, 100, 190),
             child: Text(
-              widget.nombreGrupo![0].toUpperCase(),
+              widget.nombreGrupo[0].toUpperCase(),
               style: const TextStyle(color: Colors.white, fontSize: 22),
             ),
           ),

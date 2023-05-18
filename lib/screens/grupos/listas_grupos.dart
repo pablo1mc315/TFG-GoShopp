@@ -34,11 +34,11 @@ class _ListasGrupalesState extends State<ListasGrupales> {
                 child: ElevatedButton(
                   onPressed: () async {
                     await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) => NuevaLista(
-                                    widget.idGrupo.toString(), true)))
-                        .then((value) {
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => NuevaLista(
+                                idGrupo: widget.idGrupo.toString(),
+                                isGrupal: true))).then((value) {
                       setState(() {});
                     });
                   },
@@ -68,8 +68,9 @@ class _ListasGrupalesState extends State<ListasGrupales> {
                 if (snapshot.hasData) {
                   List<Widget> widgets = [];
                   for (var lista in snapshot.data!) {
-                    widgets.add(CadaListaWidget(lista.id, lista.nombre,
-                        lista.descripcion, true, widget.idGrupo.toString()));
+                    widgets.add(CadaListaWidget(
+                        lista.id!, lista.nombre!, lista.descripcion!,
+                        isGrupal: true, idGrupo: widget.idGrupo.toString()));
                   }
                   return Expanded(
                       child: Padding(

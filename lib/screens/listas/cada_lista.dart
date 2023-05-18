@@ -6,15 +6,14 @@ import 'package:goshopp/screens/listas/editar_lista.dart';
 import 'package:goshopp/services/listas.dart';
 
 class CadaListaWidget extends StatefulWidget {
-  final String? listaID;
-  final String? nombre;
-  final String? descripcion;
-  final bool isGrupal;
+  final String listaID;
+  final String nombre;
+  final String descripcion;
+  final bool? isGrupal;
   final String? idGrupo;
 
-  const CadaListaWidget(
-      this.listaID, this.nombre, this.descripcion, this.isGrupal, this.idGrupo,
-      {super.key});
+  const CadaListaWidget(this.listaID, this.nombre, this.descripcion,
+      {super.key, this.isGrupal = false, this.idGrupo});
 
   @override
   State<CadaListaWidget> createState() => _CadaListaWidgetState();
@@ -36,11 +35,9 @@ class _CadaListaWidgetState extends State<CadaListaWidget> {
                 context,
                 MaterialPageRoute(
                     builder: (BuildContext context) => ListaDetalles(
-                        widget.listaID,
-                        widget.nombre,
-                        widget.descripcion,
-                        widget.isGrupal,
-                        widget.idGrupo.toString())));
+                        widget.listaID, widget.nombre, widget.descripcion,
+                        isGrupal: widget.isGrupal,
+                        idGrupo: widget.idGrupo.toString())));
           },
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white,
@@ -79,8 +76,8 @@ class _CadaListaWidgetState extends State<CadaListaWidget> {
                                                       widget.listaID,
                                                       widget.nombre,
                                                       widget.descripcion,
-                                                      widget.isGrupal,
-                                                      widget.idGrupo
+                                                      isGrupal: widget.isGrupal,
+                                                      idGrupo: widget.idGrupo
                                                           .toString())))
                                       .then((value) {
                                     setState(() {});
@@ -132,7 +129,7 @@ class _CadaListaWidgetState extends State<CadaListaWidget> {
                                       });
 
                                   if (borrar) {
-                                    if (widget.isGrupal) {
+                                    if (widget.isGrupal!) {
                                       eliminarListaCompraGrupo(
                                           widget.idGrupo.toString(),
                                           widget.listaID.toString());
