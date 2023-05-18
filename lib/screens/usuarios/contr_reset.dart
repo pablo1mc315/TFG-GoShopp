@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'package:goshopp/screens/usuarios/auxiliar_login.dart';
+import 'package:goshopp/screens/auxiliar.dart';
 
 class ResetPassword extends StatefulWidget {
   const ResetPassword({super.key});

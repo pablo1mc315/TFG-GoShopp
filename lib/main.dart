@@ -12,7 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:goshopp/screens/usuarios/contr_reset.dart';
 import 'package:goshopp/screens/inicio.dart';
 import 'package:goshopp/screens/usuarios/registro.dart';
-import 'package:goshopp/screens/usuarios/auxiliar_login.dart';
+import 'package:goshopp/screens/auxiliar.dart';
 import 'package:goshopp/screens/usuarios/verificacion.dart';
 
 void main() async {

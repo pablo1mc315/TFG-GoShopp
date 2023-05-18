@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:goshopp/models/producto.dart';
 import 'package:goshopp/models/tipoproducto.dart';
 import 'package:goshopp/screens/listas/cada_producto.dart';
-import 'package:goshopp/screens/usuarios/auxiliar_login.dart';
+import 'package:goshopp/screens/auxiliar.dart';
 import 'package:goshopp/services/imagenes.dart';
 import 'package:goshopp/services/productos.dart';
 import 'package:image_picker/image_picker.dart';
