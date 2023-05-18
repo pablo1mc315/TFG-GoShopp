@@ -16,6 +16,7 @@ class Chat extends StatefulWidget {
 }
 
 class _ChatState extends State<Chat> {
+  final ScrollController _scrollController = ScrollController();
   final TextEditingController _mensajeController = TextEditingController();
   Stream<QuerySnapshot>? chats;
   String admin = "";
@@ -62,53 +63,60 @@ class _ChatState extends State<Chat> {
                 icon: const Icon(Icons.info))
           ],
         ),
-        body: Stack(
+        body: Column(
           children: <Widget>[
             mostrarMensajesChat(),
-            Container(
+            Align(
               alignment: Alignment.bottomCenter,
-              width: MediaQuery.of(context).size.width,
-              child: Container(
-                padding: const EdgeInsets.all(15),
-                color: const Color.fromARGB(255, 0, 40, 76),
-                child: Row(children: [
-                  // Mensaje a enviar
-                  Expanded(
-                      child: TextFormField(
-                    controller: _mensajeController,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: const InputDecoration(
-                      hintText: "Enviar un mensaje...",
-                      hintStyle: TextStyle(color: Colors.white, fontSize: 16),
-                      border: InputBorder.none,
-                    ),
-                  )),
-
-                  const SizedBox(
-                    width: 12,
-                  ),
-
-                  // Botón de enviar mensaje
-                  GestureDetector(
-                    onTap: () {
-                      enviar();
-                    },
-                    child: Container(
-                      height: 45,
-                      width: 45,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(30),
+              child: SizedBox(
+                height: 80,
+                width: MediaQuery.of(context).size.width,
+                child: Container(
+                  padding: const EdgeInsets.all(15),
+                  color: const Color.fromARGB(255, 0, 40, 76),
+                  child: Row(children: [
+                    // Mensaje a enviar
+                    Expanded(
+                        child: TextFormField(
+                      controller: _mensajeController,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: const InputDecoration(
+                        hintText: "Enviar un mensaje...",
+                        hintStyle: TextStyle(color: Colors.white, fontSize: 16),
+                        border: InputBorder.none,
                       ),
-                      child: const Center(
-                          child: Icon(
-                        Icons.send,
-                        size: 20,
-                        color: Color.fromARGB(255, 0, 40, 76),
-                      )),
+                    )),
+
+                    const SizedBox(
+                      width: 12,
                     ),
-                  )
-                ]),
+
+                    // Botón de enviar mensaje
+                    GestureDetector(
+                      onTap: () {
+                        _scrollController.animateTo(
+                            _scrollController.position.maxScrollExtent,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeOut);
+                        enviar();
+                      },
+                      child: Container(
+                        height: 45,
+                        width: 45,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: const Center(
+                            child: Icon(
+                          Icons.send,
+                          size: 20,
+                          color: Color.fromARGB(255, 0, 40, 76),
+                        )),
+                      ),
+                    )
+                  ]),
+                ),
               ),
             )
           ],
@@ -121,23 +129,31 @@ class _ChatState extends State<Chat> {
   mostrarMensajesChat() {
     final User? usuario = FirebaseAuth.instance.currentUser;
 
-    return StreamBuilder(
-      stream: chats,
-      builder: (context, AsyncSnapshot snapshot) {
-        return snapshot.hasData
-            ? ListView.builder(
-                itemCount: snapshot.data.docs.length,
-                itemBuilder: (context, index) {
-                  return Mensajes(
-                      snapshot.data.docs[index]['mensaje'],
-                      snapshot.data.docs[index]['hora'],
-                      snapshot.data.docs[index]['emisor'],
-                      usuario!.displayName ==
-                          snapshot.data.docs[index]['emisor']);
-                },
-              )
-            : Container();
-      },
+    return Expanded(
+      child: StreamBuilder(
+        stream: chats,
+        builder: (context, AsyncSnapshot snapshot) {
+          return snapshot.hasData
+              ? ListView.builder(
+                  controller: _scrollController,
+                  itemCount: snapshot.data.docs.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index == snapshot.data.docs.length) {
+                      return Container(
+                        height: 80,
+                      );
+                    }
+                    return Mensajes(
+                        snapshot.data.docs[index]['mensaje'],
+                        snapshot.data.docs[index]['hora'],
+                        snapshot.data.docs[index]['emisor'],
+                        usuario!.displayName ==
+                            snapshot.data.docs[index]['emisor']);
+                  },
+                )
+              : Container();
+        },
+      ),
     );
   }
 
