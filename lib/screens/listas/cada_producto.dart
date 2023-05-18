@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:goshopp/models/producto.dart';
 import 'package:goshopp/screens/listas/detalles.dart';
+import 'package:goshopp/screens/usuarios/auxiliar_login.dart';
 import 'package:goshopp/services/productos.dart';
 
 // ignore: must_be_immutable
@@ -50,13 +51,6 @@ class _CadaProductoWidgetState extends State<CadaProductoWidget> {
                         Row(
                           children: [
                             Text(getNombre(widget.producto.tipo!)),
-
-                            // Mostrar le precio cuando se compre toda la lista
-                            // Text(" - ${widget.precio.toString()} €",
-                            //     style: const TextStyle(
-                            //       fontSize: 15,
-                            //       color: Color.fromARGB(255, 0, 40, 76),
-                            //     ))
                           ],
                         ),
                       ],
@@ -140,6 +134,10 @@ class _CadaProductoWidgetState extends State<CadaProductoWidget> {
                                                   widget.listaDescripcion,
                                                   widget.isGrupal,
                                                   widget.idGrupo)));
+                                  mostrarSnackBar(
+                                      "Producto eliminado correctamente",
+                                      "ok",
+                                      context);
                                 });
                               } else {
                                 await eliminarProductoUsuario(
@@ -147,7 +145,6 @@ class _CadaProductoWidgetState extends State<CadaProductoWidget> {
                                         widget.listaID.toString(),
                                         widget.producto.id.toString())
                                     .then((_) {
-                                  print(widget.listaID);
                                   Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
@@ -158,6 +155,10 @@ class _CadaProductoWidgetState extends State<CadaProductoWidget> {
                                                   widget.listaDescripcion,
                                                   widget.isGrupal,
                                                   widget.idGrupo)));
+                                  mostrarSnackBar(
+                                      "Producto eliminado correctamente",
+                                      "ok",
+                                      context);
                                 });
                               }
                             }
