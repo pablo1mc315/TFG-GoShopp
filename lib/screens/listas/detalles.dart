@@ -204,8 +204,13 @@ class _ListaDetallesState extends State<ListaDetalles> {
                         producto.tipo!,
                         producto.estaComprado!);
 
-                    widgets.add(CadaProductoWidget(widget.listaID, p,
-                        widget.isGrupal, widget.idGrupo.toString()));
+                    widgets.add(CadaProductoWidget(
+                        widget.listaID,
+                        widget.nombre,
+                        widget.descripcion,
+                        p,
+                        widget.isGrupal,
+                        widget.idGrupo.toString()));
                   }
                   return Expanded(
                       child: Padding(

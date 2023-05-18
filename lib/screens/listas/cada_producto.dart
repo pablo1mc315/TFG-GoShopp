@@ -7,12 +7,14 @@ import 'package:goshopp/services/productos.dart';
 // ignore: must_be_immutable
 class CadaProductoWidget extends StatefulWidget {
   final String? listaID;
+  final String? listaNombre;
+  final String? listaDescripcion;
   final Producto producto;
   final bool isGrupal;
   final String? idGrupo;
 
-  const CadaProductoWidget(
-      this.listaID, this.producto, this.isGrupal, this.idGrupo,
+  const CadaProductoWidget(this.listaID, this.listaNombre,
+      this.listaDescripcion, this.producto, this.isGrupal, this.idGrupo,
       {super.key});
 
   @override
@@ -123,15 +125,40 @@ class _CadaProductoWidgetState extends State<CadaProductoWidget> {
 
                             if (borrar) {
                               if (widget.isGrupal) {
-                                eliminarProductoGrupo(
-                                    widget.idGrupo.toString(),
-                                    widget.listaID.toString(),
-                                    widget.producto.id.toString());
+                                await eliminarProductoGrupo(
+                                        widget.idGrupo.toString(),
+                                        widget.listaID.toString(),
+                                        widget.producto.id.toString())
+                                    .then((_) {
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              ListaDetalles(
+                                                  widget.listaID,
+                                                  widget.listaNombre,
+                                                  widget.listaDescripcion,
+                                                  widget.isGrupal,
+                                                  widget.idGrupo)));
+                                });
                               } else {
-                                eliminarProductoUsuario(
-                                    usuario!.uid,
-                                    widget.listaID.toString(),
-                                    widget.producto.id.toString());
+                                await eliminarProductoUsuario(
+                                        usuario!.uid,
+                                        widget.listaID.toString(),
+                                        widget.producto.id.toString())
+                                    .then((_) {
+                                  print(widget.listaID);
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              ListaDetalles(
+                                                  widget.listaID,
+                                                  widget.listaNombre,
+                                                  widget.listaDescripcion,
+                                                  widget.isGrupal,
+                                                  widget.idGrupo)));
+                                });
                               }
                             }
                           },
