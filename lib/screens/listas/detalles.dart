@@ -133,7 +133,7 @@ class _ListaDetallesState extends State<ListaDetalles> {
                     } else {
                       // Añadimos un nuevo producto con esos valores
                       Producto nuevoProducto = Producto(
-                          "", _nombreController.text, _tipoProducto, false);
+                          "", _nombreController.text, -1, _tipoProducto, false);
 
                       _nombreController.text = "";
 
@@ -197,20 +197,25 @@ class _ListaDetallesState extends State<ListaDetalles> {
                 if (snapshot.hasData) {
                   List<Widget> widgets = [];
                   for (var producto in snapshot.data!) {
-                    widgets.add(CadaProductoWidget(
-                        widget.listaID,
-                        producto.id,
-                        producto.nombre,
-                        producto.precio,
-                        producto.tipo,
-                        producto.estaComprado,
-                        widget.isGrupal,
-                        widget.idGrupo.toString()));
+                    final p = Producto(
+                        producto.id!,
+                        producto.nombre!,
+                        producto.precio!,
+                        producto.tipo!,
+                        producto.estaComprado!);
+
+                    widgets.add(CadaProductoWidget(widget.listaID, p,
+                        widget.isGrupal, widget.idGrupo.toString()));
                   }
                   return Expanded(
                       child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: ListView(shrinkWrap: true, children: widgets),
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: widgets.length,
+                        itemBuilder: (context, index) {
+                          return widgets[index];
+                        }),
                   ));
                 } else {
                   return const CircularProgressIndicator();

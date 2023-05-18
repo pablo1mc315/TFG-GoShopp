@@ -19,8 +19,8 @@ Future<List<Producto>> getProductosUsuario(String uid, String lid) async {
   for (var resultado in resultados) {
     TipoProducto tipo = obtenerTipoProducto(resultado["tipo"]);
 
-    Producto producto = Producto(
-        resultado['id'], resultado['nombre'], tipo, resultado['estaComprado']);
+    Producto producto = Producto(resultado['id'], resultado['nombre'], -1, tipo,
+        resultado['estaComprado']);
 
     productos.add(producto);
   }
@@ -43,8 +43,8 @@ Future<List<Producto>> getProductosGrupo(String gid, String lid) async {
   for (var resultado in resultados) {
     TipoProducto tipo = obtenerTipoProducto(resultado["tipo"]);
 
-    Producto producto = Producto(
-        resultado['id'], resultado['nombre'], tipo, resultado['estaComprado']);
+    Producto producto = Producto(resultado['id'], resultado['nombre'], -1, tipo,
+        resultado['estaComprado']);
 
     productos.add(producto);
   }
