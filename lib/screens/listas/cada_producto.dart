@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:goshopp/models/producto.dart';
 import 'package:goshopp/screens/listas/detalles.dart';
-import 'package:goshopp/screens/auxiliar.dart';
 import 'package:goshopp/services/productos.dart';
 
 // ignore: must_be_immutable
@@ -134,10 +133,6 @@ class _CadaProductoWidgetState extends State<CadaProductoWidget> {
                                                   widget.listaDescripcion,
                                                   isGrupal: widget.isGrupal,
                                                   idGrupo: widget.idGrupo)));
-                                  mostrarSnackBar(
-                                      "Producto eliminado correctamente",
-                                      "ok",
-                                      context);
                                 });
                               } else {
                                 await eliminarProductoUsuario(
@@ -155,10 +150,6 @@ class _CadaProductoWidgetState extends State<CadaProductoWidget> {
                                                   widget.listaDescripcion,
                                                   isGrupal: widget.isGrupal,
                                                   idGrupo: widget.idGrupo)));
-                                  mostrarSnackBar(
-                                      "Producto eliminado correctamente",
-                                      "ok",
-                                      context);
                                 });
                               }
                             }

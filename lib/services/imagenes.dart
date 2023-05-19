@@ -33,7 +33,8 @@ Future<String> subirImagen(File imagen) async {
 Future<ImageSource?> abrirModalObtenerImagen(BuildContext context) async {
   return showModalBottomSheet(
       context: context,
-      builder: ((context) => Padding(
+      builder: ((context) => Container(
+            height: 160,
             padding: const EdgeInsets.all(20),
             child: Column(children: [
               // Galeria
