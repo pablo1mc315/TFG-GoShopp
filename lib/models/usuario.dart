@@ -9,6 +9,7 @@ class Usuario {
   String? nombreUsuario;
   String? urlFotoPerfil;
   List<ListaCompra>? listas;
+  List<String>? grupos;
 
   // ======= CONSTRUCTOR =======
 
@@ -17,5 +18,6 @@ class Usuario {
     nombreUsuario = nU;
     urlFotoPerfil = url;
     listas = [];
+    grupos = [];
   }
 }

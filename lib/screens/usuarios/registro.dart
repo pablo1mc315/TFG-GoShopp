@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:goshopp/models/usuario.dart';
 
-import 'package:goshopp/screens/usuarios/auxiliar_login.dart';
+import 'package:goshopp/screens/auxiliar.dart';
 import 'package:goshopp/screens/usuarios/verificacion.dart';
 import 'package:goshopp/services/imagenes.dart';
 import 'package:goshopp/services/usuarios.dart';

@@ -1,17 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:goshopp/screens/grupos/listas_grupos.dart';
 import 'package:goshopp/screens/inicio.dart';
 import 'package:goshopp/screens/listas/detalles.dart';
 import 'package:goshopp/screens/listas/editar_lista.dart';
 import 'package:goshopp/services/listas.dart';
 
 class CadaListaWidget extends StatefulWidget {
-  final String? listaID;
-  final String? nombre;
-  final String? descripcion;
+  final String listaID;
+  final String nombre;
+  final String descripcion;
+  final bool? isGrupal;
+  final String? idGrupo;
 
   const CadaListaWidget(this.listaID, this.nombre, this.descripcion,
-      {super.key});
+      {super.key, this.isGrupal = false, this.idGrupo});
 
   @override
   State<CadaListaWidget> createState() => _CadaListaWidgetState();
@@ -33,7 +36,9 @@ class _CadaListaWidgetState extends State<CadaListaWidget> {
                 context,
                 MaterialPageRoute(
                     builder: (BuildContext context) => ListaDetalles(
-                        widget.listaID, widget.nombre, widget.descripcion)));
+                        widget.listaID, widget.nombre, widget.descripcion,
+                        isGrupal: widget.isGrupal,
+                        idGrupo: widget.idGrupo.toString())));
           },
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white,
@@ -71,7 +76,10 @@ class _CadaListaWidgetState extends State<CadaListaWidget> {
                                                   EditarLista(
                                                       widget.listaID,
                                                       widget.nombre,
-                                                      widget.descripcion)))
+                                                      widget.descripcion,
+                                                      isGrupal: widget.isGrupal,
+                                                      idGrupo: widget.idGrupo
+                                                          .toString())))
                                       .then((value) {
                                     setState(() {});
                                   });
@@ -106,12 +114,6 @@ class _CadaListaWidgetState extends State<CadaListaWidget> {
                                             TextButton(
                                                 onPressed: () {
                                                   Navigator.pop(context, true);
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (BuildContext
-                                                                  context) =>
-                                                              const Home()));
                                                 },
                                                 child: const Text(
                                                     "Sí, estoy seguro",
@@ -122,8 +124,34 @@ class _CadaListaWidgetState extends State<CadaListaWidget> {
                                       });
 
                                   if (borrar) {
-                                    eliminarListaCompraUsuario(usuario!.uid,
-                                        widget.listaID.toString());
+                                    if (widget.isGrupal!) {
+                                      await eliminarListaCompraGrupo(
+                                              widget.idGrupo.toString(),
+                                              widget.listaID.toString())
+                                          .then((_) {
+                                        Navigator.pop(context);
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        ListasGrupales(widget
+                                                            .idGrupo
+                                                            .toString())));
+                                      });
+                                    } else {
+                                      eliminarListaCompraUsuario(usuario!.uid,
+                                              widget.listaID.toString())
+                                          .then((_) {
+                                        Navigator.pop(context);
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        const Home()));
+                                      });
+                                    }
                                   }
                                 },
                                 icon: const Icon(

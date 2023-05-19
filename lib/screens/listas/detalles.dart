@@ -3,15 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:goshopp/models/producto.dart';
 import 'package:goshopp/models/tipoproducto.dart';
 import 'package:goshopp/screens/listas/cada_producto.dart';
-import 'package:goshopp/screens/usuarios/auxiliar_login.dart';
+import 'package:goshopp/screens/auxiliar.dart';
+import 'package:goshopp/services/imagenes.dart';
 import 'package:goshopp/services/productos.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ListaDetalles extends StatefulWidget {
-  final String? listaID;
-  final String? nombre;
-  final String? descripcion;
+  final String listaID;
+  final String nombre;
+  final String descripcion;
+  final bool? isGrupal;
+  final String? idGrupo;
 
-  const ListaDetalles(this.listaID, this.nombre, this.descripcion, {super.key});
+  const ListaDetalles(this.listaID, this.nombre, this.descripcion,
+      {super.key, this.isGrupal = false, this.idGrupo});
 
   @override
   State<ListaDetalles> createState() => _ListaDetallesState();
@@ -20,6 +25,7 @@ class ListaDetalles extends StatefulWidget {
 class _ListaDetallesState extends State<ListaDetalles> {
   final TextEditingController _nombreController = TextEditingController();
   TipoProducto _tipoProducto = TipoProducto.comida;
+  String textoObtenido = "";
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +37,21 @@ class _ListaDetallesState extends State<ListaDetalles> {
         title: Text(widget.nombre.toString()),
         centerTitle: true,
         titleTextStyle: const TextStyle(fontSize: 22),
+        actions: [
+          IconButton(
+              splashRadius: 20,
+              onPressed: () async {
+                try {
+                  final ImageSource? src =
+                      await abrirModalObtenerImagen(context);
+                  getTicket(src!);
+                } catch (e) {
+                  mostrarSnackBar(
+                      "No se ha seleccionado ninguna imagen", "warn", context);
+                }
+              },
+              icon: const Icon(Icons.qr_code_scanner_rounded))
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(25),
@@ -49,6 +70,7 @@ class _ListaDetallesState extends State<ListaDetalles> {
 
           SizedBox(
             child: TextFormField(
+              maxLength: 20,
               controller: _nombreController,
               style: const TextStyle(
                   fontSize: 20, color: Color.fromARGB(255, 0, 100, 190)),
@@ -110,15 +132,29 @@ class _ListaDetallesState extends State<ListaDetalles> {
                     } else {
                       // Añadimos un nuevo producto con esos valores
                       Producto nuevoProducto = Producto(
-                          "", _nombreController.text, _tipoProducto, false);
+                          "", _nombreController.text, -1, _tipoProducto, false);
 
-                      await addProductoUsuario(nuevoProducto,
-                              widget.listaID.toString(), usuario!.uid)
-                          .then((_) {
-                        mostrarSnackBar(
-                            "Producto añadido correctamente", "ok", context);
-                        setState(() {});
-                      });
+                      _nombreController.text = "";
+
+                      if (widget.isGrupal!) {
+                        await addProductoGrupo(
+                                nuevoProducto,
+                                widget.listaID.toString(),
+                                widget.idGrupo.toString())
+                            .then((_) {
+                          mostrarSnackBar(
+                              "Producto añadido correctamente", "ok", context);
+                          setState(() {});
+                        });
+                      } else {
+                        await addProductoUsuario(nuevoProducto,
+                                widget.listaID.toString(), usuario!.uid)
+                            .then((_) {
+                          mostrarSnackBar(
+                              "Producto añadido correctamente", "ok", context);
+                          setState(() {});
+                        });
+                      }
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -151,24 +187,36 @@ class _ListaDetallesState extends State<ListaDetalles> {
 
           // Mostramos todos los productos de la lista
           FutureBuilder(
-              future:
-                  getProductosUsuario(usuario!.uid, widget.listaID.toString()),
+              future: widget.isGrupal!
+                  ? getProductosGrupo(
+                      widget.idGrupo.toString(), widget.listaID.toString())
+                  : getProductosUsuario(
+                      usuario!.uid, widget.listaID.toString()),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   List<Widget> widgets = [];
                   for (var producto in snapshot.data!) {
+                    final p = Producto(
+                        producto.id!,
+                        producto.nombre!,
+                        producto.precio!,
+                        producto.tipo!,
+                        producto.estaComprado!);
+
                     widgets.add(CadaProductoWidget(
-                        widget.listaID,
-                        producto.id,
-                        producto.nombre,
-                        producto.precio,
-                        producto.tipo,
-                        producto.estaComprado));
+                        widget.listaID, widget.nombre, widget.descripcion, p,
+                        isGrupal: widget.isGrupal,
+                        idGrupo: widget.idGrupo.toString()));
                   }
                   return Expanded(
                       child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: ListView(shrinkWrap: true, children: widgets),
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: widgets.length,
+                        itemBuilder: (context, index) {
+                          return widgets[index];
+                        }),
                   ));
                 } else {
                   return const CircularProgressIndicator();
@@ -177,6 +225,22 @@ class _ListaDetallesState extends State<ListaDetalles> {
         ]),
       ),
     );
+  }
+
+  // ================ Funciones auxiliares ================ //
+
+  // Obtener el ticket de la compra mediante la fuente de origen seleccionada
+  Future<void> getTicket(ImageSource src) async {
+    try {
+      final imagen = await ImagePicker().pickImage(source: src);
+
+      if (imagen == null) return;
+
+      // TODO: Reconocer texto de la imagen
+    } catch (e) {
+      mostrarSnackBar(
+          "Se produjo un error al seleccionar la imagen", "error", context);
+    }
   }
 
   // Función que muestra los distintos tipo de producto seleccionables
@@ -202,8 +266,6 @@ class _ListaDetallesState extends State<ListaDetalles> {
     ];
   }
 }
-
-// ================ Funciones auxiliares ================ //
 
 // Función que devuelve el nombre del tipo de producto seleccionado
 String getNombre(TipoProducto tipo) {

@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:goshopp/models/lista_compra.dart';
-import 'package:goshopp/screens/usuarios/auxiliar_login.dart';
+import 'package:goshopp/screens/auxiliar.dart';
 import 'package:goshopp/services/listas.dart';
 
 class NuevaLista extends StatefulWidget {
-  const NuevaLista({super.key});
+  final String? idGrupo;
+  final bool? isGrupal;
+  const NuevaLista({super.key, this.idGrupo, this.isGrupal = false});
 
   @override
   State<NuevaLista> createState() => _NuevaListaState();
@@ -37,6 +39,7 @@ class _NuevaListaState extends State<NuevaLista> {
                 Padding(
                   padding: const EdgeInsets.all(30),
                   child: TextFormField(
+                    maxLength: 20,
                     controller: _tituloController,
                     style: const TextStyle(
                       fontSize: 22,
@@ -114,12 +117,22 @@ class _NuevaListaState extends State<NuevaLista> {
                             _tituloController.text,
                             _descripcionController.text);
 
-                        await addListaCompraUsuario(nuevaLista, usuario!.uid)
-                            .then((_) {
-                          mostrarSnackBar(
-                              "Lista creada correctamente", "ok", context);
-                          Navigator.pop(context);
-                        });
+                        if (widget.isGrupal!) {
+                          await addListaCompraGrupo(
+                                  nuevaLista, widget.idGrupo.toString())
+                              .then((_) {
+                            mostrarSnackBar(
+                                "Lista creada correctamente", "ok", context);
+                            Navigator.pop(context);
+                          });
+                        } else {
+                          await addListaCompraUsuario(nuevaLista, usuario!.uid)
+                              .then((_) {
+                            mostrarSnackBar(
+                                "Lista creada correctamente", "ok", context);
+                            Navigator.pop(context);
+                          });
+                        }
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -161,17 +174,4 @@ class _NuevaListaState extends State<NuevaLista> {
     _descripcionController.dispose();
     super.dispose();
   }
-
-  // Función que registra un nuevo usuario mediante email y contraseña.
-  // Future<void> crearNuevaLista(BuildContext context, ListaCompra lista) async {
-  //   try {
-  //     // Guardamos la lista creada en la base de datos
-  //     widget.listaCompraDB.guardarLista(lista);
-
-  //     mostrarSnackBar("Lista creada correctamente", context);
-  //     Navigator.pop(context);
-  //   } catch (e) {
-  //     mostrarSnackBar("Lo sentimos, hubo un error", context);
-  //   }
-  // }
 }

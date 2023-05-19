@@ -10,7 +10,6 @@ class ListaCompra {
   String? descripcion;
   String? idPropietario;
   List<Producto>? productosLista;
-  List<Producto>? productosComprados;
 
   // ======= CONSTRUCTOR =======
 
@@ -20,6 +19,5 @@ class ListaCompra {
     descripcion = d;
     idPropietario = null;
     productosLista = [];
-    productosComprados = [];
   }
 }
