@@ -49,7 +49,7 @@ class _MensajesState extends State<Mensajes> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "${widget.emisor} - ${widget.hora.toDate().toLocal().hour}:${widget.hora.toDate().minute}",
+              "${widget.emisor} - ${widget.hora.toDate().toLocal().hour}:${widget.hora.toDate().minute.toString().padLeft(2, '0')}",
               textAlign: TextAlign.start,
               style: const TextStyle(
                   fontSize: 15,

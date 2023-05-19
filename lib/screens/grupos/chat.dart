@@ -16,7 +16,6 @@ class Chat extends StatefulWidget {
 }
 
 class _ChatState extends State<Chat> {
-  final ScrollController _scrollController = ScrollController();
   final TextEditingController _mensajeController = TextEditingController();
   Stream<QuerySnapshot>? chats;
   String admin = "";
@@ -25,22 +24,6 @@ class _ChatState extends State<Chat> {
   void initState() {
     getInfoGrupo();
     super.initState();
-  }
-
-  getInfoGrupo() {
-    // Recuperamos los chats del grupo
-    getChats(widget.idGrupo.toString()).then((val) {
-      setState(() {
-        chats = val;
-      });
-    });
-
-    // Recuperamos el admin del grupo
-    getAdmin(widget.idGrupo.toString()).then((administrador) {
-      setState(() {
-        admin = administrador;
-      });
-    });
   }
 
   @override
@@ -94,10 +77,6 @@ class _ChatState extends State<Chat> {
                     // Botón de enviar mensaje
                     GestureDetector(
                       onTap: () {
-                        _scrollController.animateTo(
-                            _scrollController.position.maxScrollExtent,
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeOut);
                         enviar();
                       },
                       child: Container(
@@ -135,7 +114,7 @@ class _ChatState extends State<Chat> {
         builder: (context, AsyncSnapshot snapshot) {
           return snapshot.hasData
               ? ListView.builder(
-                  controller: _scrollController,
+                  reverse: true,
                   itemCount: snapshot.data.docs.length + 1,
                   itemBuilder: (context, index) {
                     if (index == snapshot.data.docs.length) {
@@ -144,11 +123,12 @@ class _ChatState extends State<Chat> {
                       );
                     }
                     return Mensajes(
-                        snapshot.data.docs[index]['mensaje'],
-                        snapshot.data.docs[index]['hora'],
-                        snapshot.data.docs[index]['emisor'],
+                        snapshot.data.docs.reversed.toList()[index]['mensaje'],
+                        snapshot.data.docs.reversed.toList()[index]['hora'],
+                        snapshot.data.docs.reversed.toList()[index]['emisor'],
                         usuario!.displayName ==
-                            snapshot.data.docs[index]['emisor']);
+                            snapshot.data.docs.reversed.toList()[index]
+                                ['emisor']);
                   },
                 )
               : Container();
@@ -165,7 +145,7 @@ class _ChatState extends State<Chat> {
       Map<String, dynamic> mensaje = {
         "mensaje": _mensajeController.text,
         "emisor": usuario!.displayName,
-        "hora": DateTime.now(),
+        "hora": Timestamp.now()
       };
 
       enviarMensaje(widget.idGrupo.toString(), mensaje);
@@ -174,5 +154,22 @@ class _ChatState extends State<Chat> {
         _mensajeController.clear();
       });
     }
+  }
+
+  // Función que recupera información importante acerca del grupo
+  getInfoGrupo() {
+    // Recuperamos los chats del grupo
+    getChats(widget.idGrupo.toString()).then((val) {
+      setState(() {
+        chats = val;
+      });
+    });
+
+    // Recuperamos el admin del grupo
+    getAdmin(widget.idGrupo.toString()).then((administrador) {
+      setState(() {
+        admin = administrador;
+      });
+    });
   }
 }
