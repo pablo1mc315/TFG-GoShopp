@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:goshopp/models/producto.dart';
 import 'package:goshopp/models/tipoproducto.dart';
 import 'package:goshopp/screens/listas/cada_producto.dart';
@@ -25,7 +28,9 @@ class ListaDetalles extends StatefulWidget {
 class _ListaDetallesState extends State<ListaDetalles> {
   final TextEditingController _nombreController = TextEditingController();
   TipoProducto _tipoProducto = TipoProducto.comida;
-  String textoObtenido = "";
+  final textRecognizer = TextRecognizer();
+  File? imagen;
+  List<String> textoObtenido = [];
 
   @override
   Widget build(BuildContext context) {
@@ -236,11 +241,61 @@ class _ListaDetallesState extends State<ListaDetalles> {
 
       if (imagen == null) return;
 
-      // TODO: Reconocer texto de la imagen
+      setState(() {
+        this.imagen = File(imagen.path);
+      });
+
+      obtenerTextoTicket(imagen);
     } catch (e) {
       mostrarSnackBar(
           "Se produjo un error al seleccionar la imagen", "error", context);
     }
+  }
+
+  // Obtiene el texto de una imagen
+  Future<void> obtenerTextoTicket(XFile imagen) async {
+    final User? usuario = FirebaseAuth.instance.currentUser;
+
+    // Obtenemos el texto de la imagen
+    final input = InputImage.fromFilePath(imagen.path);
+    await textRecognizer.processImage(input).then((detectorTexto) {
+      setState(() {
+        textoObtenido = detectorTexto.text.split('\n');
+        filtrarTextoObtenido();
+      });
+    });
+
+    // Creamos productos y los añadimos a la lista marcándolos como comprados
+    if (textoObtenido.isNotEmpty) {
+      for (var i = 0; i < textoObtenido.length; i++) {
+        String nombreProducto = textoObtenido[i].substring(0, 1).toUpperCase() +
+            textoObtenido[i].substring(1).toLowerCase();
+        Producto nuevoProducto =
+            Producto("", nombreProducto, -1, TipoProducto.comida, true);
+
+        if (widget.isGrupal!) {
+          await addProductoGrupo(nuevoProducto, widget.listaID.toString(),
+              widget.idGrupo.toString());
+        } else {
+          await addProductoUsuario(
+              nuevoProducto, widget.listaID.toString(), usuario!.uid);
+        }
+      }
+    }
+
+    setState(() {});
+  }
+
+  // Obtiene los elementos escaneados que se corresponden con productos
+  filtrarTextoObtenido() {
+    // Filtramos aquellas cadenas compuestas por numero + espacio + cadena
+    RegExp regex = RegExp(r'^\d+\s\w+');
+    textoObtenido.removeWhere((element) => !regex.hasMatch(element));
+
+    // Eliminamos la cantidad y nos quedamos solo con el nombre
+    textoObtenido = textoObtenido
+        .map((elemento) => elemento.replaceAll(RegExp(r'^\d+\s'), ''))
+        .toList();
   }
 
   // Función que muestra los distintos tipo de producto seleccionables
