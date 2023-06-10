@@ -31,6 +31,7 @@ class _ListaDetallesState extends State<ListaDetalles> {
   final textRecognizer = TextRecognizer();
   File? imagen;
   List<String> textoObtenido = [];
+  bool _cargando = false;
 
   @override
   Widget build(BuildContext context) {
@@ -190,6 +191,8 @@ class _ListaDetallesState extends State<ListaDetalles> {
 
           const SizedBox(height: 25),
 
+          _cargando ? const CircularProgressIndicator() : Container(),
+
           // Mostramos todos los productos de la lista
           FutureBuilder(
               future: widget.isGrupal!
@@ -256,6 +259,10 @@ class _ListaDetallesState extends State<ListaDetalles> {
   Future<void> obtenerTextoTicket(XFile imagen) async {
     final User? usuario = FirebaseAuth.instance.currentUser;
 
+    setState(() {
+      _cargando = true;
+    });
+
     // Obtenemos el texto de la imagen
     final input = InputImage.fromFilePath(imagen.path);
     await textRecognizer.processImage(input).then((detectorTexto) {
@@ -296,6 +303,10 @@ class _ListaDetallesState extends State<ListaDetalles> {
     textoObtenido = textoObtenido
         .map((elemento) => elemento.replaceAll(RegExp(r'^\d+\s'), ''))
         .toList();
+
+    setState(() {
+      _cargando = false;
+    });
   }
 
   // Función que muestra los distintos tipo de producto seleccionables
