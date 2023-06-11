@@ -277,8 +277,8 @@ class _ListaDetallesState extends State<ListaDetalles> {
       for (var i = 0; i < textoObtenido.length; i++) {
         String nombreProducto = textoObtenido[i].substring(0, 1).toUpperCase() +
             textoObtenido[i].substring(1).toLowerCase();
-        Producto nuevoProducto =
-            Producto("", nombreProducto, -1, TipoProducto.comida, true);
+        Producto nuevoProducto = Producto(
+            "", nombreProducto.substring(0, 20), -1, TipoProducto.comida, true);
 
         if (widget.isGrupal!) {
           await addProductoGrupo(nuevoProducto, widget.listaID.toString(),

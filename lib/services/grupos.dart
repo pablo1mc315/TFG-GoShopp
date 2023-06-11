@@ -176,9 +176,3 @@ Future eliminarGrupo(String gid, String nombreGrupo) async {
   DocumentReference refG = db.collection("grupos").doc(gid);
   refG.delete();
 }
-
-Future<void> actualizarAdmin(String gid, String nuevoAdmin) async {
-  final refG = db.collection('grupos').doc(gid);
-
-  await refG.update({'admin': nuevoAdmin});
-}
