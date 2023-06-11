@@ -16,9 +16,12 @@ class InfoGrupo extends StatefulWidget {
 }
 
 class _InfoGrupoState extends State<InfoGrupo> {
+  bool _cargarParticipantes = true;
+
   @override
   void initState() {
     super.initState();
+    _cargarParticipantes = true;
   }
 
   @override
@@ -59,6 +62,9 @@ class _InfoGrupoState extends State<InfoGrupo> {
                                             usuario.uid)
                                         .then((_) {
                                       Navigator.pop(context);
+                                      setState(() {
+                                        _cargarParticipantes = false;
+                                      });
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -102,6 +108,9 @@ class _InfoGrupoState extends State<InfoGrupo> {
                                               widget.nombreGrupo.toString())
                                           .then((_) {
                                         Navigator.pop(context);
+                                        setState(() {
+                                          _cargarParticipantes = false;
+                                        });
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -186,7 +195,7 @@ class _InfoGrupoState extends State<InfoGrupo> {
             ),
 
             // Participantes
-            mostrarParticipantes()
+            _cargarParticipantes ? mostrarParticipantes() : Container()
           ],
         ));
   }
