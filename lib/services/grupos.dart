@@ -86,10 +86,10 @@ Future salirGrupo(
   DocumentReference refU = db.collection("usuarios").doc(uid);
   DocumentReference refG = db.collection("grupos").doc(gid);
 
-  DocumentSnapshot snapshot = await refU.get();
-  List<dynamic> grupos = await snapshot['grupos'];
+  DocumentSnapshot snapshotU = await refU.get();
+  List<dynamic> grupos = await snapshotU['grupos'];
 
-  // Si el grupo existe, lo eliminamos
+  // Si el grupo existe en el usuario, lo eliminamos
   if (grupos.contains("${nombreGrupo}_$gid")) {
     await refU.update({
       "grupos": FieldValue.arrayRemove(["${nombreGrupo}_$gid"])
@@ -97,6 +97,14 @@ Future salirGrupo(
     await refG.update({
       "participantes": FieldValue.arrayRemove([correo])
     });
+  }
+
+  // Si el grupo ha quedado vacío, lo eliminamos definitivamente
+  DocumentSnapshot snapshotG = await refG.get();
+  List<dynamic> participantes = await snapshotG['participantes'];
+
+  if (participantes.isEmpty) {
+    eliminarGrupo(gid, nombreGrupo);
   }
 }
 
@@ -128,4 +136,33 @@ enviarMensaje(String gid, Map<String, dynamic> mensaje) {
     "usuarioUltimoMensaje": mensaje["emisor"],
     "horaUltimoMensaje": mensaje["hora"].toString()
   });
+}
+
+// Función que elimina un grupo por completo
+Future eliminarGrupo(String gid, String nombreGrupo) async {
+  // Obtenemos todos los usuarios que pertenecen al grupo
+  final snapshotU = await db
+      .collection('usuarios')
+      .where('grupos', arrayContains: "${nombreGrupo}_$gid")
+      .get();
+
+  // Eliminamos el grupo de cada uno de los usuarios que pertenecían a él
+  for (final docU in snapshotU.docs) {
+    List<String> listaGrupos = [];
+    final gruposUsuario = docU['grupos'];
+
+    // Realizamos un casting de 'dynamic' a 'String'
+    for (var grupo in gruposUsuario) {
+      if (grupo is String) {
+        listaGrupos.add(grupo);
+      }
+    }
+
+    listaGrupos.remove("${nombreGrupo}_$gid");
+    docU.reference.update({'grupos': listaGrupos});
+  }
+
+  // Eliminamos el grupo de la base de datos
+  DocumentReference refG = db.collection("grupos").doc(gid);
+  refG.delete();
 }

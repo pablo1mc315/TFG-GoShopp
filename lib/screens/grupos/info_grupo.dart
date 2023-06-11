@@ -72,7 +72,50 @@ class _InfoGrupoState extends State<InfoGrupo> {
                           );
                         });
                   },
-                  icon: const Icon(Icons.exit_to_app))
+                  icon: const Icon(Icons.exit_to_app)),
+
+              // Si el usuario es el administrador, permitimos borrar el grupo
+              if (usuario!.email == widget.admin)
+                IconButton(
+                    splashRadius: 20,
+                    onPressed: () {
+                      showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text("Borrar grupo"),
+                              content: const Text(
+                                  "¿Estás seguro de que deseas borrar el grupo definitivamente?"),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text("Cancelar",
+                                        style: TextStyle(
+                                            color: Colors.red, fontSize: 18))),
+                                TextButton(
+                                    onPressed: () async {
+                                      await eliminarGrupo(
+                                              widget.idGrupo.toString(),
+                                              widget.nombreGrupo.toString())
+                                          .then((_) {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        const Home()));
+                                      });
+                                    },
+                                    child: const Text("Sí, estoy seguro",
+                                        style: TextStyle(fontSize: 18)))
+                              ],
+                            );
+                          });
+                    },
+                    icon: const Icon(Icons.delete))
             ]),
         body: Column(
           children: [
