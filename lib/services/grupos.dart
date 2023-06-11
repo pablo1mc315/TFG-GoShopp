@@ -89,6 +89,12 @@ Future salirGrupo(
   DocumentSnapshot snapshotU = await refU.get();
   List<dynamic> grupos = await snapshotU['grupos'];
 
+  DocumentSnapshot snapshotG = await refG.get();
+  List<dynamic> participantes = await snapshotG['participantes'];
+
+  // Modificamos el admin al primer participante del grupo (más antiguo)
+  await refG.update({"admin": participantes[0]});
+
   // Si el grupo existe en el usuario, lo eliminamos
   if (grupos.contains("${nombreGrupo}_$gid")) {
     await refU.update({
@@ -99,12 +105,16 @@ Future salirGrupo(
     });
   }
 
-  // Si el grupo ha quedado vacío, lo eliminamos definitivamente
-  DocumentSnapshot snapshotG = await refG.get();
-  List<dynamic> participantes = await snapshotG['participantes'];
+  snapshotG = await refG.get();
+  participantes = await snapshotG['participantes'];
 
+  // Si el grupo ha quedado vacío, lo eliminamos definitivamente
   if (participantes.isEmpty) {
     eliminarGrupo(gid, nombreGrupo);
+  }
+  // Si no, modificamos el admin al primer participante del grupo (más antiguo)
+  else {
+    await refG.update({"admin": participantes[0]});
   }
 }
 
@@ -165,4 +175,10 @@ Future eliminarGrupo(String gid, String nombreGrupo) async {
   // Eliminamos el grupo de la base de datos
   DocumentReference refG = db.collection("grupos").doc(gid);
   refG.delete();
+}
+
+Future<void> actualizarAdmin(String gid, String nuevoAdmin) async {
+  final refG = db.collection('grupos').doc(gid);
+
+  await refG.update({'admin': nuevoAdmin});
 }
