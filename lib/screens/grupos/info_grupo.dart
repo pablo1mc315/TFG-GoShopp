@@ -101,6 +101,7 @@ class _InfoGrupoState extends State<InfoGrupo> {
                                               widget.idGrupo.toString(),
                                               widget.nombreGrupo.toString())
                                           .then((_) {
+                                        Navigator.pop(context);
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
