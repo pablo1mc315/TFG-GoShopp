@@ -275,10 +275,14 @@ class _ListaDetallesState extends State<ListaDetalles> {
     // Creamos productos y los añadimos a la lista marcándolos como comprados
     if (textoObtenido.isNotEmpty) {
       for (var i = 0; i < textoObtenido.length; i++) {
-        String nombreProducto = textoObtenido[i].substring(0, 1).toUpperCase() +
-            textoObtenido[i].substring(1).toLowerCase();
-        Producto nuevoProducto = Producto(
-            "", nombreProducto.substring(0, 20), -1, TipoProducto.comida, true);
+        String nombreProducto = textoObtenido[i].length > 20
+            ? textoObtenido[i].substring(0, 1).toUpperCase() +
+                textoObtenido[i].substring(1, 20).toLowerCase()
+            : textoObtenido[i].substring(0, 1).toUpperCase() +
+                textoObtenido[i].substring(1).toLowerCase();
+
+        Producto nuevoProducto =
+            Producto("", nombreProducto, -1, TipoProducto.comida, true);
 
         if (widget.isGrupal!) {
           await addProductoGrupo(nuevoProducto, widget.listaID.toString(),
@@ -296,13 +300,18 @@ class _ListaDetallesState extends State<ListaDetalles> {
   // Obtiene los elementos escaneados que se corresponden con productos
   filtrarTextoObtenido() {
     // Filtramos aquellas cadenas compuestas por numero + espacio + cadena
-    RegExp regex = RegExp(r'^\d+\s\w+');
+    RegExp regex = RegExp(r'^\s*\d{1,3}\s.+');
     textoObtenido.removeWhere((element) => !regex.hasMatch(element));
 
-    // Eliminamos la cantidad y nos quedamos solo con el nombre
-    textoObtenido = textoObtenido
-        .map((elemento) => elemento.replaceAll(RegExp(r'^\d+\s'), ''))
-        .toList();
+    // Si encontramos elementos con la expresión regular, estamos en el tipo 1
+    if (textoObtenido.isNotEmpty) {
+      // Eliminamos la cantidad y nos quedamos solo con el nombre
+      textoObtenido = textoObtenido
+          .map((elemento) => elemento.replaceAll(RegExp(r'^\d+\s'), ''))
+          .toList();
+    }
+    // Si no, nos encontramos en el tipo 2 y debemos tratarlo de otra forma
+    else {}
 
     setState(() {
       _cargando = false;
