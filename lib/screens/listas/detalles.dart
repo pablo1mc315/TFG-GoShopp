@@ -300,18 +300,21 @@ class _ListaDetallesState extends State<ListaDetalles> {
   // Obtiene los elementos escaneados que se corresponden con productos
   filtrarTextoObtenido() {
     // Filtramos aquellas cadenas compuestas por numero + espacio + cadena
-    RegExp regex = RegExp(r'^\s*\d{1,3}\s.+');
+    RegExp regex = RegExp(r'^\s*\d{1,3}\s+.+');
     textoObtenido.removeWhere((element) => !regex.hasMatch(element));
 
-    // Si encontramos elementos con la expresión regular, estamos en el tipo 1
+    // Si encontramos elementos con la expresión regular, los formateamos
     if (textoObtenido.isNotEmpty) {
       // Eliminamos la cantidad y nos quedamos solo con el nombre
       textoObtenido = textoObtenido
-          .map((elemento) => elemento.replaceAll(RegExp(r'^\d+\s'), ''))
+          .map((elemento) => elemento.replaceAll(RegExp(r'^\d+\s+'), ''))
           .toList();
     }
-    // Si no, nos encontramos en el tipo 2 y debemos tratarlo de otra forma
-    else {}
+    // Si no, informamos al usuario
+    else {
+      mostrarSnackBar(
+          "No ha sido posible encontrar productos.", "warn", context);
+    }
 
     setState(() {
       _cargando = false;
