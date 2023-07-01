@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:goshopp/screens/grupos/buscar_grupos.dart';
 import 'package:goshopp/screens/grupos/cada_grupo.dart';
-import 'package:goshopp/screens/auxiliar.dart';
 import 'package:goshopp/services/grupos.dart';
 
 class ListaGrupos extends StatefulWidget {
@@ -159,8 +158,6 @@ class _ListaGruposState extends State<ListaGrupos> {
                                 .whenComplete(() => _cargando = false);
                           }
                           Navigator.pop(context);
-                          mostrarSnackBar(
-                              "Grupo creado correctamente", "ok", context);
                         },
                         child:
                             const Text("Crear", style: TextStyle(fontSize: 18)))
