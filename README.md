@@ -21,6 +21,10 @@ Para resaltar la facilidad de uso del software desarrollado, también cuenta con
 - Implementar visualización, creación, edición y borrado de grupos y listas cooperativas, así como la funcionalidad de chat entre usuarios de un mismo grupo [#15](https://github.com/pablo1mc315/TFG-GoShopp/pull/15).
 - Implementar el escaneado de tickets de la compra, así como algunas otras funcionalidades adicionales [#23](https://github.com/pablo1mc315/TFG-GoShopp/pull/23).
 
+## Instalación
+
+Si desea probar la aplicación, puede descargarla en su dispositivo Android pulsando [aquí](https://drive.google.com/file/d/14tk2q-vphy2unUnq2HV-9yoi7i2yKWHi/view?usp=sharing). Asegúrese de entrar a Google Drive con una cuenta de Google corporativa de la Universidad de Granada. Basta con instalar el fichero .apk descargado para comenzar a utilizar GoShopp.
+
 ## Documentación
 
 Toda la documentación del proyecto, así como las imágenes utilizadas en la misma y las capturas de pantalla de la interfaz de usuario final, se encuentra disponible en la carpeta [/docs](./docs).
