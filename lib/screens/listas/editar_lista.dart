@@ -167,7 +167,7 @@ class _EditarListaState extends State<EditarLista> {
                       ),
                     ),
                     child: const Text(
-                      'Crear',
+                      'Guardar',
                       style: TextStyle(
                         fontSize: 20,
                         color: Colors.white,

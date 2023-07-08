@@ -16,9 +16,12 @@ class InfoGrupo extends StatefulWidget {
 }
 
 class _InfoGrupoState extends State<InfoGrupo> {
+  bool _cargarParticipantes = true;
+
   @override
   void initState() {
     super.initState();
+    _cargarParticipantes = true;
   }
 
   @override
@@ -59,6 +62,9 @@ class _InfoGrupoState extends State<InfoGrupo> {
                                             usuario.uid)
                                         .then((_) {
                                       Navigator.pop(context);
+                                      setState(() {
+                                        _cargarParticipantes = false;
+                                      });
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -72,7 +78,54 @@ class _InfoGrupoState extends State<InfoGrupo> {
                           );
                         });
                   },
-                  icon: const Icon(Icons.exit_to_app))
+                  icon: const Icon(Icons.exit_to_app)),
+
+              // Si el usuario es el administrador, permitimos borrar el grupo
+              if (usuario!.email == widget.admin)
+                IconButton(
+                    splashRadius: 20,
+                    onPressed: () {
+                      showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text("Borrar grupo"),
+                              content: const Text(
+                                  "¿Estás seguro de que deseas borrar el grupo definitivamente?"),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text("Cancelar",
+                                        style: TextStyle(
+                                            color: Colors.red, fontSize: 18))),
+                                TextButton(
+                                    onPressed: () async {
+                                      await eliminarGrupo(
+                                              widget.idGrupo.toString(),
+                                              widget.nombreGrupo.toString())
+                                          .then((_) {
+                                        Navigator.pop(context);
+                                        setState(() {
+                                          _cargarParticipantes = false;
+                                        });
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        const Home()));
+                                      });
+                                    },
+                                    child: const Text("Sí, estoy seguro",
+                                        style: TextStyle(fontSize: 18)))
+                              ],
+                            );
+                          });
+                    },
+                    icon: const Icon(Icons.delete))
             ]),
         body: Column(
           children: [
@@ -142,7 +195,7 @@ class _InfoGrupoState extends State<InfoGrupo> {
             ),
 
             // Participantes
-            mostrarParticipantes()
+            _cargarParticipantes ? mostrarParticipantes() : Container()
           ],
         ));
   }
