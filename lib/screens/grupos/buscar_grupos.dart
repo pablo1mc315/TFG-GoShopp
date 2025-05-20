@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:goshopp/screens/grupos/chat.dart';
 import 'package:goshopp/screens/auxiliar.dart';
 import 'package:goshopp/services/grupos.dart';
+import 'package:goshopp/services/navigation.dart';
 
 class BuscarGrupos extends StatefulWidget {
   const BuscarGrupos({super.key});
@@ -157,12 +158,10 @@ class _BuscarGruposState extends State<BuscarGrupos> {
                 await entrarGrupo(gid, nombreGrupo, usuario!.email.toString(),
                         usuario.uid.toString())
                     .then((_) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              Chat(gid, nombreGrupo)));
-                  mostrarSnackBar("Te has unido a $nombreGrupo", "ok", context);
+                  NavigationService.push(MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          Chat(gid, nombreGrupo)));
+                  mostrarSnackBar("Te has unido a $nombreGrupo", "ok");
                 });
                 setState(() {
                   perteneceAlGrupo = true;

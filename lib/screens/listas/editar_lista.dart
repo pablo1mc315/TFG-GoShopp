@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:goshopp/screens/inicio.dart';
 import 'package:goshopp/screens/auxiliar.dart';
 import 'package:goshopp/services/listas.dart';
+import 'package:goshopp/services/navigation.dart';
 
 class EditarLista extends StatefulWidget {
   final String? listaID;
@@ -116,7 +117,7 @@ class _EditarListaState extends State<EditarLista> {
                     onPressed: () async {
                       if (_tituloController.text.isEmpty) {
                         mostrarSnackBar(
-                            "La lista debe tener un título", "error", context);
+                            "La lista debe tener un título", "error");
                       } else {
                         if (widget.isGrupal!) {
                           await editarListaCompraGrupo(
@@ -125,14 +126,12 @@ class _EditarListaState extends State<EditarLista> {
                                   widget.listaID.toString(),
                                   widget.idGrupo.toString())
                               .then((_) {
-                            mostrarSnackBar("Lista modificada correctamente",
-                                "ok", context);
-                            Navigator.pop(context);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        const Home()));
+                            mostrarSnackBar(
+                                "Lista modificada correctamente", "ok");
+                            NavigationService.pop();
+                            NavigationService.push(MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    const Home()));
                           });
                         } else {
                           await editarListaCompraUsuario(
@@ -141,14 +140,12 @@ class _EditarListaState extends State<EditarLista> {
                                   widget.listaID.toString(),
                                   usuario!.uid)
                               .then((_) {
-                            mostrarSnackBar("Lista modificada correctamente",
-                                "ok", context);
-                            Navigator.pop(context);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        const Home()));
+                            mostrarSnackBar(
+                                "Lista modificada correctamente", "ok");
+                            NavigationService.pop();
+                            NavigationService.push(MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    const Home()));
                           });
                         }
                       }

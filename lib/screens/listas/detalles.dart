@@ -53,7 +53,7 @@ class _ListaDetallesState extends State<ListaDetalles> {
                   getTicket(src!);
                 } catch (e) {
                   mostrarSnackBar(
-                      "No se ha seleccionado ninguna imagen", "warn", context);
+                      "No se ha seleccionado ninguna imagen", "warn");
                 }
               },
               icon: const Icon(Icons.qr_code_scanner_rounded))
@@ -104,10 +104,10 @@ class _ListaDetallesState extends State<ListaDetalles> {
             TextButton(
               onPressed: () {},
               style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.all(
+                  foregroundColor: WidgetStateProperty.all(
                       const Color.fromARGB(255, 0, 100, 190)),
                   fixedSize:
-                      MaterialStateProperty.all(const Size.fromHeight(20))),
+                      WidgetStateProperty.all(const Size.fromHeight(20))),
               child: Row(
                 children: [
                   Text("Tipo: ${getNombre(_tipoProducto)}"),
@@ -134,7 +134,7 @@ class _ListaDetallesState extends State<ListaDetalles> {
                   onPressed: () async {
                     if (_nombreController.text.isEmpty) {
                       mostrarSnackBar(
-                          'Debe rellenar todos los campos.', "error", context);
+                          'Debe rellenar todos los campos.', "error");
                     } else {
                       // Añadimos un nuevo producto con esos valores
                       Producto nuevoProducto = Producto(
@@ -149,7 +149,7 @@ class _ListaDetallesState extends State<ListaDetalles> {
                                 widget.idGrupo.toString())
                             .then((_) {
                           mostrarSnackBar(
-                              "Producto añadido correctamente", "ok", context);
+                              "Producto añadido correctamente", "ok");
                           setState(() {});
                         });
                       } else {
@@ -157,7 +157,7 @@ class _ListaDetallesState extends State<ListaDetalles> {
                                 widget.listaID.toString(), usuario!.uid)
                             .then((_) {
                           mostrarSnackBar(
-                              "Producto añadido correctamente", "ok", context);
+                              "Producto añadido correctamente", "ok");
                           setState(() {});
                         });
                       }
@@ -250,8 +250,7 @@ class _ListaDetallesState extends State<ListaDetalles> {
 
       obtenerTextoTicket(imagen);
     } catch (e) {
-      mostrarSnackBar(
-          "Se produjo un error al seleccionar la imagen", "error", context);
+      mostrarSnackBar("Se produjo un error al seleccionar la imagen", "error");
     }
   }
 
@@ -312,8 +311,7 @@ class _ListaDetallesState extends State<ListaDetalles> {
     }
     // Si no, informamos al usuario
     else {
-      mostrarSnackBar(
-          "No ha sido posible encontrar productos.", "warn", context);
+      mostrarSnackBar("No ha sido posible encontrar productos.", "warn");
     }
 
     setState(() {

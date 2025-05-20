@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:goshopp/screens/auxiliar.dart';
+import 'package:goshopp/services/navigation.dart';
 
 class ResetPassword extends StatefulWidget {
   const ResetPassword({super.key});
@@ -67,9 +68,9 @@ class ResetPasswordState extends State<ResetPassword> {
         if (controller.text.isNotEmpty) {
           FirebaseAuth.instance
               .sendPasswordResetEmail(email: controller.text)
-              .then((value) => Navigator.of(context).pop());
-          mostrarSnackBar("Se ha enviado un correo a la dirección indicada.",
-              "ok", context);
+              .then((value) => NavigationService.of()?.pop());
+          mostrarSnackBar(
+              "Se ha enviado un correo a la dirección indicada.", "ok");
         }
       },
       style: ElevatedButton.styleFrom(

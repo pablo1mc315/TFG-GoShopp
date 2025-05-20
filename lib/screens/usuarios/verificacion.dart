@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:goshopp/services/navigation.dart';
 
 import '../inicio.dart';
 
@@ -65,7 +66,7 @@ class _VerificacionCorreoState extends State<VerificacionCorreo> {
     usuario = auth.currentUser;
     await usuario?.reload().then((value) {
       if (usuario!.emailVerified) {
-        Navigator.of(context).pushReplacement(
+        NavigationService.of()?.pushReplacement(
             MaterialPageRoute(builder: (context) => const Home()));
       }
     });
