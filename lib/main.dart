@@ -18,8 +18,7 @@ import 'package:goshopp/screens/usuarios/verificacion.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-      name: 'goshopp-d4eb4', options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(
     MaterialApp(
