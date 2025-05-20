@@ -169,10 +169,10 @@ class _CadaListaWidgetState extends State<CadaListaWidget> {
                   child: ElevatedButton(
                     onPressed: null,
                     style: const ButtonStyle(
-                        backgroundColor: MaterialStatePropertyAll(
+                        backgroundColor: WidgetStatePropertyAll(
                             Color.fromARGB(255, 0, 100, 190)),
-                        foregroundColor: MaterialStatePropertyAll(Colors.white),
-                        side: MaterialStatePropertyAll(
+                        foregroundColor: WidgetStatePropertyAll(Colors.white),
+                        side: WidgetStatePropertyAll(
                             BorderSide(width: 1, color: Colors.white))),
                     child: Text(widget.descripcion.toString(),
                         style: const TextStyle(fontSize: 18)),

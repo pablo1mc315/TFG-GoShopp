@@ -104,10 +104,10 @@ class _ListaDetallesState extends State<ListaDetalles> {
             TextButton(
               onPressed: () {},
               style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.all(
+                  foregroundColor: WidgetStateProperty.all(
                       const Color.fromARGB(255, 0, 100, 190)),
                   fixedSize:
-                      MaterialStateProperty.all(const Size.fromHeight(20))),
+                      WidgetStateProperty.all(const Size.fromHeight(20))),
               child: Row(
                 children: [
                   Text("Tipo: ${getNombre(_tipoProducto)}"),
