@@ -284,7 +284,7 @@ class LoginState extends State<Login> {
                           height: 30.0,
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 40, right: 30),
+                          padding: EdgeInsets.symmetric(horizontal: 16),
                           child: Text(
                             'Iniciar sesión con Google',
                             style: TextStyle(
