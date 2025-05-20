@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:goshopp/models/lista_compra.dart';
 import 'package:goshopp/screens/auxiliar.dart';
 import 'package:goshopp/services/listas.dart';
+import 'package:goshopp/services/navigation.dart';
 
 class NuevaLista extends StatefulWidget {
   final String? idGrupo;
@@ -108,8 +109,8 @@ class _NuevaListaState extends State<NuevaLista> {
                   child: ElevatedButton(
                     onPressed: () async {
                       if (_tituloController.text.isEmpty) {
-                        mostrarSnackBar('El título es un campo obligatorio.',
-                            "error", context);
+                        mostrarSnackBar(
+                            'El título es un campo obligatorio.', "error");
                       } else {
                         // Añadimos una nueva lista con esos valores
                         ListaCompra nuevaLista = ListaCompra(
@@ -121,16 +122,14 @@ class _NuevaListaState extends State<NuevaLista> {
                           await addListaCompraGrupo(
                                   nuevaLista, widget.idGrupo.toString())
                               .then((_) {
-                            mostrarSnackBar(
-                                "Lista creada correctamente", "ok", context);
-                            Navigator.pop(context);
+                            mostrarSnackBar("Lista creada correctamente", "ok");
+                            NavigationService.pop();
                           });
                         } else {
                           await addListaCompraUsuario(nuevaLista, usuario!.uid)
                               .then((_) {
-                            mostrarSnackBar(
-                                "Lista creada correctamente", "ok", context);
-                            Navigator.pop(context);
+                            mostrarSnackBar("Lista creada correctamente", "ok");
+                            NavigationService.pop();
                           });
                         }
                       }

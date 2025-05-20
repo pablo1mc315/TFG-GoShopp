@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:goshopp/screens/grupos/listas_grupos.dart';
 import 'package:goshopp/screens/inicio.dart';
 import 'package:goshopp/services/grupos.dart';
+import 'package:goshopp/services/navigation.dart';
 
 class InfoGrupo extends StatefulWidget {
   final String idGrupo;
@@ -61,15 +62,13 @@ class _InfoGrupoState extends State<InfoGrupo> {
                                             usuario!.email.toString(),
                                             usuario.uid)
                                         .then((_) {
-                                      Navigator.pop(context);
+                                      NavigationService.pop();
                                       setState(() {
                                         _cargarParticipantes = false;
                                       });
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (BuildContext context) =>
-                                                  const Home()));
+                                      NavigationService.push(MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              const Home()));
                                     });
                                   },
                                   child: const Text("Sí, estoy seguro",
@@ -107,12 +106,11 @@ class _InfoGrupoState extends State<InfoGrupo> {
                                               widget.idGrupo.toString(),
                                               widget.nombreGrupo.toString())
                                           .then((_) {
-                                        Navigator.pop(context);
+                                        NavigationService.pop();
                                         setState(() {
                                           _cargarParticipantes = false;
                                         });
-                                        Navigator.push(
-                                            context,
+                                        NavigationService.push(
                                             MaterialPageRoute(
                                                 builder:
                                                     (BuildContext context) =>
@@ -138,7 +136,7 @@ class _InfoGrupoState extends State<InfoGrupo> {
                         bottom: BorderSide(
                             width: 2, color: Color.fromARGB(255, 0, 100, 190))),
                     color: const Color.fromARGB(255, 0, 100, 190)
-                        .withOpacity(0.2)),
+                        .withValues(alpha: 0.2)),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
