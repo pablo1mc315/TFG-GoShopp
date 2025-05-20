@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:goshopp/screens/auxiliar.dart';
 import 'package:goshopp/services/imagenes.dart';
+import 'package:goshopp/services/navigation.dart';
 import 'package:goshopp/services/usuarios.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -95,8 +96,7 @@ class EditarPerfilState extends State<EditarPerfil> {
                         await usuario!.updatePhotoURL(url).then((_) {
                           mostrarSnackBar(
                               "Imagen de perfil modificada correctamente.",
-                              "ok",
-                              context);
+                              "ok");
                         });
                       }
                     },
@@ -165,18 +165,16 @@ class EditarPerfilState extends State<EditarPerfil> {
                   child: ElevatedButton(
                     onPressed: () async {
                       if (_textoController.text.isEmpty) {
-                        mostrarSnackBar(
-                            'El campo es obligatorio.', "error", context);
+                        mostrarSnackBar('El campo es obligatorio.', "error");
                       } else {
                         await modificarNombreUsuario(
                                 usuario!.uid, _textoController.text)
                             .then((value) {
                           usuario!.updateDisplayName(_textoController.text);
-                          Navigator.pop(context);
+                          NavigationService.pop();
                           mostrarSnackBar(
                               'Nombre de usuario modificado correctamente.',
-                              "ok",
-                              context);
+                              "ok");
                         });
                       }
                     },

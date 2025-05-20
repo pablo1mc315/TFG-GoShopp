@@ -5,6 +5,7 @@ import 'package:goshopp/screens/inicio.dart';
 import 'package:goshopp/screens/listas/detalles.dart';
 import 'package:goshopp/screens/listas/editar_lista.dart';
 import 'package:goshopp/services/listas.dart';
+import 'package:goshopp/services/navigation.dart';
 
 class CadaListaWidget extends StatefulWidget {
   final String listaID;
@@ -129,9 +130,8 @@ class _CadaListaWidgetState extends State<CadaListaWidget> {
                                               widget.idGrupo.toString(),
                                               widget.listaID.toString())
                                           .then((_) {
-                                        Navigator.pop(context);
-                                        Navigator.push(
-                                            context,
+                                        NavigationService.pop();
+                                        NavigationService.push(
                                             MaterialPageRoute(
                                                 builder:
                                                     (BuildContext context) =>
@@ -143,9 +143,8 @@ class _CadaListaWidgetState extends State<CadaListaWidget> {
                                       eliminarListaCompraUsuario(usuario!.uid,
                                               widget.listaID.toString())
                                           .then((_) {
-                                        Navigator.pop(context);
-                                        Navigator.push(
-                                            context,
+                                        NavigationService.pop();
+                                        NavigationService.push(
                                             MaterialPageRoute(
                                                 builder:
                                                     (BuildContext context) =>
@@ -169,10 +168,10 @@ class _CadaListaWidgetState extends State<CadaListaWidget> {
                   child: ElevatedButton(
                     onPressed: null,
                     style: const ButtonStyle(
-                        backgroundColor: MaterialStatePropertyAll(
+                        backgroundColor: WidgetStatePropertyAll(
                             Color.fromARGB(255, 0, 100, 190)),
-                        foregroundColor: MaterialStatePropertyAll(Colors.white),
-                        side: MaterialStatePropertyAll(
+                        foregroundColor: WidgetStatePropertyAll(Colors.white),
+                        side: WidgetStatePropertyAll(
                             BorderSide(width: 1, color: Colors.white))),
                     child: Text(widget.descripcion.toString(),
                         style: const TextStyle(fontSize: 18)),

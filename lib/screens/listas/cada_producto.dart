@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:goshopp/models/producto.dart';
 import 'package:goshopp/screens/listas/detalles.dart';
+import 'package:goshopp/services/navigation.dart';
 import 'package:goshopp/services/productos.dart';
 
 // ignore: must_be_immutable
@@ -123,8 +124,7 @@ class _CadaProductoWidgetState extends State<CadaProductoWidget> {
                                         widget.listaID.toString(),
                                         widget.producto!.id.toString())
                                     .then((_) {
-                                  Navigator.pushReplacement(
-                                      context,
+                                  NavigationService.pushReplacement(
                                       MaterialPageRoute(
                                           builder: (BuildContext context) =>
                                               ListaDetalles(
@@ -140,8 +140,7 @@ class _CadaProductoWidgetState extends State<CadaProductoWidget> {
                                         widget.listaID.toString(),
                                         widget.producto!.id.toString())
                                     .then((_) {
-                                  Navigator.pushReplacement(
-                                      context,
+                                  NavigationService.pushReplacement(
                                       MaterialPageRoute(
                                           builder: (BuildContext context) =>
                                               ListaDetalles(

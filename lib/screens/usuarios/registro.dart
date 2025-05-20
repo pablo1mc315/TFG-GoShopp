@@ -9,6 +9,7 @@ import 'package:goshopp/models/usuario.dart';
 import 'package:goshopp/screens/auxiliar.dart';
 import 'package:goshopp/screens/usuarios/verificacion.dart';
 import 'package:goshopp/services/imagenes.dart';
+import 'package:goshopp/services/navigation.dart';
 import 'package:goshopp/services/usuarios.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -242,23 +243,21 @@ class PaginaRegistroState extends State<PaginaRegistro> {
                           _emailController.text.isEmpty ||
                           _contrasenaController1.text.isEmpty ||
                           _contrasenaController2.text.isEmpty) {
-                        mostrarSnackBar('Debe rellenar todos los campos.',
-                            "error", context);
+                        mostrarSnackBar(
+                            'Debe rellenar todos los campos.', "error");
                       } else if (!EmailValidator.validate(
                           _emailController.text)) {
                         mostrarSnackBar(
                             'El correo introducido no tiene un formato correcto.',
-                            "error",
-                            context);
+                            "error");
                       } else if (_contrasenaController1.text.length < 6) {
                         mostrarSnackBar(
                             'La contraseña debe tener al menos 6 caracteres.',
-                            "error",
-                            context);
+                            "error");
                       } else if (_contrasenaController1.text !=
                           _contrasenaController2.text) {
                         mostrarSnackBar(
-                            'Las contraseñas no coinciden.', "error", context);
+                            'Las contraseñas no coinciden.', "error");
                       } else {
                         setState(() {
                           cambiarVisibilidadIndicadorProgreso();
@@ -352,22 +351,20 @@ class PaginaRegistroState extends State<PaginaRegistro> {
           Usuario(_emailController.text, _usuarioController.text, url);
 
       await addUsuario(nuevoUsuario, credenciales.user!.uid).then((_) {
-        mostrarSnackBar("Usuario creado correctamente", "ok", context);
-        Navigator.pop(context);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const VerificacionCorreo()));
+        mostrarSnackBar("Usuario creado correctamente", "ok");
+        NavigationService.pop();
+        NavigationService.push(MaterialPageRoute(
+            builder: (context) => const VerificacionCorreo()));
       });
     } on FirebaseAuthException catch (e) {
       if (e.code == "email-already-in-use") {
-        mostrarSnackBar("Ya existe un usuario con ese correo electrónico.",
-            "error", context);
+        mostrarSnackBar(
+            "Ya existe un usuario con ese correo electrónico.", "error");
       } else {
-        mostrarSnackBar("Lo sentimos, hubo un error", "error", context);
+        mostrarSnackBar("Lo sentimos, hubo un error", "error");
       }
     } catch (e) {
-      mostrarSnackBar(e.toString(), "error", context);
+      mostrarSnackBar(e.toString(), "error");
     } finally {
       setState(() {
         cambiarVisibilidadIndicadorProgreso();

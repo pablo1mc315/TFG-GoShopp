@@ -6,6 +6,7 @@ import 'package:goshopp/firebase_options.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:goshopp/models/usuario.dart';
+import 'package:goshopp/services/navigation.dart';
 import 'package:goshopp/services/usuarios.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,10 +18,15 @@ import 'package:goshopp/screens/usuarios/verificacion.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-      name: 'goshopp-d4eb4', options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  runApp(const MainPage());
+  runApp(
+    MaterialApp(
+      navigatorKey: NavigationService.navigatorKey,
+      debugShowCheckedModeBanner: false,
+      home: const MainPage(),
+    ),
+  );
 }
 
 class MainPage extends StatefulWidget {
@@ -172,8 +178,7 @@ class LoginState extends State<Login> {
                     if (!EmailValidator.validate(_emailController.text)) {
                       mostrarSnackBar(
                           'El correo introducido no tiene un formato correcto.',
-                          "error",
-                          context);
+                          "error");
                     } else {
                       setState(() {
                         _cambiarEstadoIndicadorProgreso();
@@ -279,7 +284,7 @@ class LoginState extends State<Login> {
                           height: 30.0,
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 40, right: 30),
+                          padding: EdgeInsets.symmetric(horizontal: 16),
                           child: Text(
                             'Iniciar sesión con Google',
                             style: TextStyle(
@@ -356,13 +361,11 @@ class LoginState extends State<Login> {
                 password: _contrasenaController.text.trim())
             .then((value) {
           if (auth.currentUser!.emailVerified) {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => const Home()));
+            NavigationService.push(
+                MaterialPageRoute(builder: (context) => const Home()));
           } else {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const VerificacionCorreo()));
+            NavigationService.push(MaterialPageRoute(
+                builder: (context) => const VerificacionCorreo()));
           }
         });
 
@@ -372,10 +375,9 @@ class LoginState extends State<Login> {
       } on FirebaseAuthException catch (e) {
         if (e.code == "user-not-found" || e.code == "wrong-password") {
           mostrarSnackBar(
-              "Los valores introducidos no son correctos.", "error", context);
+              "Los valores introducidos no son correctos.", "error");
         } else {
-          mostrarSnackBar(
-              "Asegúrese de rellenar todos los campos.", "error", context);
+          mostrarSnackBar("Asegúrese de rellenar todos los campos.", "error");
         }
         setState(() {
           _cambiarEstadoIndicadorProgreso();
@@ -410,14 +412,14 @@ class LoginState extends State<Login> {
             auth.currentUser!.photoURL);
 
         await addUsuario(nuevoUsuario, auth.currentUser!.uid).then((_) {
-          mostrarSnackBar("Usuario creado correctamente", "ok", context);
+          mostrarSnackBar("Usuario creado correctamente", "ok");
 
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => const Home()));
+          NavigationService.push(
+              MaterialPageRoute(builder: (context) => const Home()));
         });
       });
     } catch (e) {
-      mostrarSnackBar("Lo sentimos, se produjo un error", "error", context);
+      mostrarSnackBar("Lo sentimos, se produjo un error", "error");
     } finally {
       setState(() {
         _cambiarEstadoIndicadorProgresoGoogle();
@@ -467,8 +469,7 @@ class LoginState extends State<Login> {
         _contrasenaController.text = password;
       }
     } catch (e) {
-      mostrarSnackBar(
-          "Lo sentimos, se ha producido un error.", "error", context);
+      mostrarSnackBar("Lo sentimos, se ha producido un error.", "error");
     }
   }
 

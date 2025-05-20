@@ -5,6 +5,7 @@ import 'package:goshopp/main.dart';
 import 'package:goshopp/screens/grupos/grupos.dart';
 import 'package:goshopp/screens/listas/listas.dart';
 import 'package:goshopp/screens/usuarios/editar_usuario.dart';
+import 'package:goshopp/services/navigation.dart';
 import 'package:goshopp/services/usuarios.dart';
 import 'package:goshopp/screens/info.dart';
 
@@ -223,8 +224,7 @@ class _HomeState extends State<Home> {
   // Cerrar la sesión del usuario actual en la aplicación
   void _cerrarSesion(BuildContext context) async {
     await FirebaseAuth.instance.signOut().then((value) {
-      Navigator.pushAndRemoveUntil(
-          context,
+      NavigationService.pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => const MainPage()),
           (route) => false);
     });
